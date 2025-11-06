@@ -1,0 +1,1008 @@
+ODF_HEADER
+  FILE_SPECIFICATION = 'CTD_BCD2024669_001_01_DN'
+  ODF_SPECIFICATION_VERSION = 3.0
+CRUISE_HEADER
+  COUNTRY_INSTITUTE_CODE = 1810
+  CRUISE_NUMBER = 'BCD2024669'
+  ORGANIZATION = 'DFO SABS'
+  CHIEF_SCIENTIST = 'FRED PAGE'
+  START_DATE = '01-APR-2022 00:00:00.00'
+  END_DATE = '31-OCT-2022 00:00:00.00'
+  PLATFORM = 'LATALANTE'
+  CRUISE_NAME = 'BAY OF FUNDY (P5 FIXED STATION)'
+  CRUISE_DESCRIPTION = 'ATLANTIC ZONE MONITORING PROGRAM (AZMP)'
+EVENT_HEADER
+  DATA_TYPE = 'CTD'
+  EVENT_NUMBER = '001'
+  EVENT_QUALIFIER1 = '01'
+  EVENT_QUALIFIER2 = 'DN'
+  CREATION_DATE = '28-JAN-2025 08:28:10.52'
+  ORIG_CREATION_DATE = '27-JAN-2025 12:24:04.00'
+  START_DATE_TIME = '22-FEB-2024 13:34:51.00'
+  END_DATE_TIME = '22-FEB-2024 13:46:40.63'
+  INITIAL_LATITUDE = 44.950400
+  INITIAL_LONGITUDE = -66.847700
+  END_LATITUDE = -99.900000
+  END_LONGITUDE = -999.900000
+  MIN_DEPTH = 2.00
+  MAX_DEPTH = 92.00
+  SAMPLING_INTERVAL = 0.0
+  SOUNDING = 90.00
+  DEPTH_OFF_BOTTOM = -2.00
+  STATION_NAME = 'AR7W_15'
+  SET_NUMBER = ''
+  EVENT_COMMENTS = 'First occupation aboard the Hartland Hybrid. "Pump plugs not removed from CTD"'
+METEO_HEADER
+  AIR_TEMPERATURE = -99.00
+  ATMOSPHERIC_PRESSURE = -99.00
+  WIND_SPEED = 5.10
+  WIND_DIRECTION = 135.00
+  SEA_STATE = 2
+  CLOUD_COVER = 8
+  ICE_THICKNESS = -99.000
+  METEO_COMMENTS =  ''''
+QUALITY_HEADER
+  QUALITY_DATE = '28-JAN-2025 07:42:53.03'
+  QUALITY_TESTS = 'QUALITY CONTROL TESTS RUN'
+  QUALITY_TESTS = 'Test 2.1: GTSPP Global Impossible Parameter Values (4)'
+  QUALITY_TESTS = 'Test 2.2: GTSPP Regional Impossible Parameter Values (8)'
+  QUALITY_TESTS = 'Test 2.3: GTSPP Increasing Depth (16)'
+  QUALITY_TESTS = 'Test 2.4: GTSPP Profile Envelope (Temperature and Salinity) (32)'
+  QUALITY_TESTS = 'Test 2.5: GTSPP Constant Profile (64)'
+  QUALITY_TESTS = 'Test 2.6: GTSPP Freezing Point (128)'
+  QUALITY_TESTS = 'Test 2.7: GTSPP Spike in Temperature and Salinity (one point) (256)'
+  QUALITY_TESTS = 'Test 2.8: GTSPP Top and Bottom Spike in Temperature and Salinity (512)'
+  QUALITY_TESTS = 'Test 2.9: GTSPP Gradient in Temperature and Salinity (1024)'
+  QUALITY_TESTS = 'Test 2.10: GTSPP Density Inversion (point to point) (2048)'
+  QUALITY_TESTS = 'Test 2.11: IML Spike in Pressure, Temperature and Salinity (one point or more) (4096)'
+  QUALITY_TESTS = 'Test 2.12: IML Density Inversion (overall profile) (8192)'
+  QUALITY_COMMENTS = 'QUALITY CODES'
+  QUALITY_COMMENTS = '0: Value has not been quality controlled'
+  QUALITY_COMMENTS = '1: Value seems to be correct'
+  QUALITY_COMMENTS = '2: Value appears inconsistent with other values'
+  QUALITY_COMMENTS = '3: Value seems doubtful'
+  QUALITY_COMMENTS = '4: Value seems erroneous'
+  QUALITY_COMMENTS = '5: Value was modified'
+  QUALITY_COMMENTS = '9: Value is missing'
+  QUALITY_COMMENTS = 'QCFF CHANNEL'
+  QUALITY_COMMENTS = 'The QCFF flag allows one to determine from which test(s) the quality flag(s) originate'
+  QUALITY_COMMENTS = 'It only applies to the stage 2 quality control tests.'
+  QUALITY_COMMENTS = 'Each test in this step is associated with a number 2x, where x is a whole positive number.'
+  QUALITY_COMMENTS = 'Before running the quality control, a QCFF value of 0 is attributed to each line of data.'
+  QUALITY_COMMENTS = 'When a test fails, the value of 2x that is associated with that test is added to the QCFF.'
+  QUALITY_COMMENTS = 'In this way one can easily identify which tests failed by analyzing the QCFF value.'
+  QUALITY_COMMENTS = 'If the QC flag of a record is modified by hand, a value of 1 is added to the QCFF.'
+  QUALITY_COMMENTS = 'QUALITY CONTROL TEST RESULTS'
+  QUALITY_COMMENTS = 'Test 2.1 Global Impossible Parameter Values -> ok'
+  QUALITY_COMMENTS = 'Test 2.2 Regional Impossible Parameter Values -> ok'
+  QUALITY_COMMENTS = 'Test 2.3 Increasing Depth -> ok'
+  QUALITY_COMMENTS = 'Test 2.4 Profile Envelope -> ok'
+  QUALITY_COMMENTS = 'Test 2.5 Constant Profile -> ok'
+  QUALITY_COMMENTS = 'Test 2.6 Freezing Point -> ok'
+  QUALITY_COMMENTS = 'Test 2.7 Spike in Temperature and Salinity (one point) -> ok'
+  QUALITY_COMMENTS = 'Test 2.8 Top and Bottom Spike in Temperature and Salinity (one point) -> ok'
+  QUALITY_COMMENTS = 'Test 2.9 Gradient (point to point) -> ok'
+  QUALITY_COMMENTS = 'Test 2.10 Density Inversion (point to point) -> ok (SIGP_01)'
+  QUALITY_COMMENTS = 'Test 2.11 Spike (one point or more) (suplementary test) -> ok'
+  QUALITY_COMMENTS = 'Test 2.12 Density Inversion (overall profile) -> ok (SIGP_01)'
+INSTRUMENT_HEADER
+  INST_TYPE = 'Sea-Bird'
+  MODEL = 'SBE25'
+  SERIAL_NUMBER = '0250304'
+  DESCRIPTION = 'C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\CTDDATA\24669001.hex C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\BCD2024669_Events_001_to_004_Corrected.XMLCON'
+HISTORY_HEADER
+  CREATION_DATE = '27-JAN-2025 12:24:04.00'
+  PROCESS = '* Sea-Bird SBE25 Data File:'
+  PROCESS = '* FileName = C:\Users\COERS\Desktop\CTD DOWNLOAD\2021\22Feb24P000.hex'
+  PROCESS = '* Software Version 1.59'
+  PROCESS = '* Temperature SN = 4125'
+  PROCESS = '* Conductivity SN = 2554'
+  PROCESS = '* System UpLoad Time = Feb 27 2024 11:20:21'
+  PROCESS = '* ds'
+  PROCESS = '* SBE 25 CTD  V 4.0b SN 0304   02/27/24  11:21:09.298'
+  PROCESS = '* external pressure sensor, range = 1000 psia,  tcval = 641'
+  PROCESS = '* xtal = 9437418   clk = 32767.934   vmain = 12.2   iop = 181   vlith = 5.3'
+  PROCESS = '* ncasts = 3   samples = 28206   free = 37083   lwait = 0 msec'
+  PROCESS = '*'
+  PROCESS = '* CTD configuration:'
+  PROCESS = '* number of scans averaged = 1,  data stored at 8 scans per second'
+  PROCESS = '* real time data transmitted at 1 scans per second'
+  PROCESS = '* minimum conductivity frequency for pump turn on = 3050'
+  PROCESS = '* pump delay = 45 seconds'
+  PROCESS = '*'
+  PROCESS = '* battery type = ALKALINE'
+  PROCESS = '*'
+  PROCESS = '* 5 external voltages sampled'
+  PROCESS = '* stored voltage # 0 = external voltage 0'
+  PROCESS = '* stored voltage # 1 = external voltage 1'
+  PROCESS = '* stored voltage # 2 = external voltage 4'
+  PROCESS = '* stored voltage # 3 = external voltage 5'
+  PROCESS = '* stored voltage # 4 = external voltage 6'
+  PROCESS = '*'
+  PROCESS = ''
+  PROCESS = ''
+  PROCESS = '* S>'
+  PROCESS = '* dh'
+  PROCESS = '* cast 0  02/22 13:34:51  smpls 0 to 19911  nv = 5  avg = 1  stp = switch of'
+  PROCESS = ''
+  PROCESS = '* S>'
+  PROCESS = '** Ship: Hartford Hybrid'
+  PROCESS = '** Cruise: BCD2024669'
+  PROCESS = '** Station: 001'
+  PROCESS = '** Cast: 01'
+  PROCESS = '** Latitude: N 44 57.025'
+  PROCESS = '** Longitude: W 066 50.86'
+  PROCESS = '** Sounding: 90'
+  PROCESS = '** Event_Comments: First occupation aboard the Hartland Hybrid. "Pump plugs not removed from CTD"'
+  PROCESS = '** Instrument_Serial_Number: 25-0304'
+  PROCESS = '# nquan = 15'
+  PROCESS = '# nvalues = 181'
+  PROCESS = '# units = specified'
+  PROCESS = '# name 0 = scan: Scan Count'
+  PROCESS = '# name 1 = timeS: Time, Elapsed [seconds]'
+  PROCESS = '# name 2 = prSM: Pressure, Strain Gauge [db]'
+  PROCESS = '# name 3 = t090C: Temperature [ITS-90, deg C]'
+  PROCESS = '# name 4 = c0S/m: Conductivity [S/m]'
+  PROCESS = '# name 5 = sbeox0V: Oxygen raw, SBE 43 [V]'
+  PROCESS = '# name 6 = obs: OBS, Backscatterance (D & A) [NTU]'
+  PROCESS = '# name 7 = xmiss: Beam Transmission, Chelsea/Seatech [%]'
+  PROCESS = '# name 8 = wetStar: Fluorescence, WET Labs WETstar [mg/m^3]'
+  PROCESS = '# name 9 = par: PAR/Irradiance, Biospherical/Licor'
+  PROCESS = '# name 10 = sal00: Salinity, Practical [PSU]'
+  PROCESS = '# name 11 = potemp090C: Potential Temperature [ITS-90, deg C]'
+  PROCESS = '# name 12 = sigma-�00: Density [sigma-theta, kg/m^3]'
+  PROCESS = '# name 13 = sbeox0ML/L: Oxygen, SBE 43 [ml/l], WS = 2'
+  PROCESS = '# name 14 = flag: flag'
+  PROCESS = '# span 0 =       3157,       5678'
+  PROCESS = '# span 1 =    394.554,    709.627'
+  PROCESS = '# span 2 =      2.000,     92.000'
+  PROCESS = '# span 3 =     3.6626,     4.2685'
+  PROCESS = '# span 4 =   2.923626,   2.971713'
+  PROCESS = '# span 5 =     1.6751,     1.9081'
+  PROCESS = '# span 6 =     1.9734,     2.7621'
+  PROCESS = '# span 7 =    65.6386,    83.2160'
+  PROCESS = '# span 8 =     0.0017,     0.4110'
+  PROCESS = '# span 9 = 1.6531e-03, 3.8402e+02'
+  PROCESS = '# span 10 =    31.1797,    31.4705'
+  PROCESS = '# span 11 =     3.6617,     4.2624'
+  PROCESS = '# span 12 =    24.7529,    25.0106'
+  PROCESS = '# span 13 =     4.2693,     5.1308'
+  PROCESS = '# span 14 = 0.0000e+00, 0.0000e+00'
+  PROCESS = '# interval = decibars: 0.5'
+  PROCESS = '# start_time = Feb 22 2024 13:34:51 [Instrument's time stamp, header]'
+  PROCESS = '# bad_flag = -9.990e-29'
+  PROCESS = '# <Sensors count="8" >'
+  PROCESS = '#   <sensor Channel="1" >'
+  PROCESS = '#     <!-- Frequency 0, Temperature -->'
+  PROCESS = '#     <TemperatureSensor SensorID="55" >'
+  PROCESS = '#       <SerialNumber>4125</SerialNumber>'
+  PROCESS = '#       <CalibrationDate>06-Jan-21</CalibrationDate>'
+  PROCESS = '#       <!-- t0pcor = -2.0600e-007 specified on DatCnv command line -->'
+  PROCESS = '#       <UseG_J>1</UseG_J>'
+  PROCESS = '#       <A>0.00000000e+000</A>'
+  PROCESS = '#       <B>0.00000000e+000</B>'
+  PROCESS = '#       <C>0.00000000e+000</C>'
+  PROCESS = '#       <D>0.00000000e+000</D>'
+  PROCESS = '#       <F0_Old>0.000</F0_Old>'
+  PROCESS = '#       <G>4.38973213e-003</G>'
+  PROCESS = '#       <H>6.46519545e-004</H>'
+  PROCESS = '#       <I>2.25181580e-005</I>'
+  PROCESS = '#       <J>1.92978095e-006</J>'
+  PROCESS = '#       <F0>1000.000</F0>'
+  PROCESS = '#       <Slope>1.00000000</Slope>'
+  PROCESS = '#       <Offset>0.0000</Offset>'
+  PROCESS = '#     </TemperatureSensor>'
+  PROCESS = '#   </sensor>'
+  PROCESS = '#   <sensor Channel="2" >'
+  PROCESS = '#     <!-- Frequency 1, Conductivity -->'
+  PROCESS = '#     <ConductivitySensor SensorID="3" >'
+  PROCESS = '#       <SerialNumber>2554</SerialNumber>'
+  PROCESS = '#       <CalibrationDate>12-Jan-21</CalibrationDate>'
+  PROCESS = '#       <UseG_J>1</UseG_J>'
+  PROCESS = '#       <!-- Cell const and series R are applicable only for wide range sensors. -->'
+  PROCESS = '#       <SeriesR>0.0000</SeriesR>'
+  PROCESS = '#       <CellConst>2000.0000</CellConst>'
+  PROCESS = '#       <ConductivityType>0</ConductivityType>'
+  PROCESS = '#       <Coefficients equation="0" >'
+  PROCESS = '#         <A>0.00000000e+000</A>'
+  PROCESS = '#         <B>0.00000000e+000</B>'
+  PROCESS = '#         <C>0.00000000e+000</C>'
+  PROCESS = '#         <D>0.00000000e+000</D>'
+  PROCESS = '#         <M>0.0</M>'
+  PROCESS = '#         <CPcor>-9.57000000e-008</CPcor>'
+  PROCESS = '#       </Coefficients>'
+  PROCESS = '#       <Coefficients equation="1" >'
+  PROCESS = '#         <G>-1.06906523e+001</G>'
+  PROCESS = '#         <H>1.64839363e+000</H>'
+  PROCESS = '#         <I>-2.63774840e-003</I>'
+  PROCESS = '#         <J>3.45255327e-004</J>'
+  PROCESS = '#         <CPcor>-9.57000000e-008</CPcor>'
+  PROCESS = '#         <CTcor>3.2500e-006</CTcor>'
+  PROCESS = '#         <!-- WBOTC not applicable unless ConductivityType = 1. -->'
+  PROCESS = '#         <WBOTC>0.00000000e+000</WBOTC>'
+  PROCESS = '#       </Coefficients>'
+  PROCESS = '#       <Slope>1.01310300</Slope>'
+  PROCESS = '#       <Offset>-0.03783</Offset>'
+  PROCESS = '#     </ConductivitySensor>'
+  PROCESS = '#   </sensor>'
+  PROCESS = '#   <sensor Channel="3" >'
+  PROCESS = '#     <!-- Pressure voltage, Pressure, Strain Gauge -->'
+  PROCESS = '#     <PressureSensor SensorID="49" >'
+  PROCESS = '#       <SerialNumber>0463</SerialNumber>'
+  PROCESS = '#       <CalibrationDate>03-Feb-21</CalibrationDate>'
+  PROCESS = '#       <A0>6.195387e+002</A0>'
+  PROCESS = '#       <A1>-1.730689e-001</A1>'
+  PROCESS = '#       <A2>6.385340e-008</A2>'
+  PROCESS = '#       <Offset>0.00000</Offset>'
+  PROCESS = '#     </PressureSensor>'
+  PROCESS = '#   </sensor>'
+  PROCESS = '#   <sensor Channel="4" >'
+  PROCESS = '#     <!-- A/D voltage 0, Oxygen, SBE 43 -->'
+  PROCESS = '#     <OxygenSensor SensorID="38" >'
+  PROCESS = '#       <SerialNumber>4068</SerialNumber>'
+  PROCESS = '#       <CalibrationDate>25-Mar-23</CalibrationDate>'
+  PROCESS = '#       <Use2007Equation>1</Use2007Equation>'
+  PROCESS = '#       <CalibrationCoefficients equation="0" >'
+  PROCESS = '#         <!-- Coefficients for Owens-Millard equation. -->'
+  PROCESS = '#         <Boc>0.0000</Boc>'
+  PROCESS = '#         <Soc>0.0000e+000</Soc>'
+  PROCESS = '#         <offset>0.0000</offset>'
+  PROCESS = '#         <Pcor>0.00e+000</Pcor>'
+  PROCESS = '#         <Tcor>0.0000</Tcor>'
+  PROCESS = '#         <Tau>0.0</Tau>'
+  PROCESS = '#       </CalibrationCoefficients>'
+  PROCESS = '#       <CalibrationCoefficients equation="1" >'
+  PROCESS = '#         <!-- Coefficients for Sea-Bird equation - SBE calibration in 2007 and later. -->'
+  PROCESS = '#         <Soc>4.8929e-001</Soc>'
+  PROCESS = '#         <offset>-0.4933</offset>'
+  PROCESS = '#         <A>-3.9233e-003</A>'
+  PROCESS = '#         <B> 1.4450e-004</B>'
+  PROCESS = '#         <C>-2.2610e-006</C>'
+  PROCESS = '#         <D0> 2.5826e+000</D0>'
+  PROCESS = '#         <D1> 1.92634e-004</D1>'
+  PROCESS = '#         <D2>-4.64803e-002</D2>'
+  PROCESS = '#         <E> 3.6000e-002</E>'
+  PROCESS = '#         <Tau20> 1.2000</Tau20>'
+  PROCESS = '#         <H1>-3.3000e-002</H1>'
+  PROCESS = '#         <H2> 5.0000e+003</H2>'
+  PROCESS = '#         <H3> 1.4500e+003</H3>'
+  PROCESS = '#       </CalibrationCoefficients>'
+  PROCESS = '#     </OxygenSensor>'
+  PROCESS = '#   </sensor>'
+  PROCESS = '#   <sensor Channel="5" >'
+  PROCESS = '#     <!-- A/D voltage 1, OBS, Backscatterance (D & A) -->'
+  PROCESS = '#     <OBS_DA_3BackscatteranceSensor SensorID="28" >'
+  PROCESS = '#       <SerialNumber>1709</SerialNumber>'
+  PROCESS = '#       <CalibrationDate>15-Mar-01</CalibrationDate>'
+  PROCESS = '#       <Gain>400.00</Gain>'
+  PROCESS = '#       <Offset>0.000</Offset>'
+  PROCESS = '#     </OBS_DA_3BackscatteranceSensor>'
+  PROCESS = '#   </sensor>'
+  PROCESS = '#   <sensor Channel="6" >'
+  PROCESS = '#     <!-- A/D voltage 2, Transmissometer, Chelsea/Seatech -->'
+  PROCESS = '#     <TransChelseaSeatechWetlabCStarSensor SensorID="59" >'
+  PROCESS = '#       <SerialNumber>CST-366PR</SerialNumber>'
+  PROCESS = '#       <CalibrationDate>27-Jan-21</CalibrationDate>'
+  PROCESS = '#       <M>21.8730</M>'
+  PROCESS = '#       <B>-1.2470</B>'
+  PROCESS = '#       <PathLength>0.250</PathLength>'
+  PROCESS = '#     </TransChelseaSeatechWetlabCStarSensor>'
+  PROCESS = '#   </sensor>'
+  PROCESS = '#   <sensor Channel="7" >'
+  PROCESS = '#     <!-- A/D voltage 3, Fluorometer, WET Labs WETstar -->'
+  PROCESS = '#     <FluoroWetlabWetstarSensor SensorID="21" >'
+  PROCESS = '#       <SerialNumber>WS3S-1382</SerialNumber>'
+  PROCESS = '#       <CalibrationDate>14/09/2010</CalibrationDate>'
+  PROCESS = '#       <ScaleFactor>15.000</ScaleFactor>'
+  PROCESS = '#       <!-- Blank output -->'
+  PROCESS = '#       <Vblank>0.078</Vblank>'
+  PROCESS = '#     </FluoroWetlabWetstarSensor>'
+  PROCESS = '#   </sensor>'
+  PROCESS = '#   <sensor Channel="8" >'
+  PROCESS = '#     <!-- A/D voltage 4, PAR/Irradiance, Biospherical/Licor -->'
+  PROCESS = '#     <PAR_BiosphericalLicorChelseaSensor SensorID="42" >'
+  PROCESS = '#       <SerialNumber>2955</SerialNumber>'
+  PROCESS = '#       <CalibrationDate>19-Jan-2021</CalibrationDate>'
+  PROCESS = '#       <M>-0.76230000</M>'
+  PROCESS = '#       <B>-3.49600000</B>'
+  PROCESS = '#       <CalibrationConstant>4.33000000</CalibrationConstant>'
+  PROCESS = '#       <Multiplier>1.00000000</Multiplier>'
+  PROCESS = '#       <Offset>0.00000000</Offset>'
+  PROCESS = '#     </PAR_BiosphericalLicorChelseaSensor>'
+  PROCESS = '#   </sensor>'
+  PROCESS = '# </Sensors>'
+  PROCESS = '# datcnv_date = Jan 27 2025 12:23:47, 7.26.7.129 [datcnv_vars = 10]'
+  PROCESS = '# datcnv_in = C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\CTDDATA\24669001.hex C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\BCD2024669_Events_001_to_004_Corrected.XMLCON'
+  PROCESS = '# datcnv_skipover = 0'
+  PROCESS = '# datcnv_ox_hysteresis_correction = yes'
+  PROCESS = '# wildedit_date = Jan 27 2025 12:23:49, 7.26.7.129'
+  PROCESS = '# wildedit_in = C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\ctddata\24669001.cnv'
+  PROCESS = '# wildedit_pass1_nstd = 2.0'
+  PROCESS = '# wildedit_pass2_nstd = 20.0'
+  PROCESS = '# wildedit_pass2_mindelta = 0.000e+000'
+  PROCESS = '# wildedit_npoint = 100'
+  PROCESS = '# wildedit_vars = prSM t090C c0S/m obs xmiss wetStar par'
+  PROCESS = '# wildedit_excl_bad_scans = yes'
+  PROCESS = '# filter_date = Jan 27 2025 12:23:50, 7.26.7.129'
+  PROCESS = '# filter_in = C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\ctddata\24669001.cnv'
+  PROCESS = '# filter_low_pass_tc_A = 0.500'
+  PROCESS = '# filter_low_pass_tc_B = 0.100'
+  PROCESS = '# filter_low_pass_A_vars = prSM'
+  PROCESS = '# filter_low_pass_B_vars = t090C c0S/m'
+  PROCESS = '# alignctd_date = Jan 27 2025 12:23:50, 7.26.7.129'
+  PROCESS = '# alignctd_in = C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\ctddata\24669001.cnv'
+  PROCESS = '# alignctd_adv = c0S/m 0.100, sbeox0V 3.500'
+  PROCESS = '# celltm_date = Jan 27 2025 12:23:51, 7.26.7.129'
+  PROCESS = '# celltm_in = C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\ctddata\24669001.cnv'
+  PROCESS = '# celltm_alpha = 0.0400, 0.0000'
+  PROCESS = '# celltm_tau = 8.0000, 0.0000'
+  PROCESS = '# celltm_temp_sensor_use_for_cond = primary,'
+  PROCESS = '# loopedit_date = Jan 27 2025 12:23:51, 7.26.7.129'
+  PROCESS = '# loopedit_in = C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\ctddata\24669001.cnv'
+  PROCESS = '# loopedit_minVelocity = 0.010'
+  PROCESS = '# loopedit_surfaceSoak: minDepth = 5.0, maxDepth = 20, useDeckPress = 1'
+  PROCESS = '# loopedit_excl_bad_scans = yes'
+  PROCESS = '# Derive_date = Jan 27 2025 12:23:52, 7.26.7.129 [derive_vars = 4]'
+  PROCESS = '# Derive_in = C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\ctddata\24669001.cnv C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\BCD2024669_Events_001_to_004_Corrected.XMLCON'
+  PROCESS = '# derive_time_window_docdt = seconds: 2'
+  PROCESS = '# derive_ox_tau_correction = yes'
+  PROCESS = '# binavg_date = Jan 27 2025 12:23:53, 7.26.7.129'
+  PROCESS = '# binavg_in = C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\ctddata\24669001.cnv'
+  PROCESS = '# binavg_bintype = decibars'
+  PROCESS = '# binavg_binsize = 0.5'
+  PROCESS = '# binavg_excl_bad_scans = yes'
+  PROCESS = '# binavg_skipover = 0'
+  PROCESS = '# binavg_omit = 0'
+  PROCESS = '# binavg_min_scans_bin = 1'
+  PROCESS = '# binavg_max_scans_bin = 2147483647'
+  PROCESS = '# binavg_surface_bin = no, min = 0.000, max = 0.000, value = 0.000'
+  PROCESS = '# split_date = Jan 27 2025 12:23:53, 7.26.7.129'
+  PROCESS = '# split_in = C:\DEV\Data\2024\BCD2024669\CTD\DATASHOP_PROCESSING\Step_2_Apply_Calibrations\ctddata\24669001.cnv'
+  PROCESS = '# split_excl_bad_scans = yes'
+  PROCESS = '# file_type = ascii'
+  PROCESS = '*END*'
+HISTORY_HEADER
+  CREATION_DATE = '27-JAN-2025 12:24:04.00'
+  PROCESS = 'SEAODF.exe version 3.5   called from CTDDAP version 6.1'
+  PROCESS = 'During the creation of the ODF file, 0 records flagged bad have been removed.'
+  PROCESS = 'During the creation of the ODF file, [Elapsed Time, seconds] has been converted to 'DD-MON-YYYY HH:MM:SS.ss'. The Event start_date_time is used as the starting point for the calculation.'
+HISTORY_HEADER
+  CREATION_DATE = '27-JAN-2025 15:03:22.91'
+  PROCESS = 'The following edits were completed by Jeff Jackson.'
+  PROCESS = 'Edit Cruise: Field "Organization" has been changed from " " to "DFO SABS".'
+  PROCESS = 'Edit Cruise: Field "Chief_Scientist" has been changed from " " to "FRED PAGE".'
+  PROCESS = 'Edit Cruise: Field "Start_Date" has been changed from "17-NOV-1858 00:00:00.00" to "01-JAN-2024 00:00:00.00".'
+  PROCESS = 'Edit Cruise: Field "End_Date" has been changed from "17-NOV-1858 00:00:00.00" to "31-DEC-2024 23:59:59.00".'
+  PROCESS = 'Edit Cruise: Field "Platform" has been changed from "Hartford Hybrid" to "HARTFORD HYBRID".'
+  PROCESS = 'Edit Instrument: Field "Serial_Number" has been changed from "25-0304" to "0250304".'
+  PROCESS = 'Edit Cruise: Field "Cruise_Name" has been changed from " " to "BAY OF FUNDY (P5 FIXED STATION)".'
+  PROCESS = 'Edit Cruise: Field "Cruise_Description" has been changed from " " to "ATLANTIC ZONE MONITORING PROGRAM (AZMP)".'
+  PROCESS = 'Edit Event: Field "Station_Name" has been changed from " " to "P5".'
+  PROCESS = 'Conductivity sensor (4787) had its "Offset" calibration coefficient changed from its original value [0.0] to [-0.009993].'
+  PROCESS = 'Conductivity sensor (4787) had its "Slope" calibration coefficient changed from its original value [1.0] to [1.003877].'
+  PROCESS = 'Oxygen sensor (3260) did not require calibration.'
+  PROCESS = 'Edit Event: Field "End_Date_Time" has been changed from "17-NOV-1858 00:00:00.00" to "22-FEB-2024 13:46:40.63".'
+  PROCESS = 'Edit Record: Field "Num_History" has been changed from 1 to 3.'
+HISTORY_HEADER
+  CREATION_DATE = '28-JAN-2025 08:27:40.59'
+  PROCESS = 'Quality control of the CTD data contents performed by Jeff Jackson'
+  PROCESS = 'The whole SIGP_01 profile looks bad'
+  PROCESS = 'The whole PSAL_01 profile looks bad'
+  PROCESS = 'The whole CNDC_01 profile looks bad'
+  PROCESS = 'Edit Record: Field "Num_History" has been changed from 3 to 4.'
+HISTORY_HEADER
+  CREATION_DATE = '23-JUN-2025 09:27:53.01'
+  PROCESS = 'Jeff Jackson made the following modifications to this file:'
+  PROCESS = 'In Cruise Header field START_DATE was changed from "01-JAN-2024 00:00:00.00" to "01-APR-2022 00:00:00.00"'
+  PROCESS = 'In Cruise Header field END_DATE was changed from "31-DEC-2024 23:59:59.00" to "31-OCT-2022 00:00:00.00"'
+  PROCESS = 'In Cruise Header field PLATFORM was changed from "HARTFORD HYBRID" to "LATALANTE"'
+  PROCESS = 'In Event Header field STATION_NAME was changed from "P5" to "AR7W_15"'
+PARAMETER_HEADER
+  TYPE = 'SYTM'
+  NAME = 'SYTM_01'
+  UNITS = 'UTC'
+  CODE = 'SYTM_01'
+  NULL_VALUE = '17-NOV-1858 00:00:00.00'
+  PRINT_FIELD_WIDTH = 27
+  PRINT_DECIMAL_PLACES = 2
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = '22-FEB-2024 13:41:25.00'
+  MAXIMUM_VALUE = '22-FEB-2024 13:46:40.00'
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'INTE'
+  NAME = 'CNTR_01'
+  UNITS = 'none'
+  CODE = 'CNTR_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 3157
+  MAXIMUM_VALUE = 5678
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: CNTR_01'
+  UNITS = 'none'
+  CODE = 'QCNTR_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 1
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'PRES_01'
+  UNITS = 'db'
+  CODE = 'PRES_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 10
+  PRINT_DECIMAL_PLACES = 3
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 2.0
+  MAXIMUM_VALUE = 92.0
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: PRES_01'
+  UNITS = 'none'
+  CODE = 'QPRES_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 1
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'TE90_01'
+  UNITS = 'ITS-90, deg C'
+  CODE = 'TE90_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 4
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 3.6626
+  MAXIMUM_VALUE = 4.2685
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: TE90_01'
+  UNITS = 'none'
+  CODE = 'QTE90_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 1
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'CNDC_01'
+  UNITS = 'S/m'
+  CODE = 'CNDC_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 6
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 2.923626
+  MAXIMUM_VALUE = 2.971713
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: CNDC_01'
+  UNITS = 'none'
+  CODE = 'QCNDC_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 4
+  MAXIMUM_VALUE = 4
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'OXYV_01'
+  UNITS = 'V'
+  CODE = 'OXYV_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 4
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1.6751
+  MAXIMUM_VALUE = 1.9081
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: OXYV_01'
+  UNITS = 'none'
+  CODE = 'QOXYV_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 1
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'OBS_01'
+  UNITS = 'NTU'
+  CODE = 'TURB_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 4
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1.9734
+  MAXIMUM_VALUE = 2.7621
+  NUMBER_VALID = 54
+  NUMBER_NULL = 127
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: TURB_01'
+  UNITS = 'none'
+  CODE = 'QTURB_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 9
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'xmiss'
+  UNITS = '%'
+  CODE = 'UNKN_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 6
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 65.6386
+  MAXIMUM_VALUE = 83.216
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: UNKN_01'
+  UNITS = 'none'
+  CODE = 'QUNKN_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 1
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'FWETLABS_01'
+  UNITS = 'mg/m^3'
+  CODE = 'FLOR_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 4
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 0.0017
+  MAXIMUM_VALUE = 0.411
+  NUMBER_VALID = 111
+  NUMBER_NULL = 70
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: FLOR_01'
+  UNITS = 'none'
+  CODE = 'QFLOR_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 9
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'PSAR_01'
+  UNITS = 'umol photons/m^2/sec'
+  CODE = 'PSAR_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 5
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 0.00165
+  MAXIMUM_VALUE = 384.02
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: PSAR_01'
+  UNITS = 'none'
+  CODE = 'QPSAR_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 1
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'PSAL_01'
+  UNITS = 'PSU'
+  CODE = 'PSAL_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 4
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 31.1797
+  MAXIMUM_VALUE = 31.4705
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: PSAL_01'
+  UNITS = 'none'
+  CODE = 'QPSAL_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 4
+  MAXIMUM_VALUE = 4
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'POTM_01'
+  UNITS = 'ITS-90, deg C'
+  CODE = 'POTM_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 4
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 3.6617
+  MAXIMUM_VALUE = 4.2624
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: POTM_01'
+  UNITS = 'none'
+  CODE = 'QPOTM_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 1
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'SIGP_01'
+  UNITS = 'sigma-theta, kg/m^3'
+  CODE = 'SIGP_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 4
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 24.7529
+  MAXIMUM_VALUE = 25.0106
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: SIGP_01'
+  UNITS = 'none'
+  CODE = 'QSIGP_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 4
+  MAXIMUM_VALUE = 4
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'DOXY_01'
+  UNITS = 'ml/l'
+  CODE = 'DOXY_01'
+  NULL_VALUE = -99.00000000
+  PRINT_FIELD_WIDTH = 11
+  PRINT_DECIMAL_PLACES = 4
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 4.2693
+  MAXIMUM_VALUE = 5.1308
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'SING'
+  NAME = 'Quality Flag for Parameter: DOXY_01'
+  UNITS = 'none'
+  CODE = 'QDOXY_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 2
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = -99.0
+  MAGNETIC_VARIATION = -99.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 1
+  MAXIMUM_VALUE = 1
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+PARAMETER_HEADER
+  TYPE = 'DOUB'
+  NAME = 'Quality flag: QCFF'
+  UNITS = 'none'
+  CODE = 'QCFF_01'
+  NULL_VALUE = -99.0
+  PRINT_FIELD_WIDTH = 5
+  PRINT_DECIMAL_PLACES = 0
+  ANGLE_OF_SECTION = 0.0
+  MAGNETIC_VARIATION = 0.0
+  DEPTH = 0.0
+  MINIMUM_VALUE = 0.0
+  MAXIMUM_VALUE = 0.0
+  NUMBER_VALID = 181
+  NUMBER_NULL = 0
+RECORD_HEADER
+  NUM_CALIBRATION = 0
+  NUM_HISTORY = 5
+  NUM_SWING = 0
+  NUM_PARAM = 28
+  NUM_CYCLE = 181
+-- DATA --
+SYTM_01,CNTR_01,QCNTR_01,PRES_01,QPRES_01,TE90_01,QTE90_01,CNDC_01,QCNDC_01,OXYV_01,QOXYV_01,TURB_01,QTURB_01,UNKN_01,QUNKN_01,FLOR_01,QFLOR_01,PSAR_01,QPSAR_01,PSAL_01,QPSAL_01,POTM_01,QPOTM_01,SIGP_01,QSIGP_01,DOXY_01,QDOXY_01,QCFF_01
+'22-FEB-2024 13:41:25.00',3157.0,1,2.0,1,3.6703,1,2.923626,4,1.7626,1,2.2593,1,65.6386,1,-99.0,9,384.02,1,31.3903,4,3.6702,1,24.9465,4,4.5822,1,0
+'22-FEB-2024 13:41:26.00',3168.0,1,2.5,1,3.6683,1,2.926678,4,1.7589,1,2.3917,1,82.4236,1,-99.0,9,169.17,1,31.4283,4,3.6681,1,24.9768,4,4.5528,1,0
+'22-FEB-2024 13:41:28.00',3180.0,1,3.0,1,3.6677,1,2.92932,4,1.7587,1,2.4045,1,82.7743,1,-99.0,9,156.86,1,31.4599,4,3.6675,1,25.0021,4,4.6037,1,0
+'22-FEB-2024 13:41:29.00',3191.0,1,3.5,1,3.6696,1,2.929255,4,1.7673,1,1.9734,1,82.8752,1,-99.0,9,133.02,1,31.457,4,3.6694,1,24.9996,4,4.698,1,0
+'22-FEB-2024 13:41:31.00',3202.0,1,4.0,1,3.6707,1,2.929463,4,1.7856,1,2.233,1,82.8996,1,0.0022,1,109.7,1,31.4582,4,3.6705,1,25.0004,4,4.8109,1,0
+'22-FEB-2024 13:41:32.00',3213.0,1,4.5,1,3.6689,1,2.929996,4,1.8081,1,2.2946,1,82.8592,1,0.0148,1,90.8,1,31.4659,4,3.6686,1,25.0067,4,4.9124,1,0
+'22-FEB-2024 13:41:33.00',3225.0,1,5.0,1,3.6661,1,2.930175,4,1.8321,1,2.2159,1,82.8427,1,0.005,1,79.859,1,31.4705,4,3.6658,1,25.0106,4,4.9973,1,0
+'22-FEB-2024 13:41:35.00',3234.0,1,5.5,1,3.6651,1,2.929888,4,1.8514,1,2.1983,1,82.853,1,0.0041,1,70.228,1,31.4678,4,3.6648,1,25.0086,4,5.0511,1,0
+'22-FEB-2024 13:41:36.00',3245.0,1,6.0,1,3.6652,1,2.929303,4,1.8705,1,2.0839,1,82.8358,1,0.0056,1,62.053,1,31.4606,4,3.6648,1,25.0028,4,5.0961,1,0
+'22-FEB-2024 13:41:37.00',3257.0,1,6.5,1,3.6652,1,2.929011,4,1.8857,1,2.2531,1,82.8041,1,0.005,1,53.981,1,31.4569,4,3.6648,1,24.9999,4,5.1183,1,0
+'22-FEB-2024 13:41:39.00',3268.0,1,7.0,1,3.6649,1,2.928848,4,1.8958,1,2.2793,1,82.7431,1,0.0083,1,47.639,1,31.4549,4,3.6645,1,24.9983,4,5.1284,1,0
+'22-FEB-2024 13:41:40.00',3279.0,1,7.5,1,3.6645,1,2.928612,4,1.9019,1,2.3015,1,82.6732,1,0.0037,1,41.827,1,31.4523,4,3.664,1,24.9963,4,5.1308,1,0
+'22-FEB-2024 13:41:42.00',3291.0,1,8.0,1,3.6632,1,2.92825,4,1.9058,1,2.1739,1,82.6953,1,0.0042,1,36.422,1,31.449,4,3.6627,1,24.9938,4,5.1245,1,0
+'22-FEB-2024 13:41:43.00',3301.0,1,8.5,1,3.6626,1,2.927848,4,1.9067,1,2.197,1,82.7687,1,0.0037,1,31.586,1,31.4446,4,3.6621,1,24.9904,4,5.1184,1,0
+'22-FEB-2024 13:41:45.00',3314.0,1,9.0,1,3.6633,1,2.92745,4,1.9081,1,2.1746,1,82.7986,1,0.0039,1,27.869,1,31.4389,4,3.6628,1,24.9858,4,5.1306,1,0
+'22-FEB-2024 13:41:46.00',3323.0,1,9.5,1,3.6638,1,2.927209,4,1.9077,1,2.2938,1,82.7498,1,0.004,1,23.897,1,31.4353,4,3.6632,1,24.9828,4,5.1038,1,0
+'22-FEB-2024 13:41:47.00',3335.0,1,10.0,1,3.6627,1,2.926946,4,1.9042,1,2.2486,1,82.7875,1,0.007,1,20.79,1,31.433,4,3.6621,1,24.9811,4,5.0899,1,0
+'22-FEB-2024 13:41:49.00',3349.0,1,10.5,1,3.6632,1,2.926704,4,1.9016,1,2.4601,1,82.8851,1,0.0017,1,17.928,1,31.4294,4,3.6626,1,24.9782,4,5.0836,1,0
+'22-FEB-2024 13:41:50.00',3359.0,1,11.0,1,3.6631,1,2.926618,4,1.8989,1,2.3763,1,82.7683,1,0.0958,1,14.832,1,31.4282,4,3.6624,1,24.9773,4,5.0677,1,0
+'22-FEB-2024 13:41:52.00',3372.0,1,11.5,1,3.6634,1,2.926429,4,1.8954,1,2.3934,1,82.757,1,0.411,1,12.8,1,31.4255,4,3.6627,1,24.9751,4,5.0601,1,0
+'22-FEB-2024 13:41:53.00',3382.0,1,12.0,1,3.6635,1,2.926327,4,1.8931,1,2.2146,1,82.7363,1,0.392,1,10.924,1,31.4239,4,3.6628,1,24.9738,4,5.0449,1,0
+'22-FEB-2024 13:41:54.00',3390.0,1,12.5,1,3.6645,1,2.926216,4,1.8894,1,2.3024,1,82.7704,1,0.4088,1,8.6616,1,31.4214,4,3.6637,1,24.9717,4,5.0257,1,0
+'22-FEB-2024 13:41:56.00',3404.0,1,13.0,1,3.6654,1,2.925991,4,1.8841,1,2.14,1,82.7285,1,0.3774,1,7.5993,1,31.4176,4,3.6646,1,24.9686,4,5.0034,1,0
+'22-FEB-2024 13:41:57.00',3412.0,1,13.5,1,3.6655,1,2.925853,4,1.88,1,2.1627,1,82.6834,1,0.3664,1,5.6156,1,31.4155,4,3.6647,1,24.967,4,4.9846,1,0
+'22-FEB-2024 13:41:58.00',3423.0,1,14.0,1,3.6656,1,2.925696,4,1.874,1,2.182,1,82.675,1,0.3298,1,4.4955,1,31.4133,4,3.6648,1,24.9652,4,4.9643,1,0
+'22-FEB-2024 13:42:00.00',3435.0,1,14.5,1,3.6658,1,2.925534,4,1.8685,1,2.1985,1,82.7252,1,0.3103,1,3.1993,1,31.411,4,3.6649,1,24.9633,4,4.94,1,0
+'22-FEB-2024 13:42:01.00',3443.0,1,15.0,1,3.6656,1,2.92547,4,1.8636,1,2.257,1,82.7438,1,0.2925,1,1.9717,1,31.4102,4,3.6647,1,24.9628,4,4.9234,1,0
+'22-FEB-2024 13:42:03.00',3457.0,1,15.5,1,3.665,1,2.925353,4,1.8559,1,2.3282,1,82.6722,1,0.2609,1,1.3588,1,31.4091,4,3.6641,1,24.9619,4,4.8967,1,0
+'22-FEB-2024 13:42:04.00',3466.0,1,16.0,1,3.6649,1,2.925292,4,1.8512,1,2.3096,1,82.6108,1,0.259,1,0.34248,1,31.4083,4,3.6639,1,24.9613,4,4.8795,1,0
+'22-FEB-2024 13:42:05.00',3479.0,1,16.5,1,3.6649,1,2.92522,4,1.8444,1,2.3088,1,82.6572,1,0.2409,1,0.03387,1,31.4071,4,3.6639,1,24.9604,4,4.8573,1,0
+'22-FEB-2024 13:42:06.00',3488.0,1,17.0,1,3.6646,1,2.925145,4,1.8396,1,2.3489,1,82.7199,1,0.239,1,0.0061,1,31.4062,4,3.6636,1,24.9597,4,4.8386,1,0
+'22-FEB-2024 13:42:08.00',3500.0,1,17.5,1,3.6643,1,2.925048,4,1.8335,1,2.3611,1,82.6369,1,0.2267,1,0.00165,1,31.4052,4,3.6633,1,24.9589,4,4.8208,1,0
+'22-FEB-2024 13:42:09.00',3510.0,1,18.0,1,3.6643,1,2.924996,4,1.8283,1,-99.0,9,82.729,1,0.2205,1,0.00165,1,31.4043,4,3.6632,1,24.9582,4,4.8005,1,0
+'22-FEB-2024 13:42:10.00',3521.0,1,18.5,1,3.6658,1,2.924925,4,1.8229,1,-99.0,9,82.678,1,0.2117,1,0.00165,1,31.4017,4,3.6647,1,24.956,4,4.7844,1,0
+'22-FEB-2024 13:42:12.00',3533.0,1,19.0,1,3.6677,1,2.924857,4,1.8174,1,-99.0,9,82.7503,1,0.2032,1,0.00165,1,31.3989,4,3.6665,1,24.9536,4,4.7657,1,0
+'22-FEB-2024 13:42:13.00',3542.0,1,19.5,1,3.6652,1,2.924836,4,1.8134,1,-99.0,9,82.8428,1,0.2018,1,0.00165,1,31.4007,4,3.6641,1,24.9553,4,4.7526,1,0
+'22-FEB-2024 13:42:15.00',3554.0,1,20.0,1,3.6633,1,2.924802,4,1.8082,1,-99.0,9,82.892,1,0.1934,1,0.00165,1,31.4019,4,3.6621,1,24.9564,4,4.737,1,0
+'22-FEB-2024 13:42:16.00',3565.0,1,20.5,1,3.6629,1,2.924766,4,1.8042,1,-99.0,9,82.8246,1,0.1881,1,0.00165,1,31.4016,4,3.6617,1,24.9562,4,4.7249,1,0
+'22-FEB-2024 13:42:17.00',3575.0,1,21.0,1,3.6633,1,2.924765,4,1.8002,1,-99.0,9,82.72,1,0.1867,1,0.00165,1,31.401,4,3.662,1,24.9557,4,4.7115,1,0
+'22-FEB-2024 13:42:19.00',3587.0,1,21.5,1,3.6639,1,2.924736,4,1.7962,1,-99.0,9,82.7117,1,0.1817,1,0.00165,1,31.3998,4,3.6626,1,24.9547,4,4.7051,1,0
+'22-FEB-2024 13:42:20.00',3597.0,1,22.0,1,3.6654,1,2.924741,4,1.7941,1,-99.0,9,82.7595,1,0.1762,1,0.00165,1,31.3982,4,3.6641,1,24.9533,4,4.7028,1,0
+'22-FEB-2024 13:42:21.00',3608.0,1,22.5,1,3.6668,1,2.924744,4,1.792,1,-99.0,9,82.751,1,0.1701,1,0.00165,1,31.3966,4,3.6654,1,24.9519,4,4.6992,1,0
+'22-FEB-2024 13:42:23.00',3621.0,1,23.0,1,3.6662,1,2.924708,4,1.7909,1,-99.0,9,82.7972,1,0.1668,1,0.00165,1,31.3965,4,3.6648,1,24.9518,4,4.7008,1,0
+'22-FEB-2024 13:42:24.00',3629.0,1,23.5,1,3.6665,1,2.924716,4,1.7903,1,-99.0,9,82.8317,1,0.163,1,0.00165,1,31.396,4,3.6651,1,24.9514,4,4.7021,1,0
+'22-FEB-2024 13:42:25.00',3641.0,1,24.0,1,3.6697,1,2.9247,4,1.7907,1,-99.0,9,82.8087,1,0.1577,1,0.00165,1,31.3925,4,3.6683,1,24.9483,4,4.7102,1,0
+'22-FEB-2024 13:42:27.00',3653.0,1,24.5,1,3.671,1,2.924717,4,1.7917,1,-99.0,9,82.8566,1,0.1523,1,0.00165,1,31.3912,4,3.6694,1,24.9472,4,4.7158,1,0
+'22-FEB-2024 13:42:28.00',3662.0,1,25.0,1,3.6696,1,2.924713,4,1.7924,1,-99.0,9,82.8741,1,0.1488,1,0.00165,1,31.3923,4,3.6681,1,24.9482,4,4.7209,1,0
+'22-FEB-2024 13:42:30.00',3674.0,1,25.5,1,3.6683,1,2.924704,4,1.7943,1,-99.0,9,82.8514,1,0.1501,1,0.00165,1,31.3932,4,3.6668,1,24.949,4,4.7326,1,0
+'22-FEB-2024 13:42:31.00',3685.0,1,26.0,1,3.6672,1,2.924704,4,1.796,1,-99.0,9,82.8816,1,0.1438,1,0.00165,1,31.3939,4,3.6656,1,24.9498,4,4.7372,1,0
+'22-FEB-2024 13:42:32.00',3694.0,1,26.5,1,3.6664,1,2.924707,4,1.7975,1,-99.0,9,82.8761,1,0.1445,1,0.00165,1,31.3945,4,3.6648,1,24.9503,4,4.7445,1,0
+'22-FEB-2024 13:42:34.00',3708.0,1,27.0,1,3.666,1,2.924692,4,1.7999,1,-99.0,9,82.8744,1,0.141,1,0.00165,1,31.3944,4,3.6644,1,24.9502,4,4.7527,1,0
+'22-FEB-2024 13:42:35.00',3716.0,1,27.5,1,3.6658,1,2.924718,4,1.8011,1,-99.0,9,82.7422,1,0.1465,1,0.00165,1,31.3947,4,3.6641,1,24.9505,4,4.7582,1,0
+'22-FEB-2024 13:42:36.00',3728.0,1,28.0,1,3.6661,1,2.924714,4,1.8029,1,-99.0,9,82.7095,1,0.1354,1,0.00165,1,31.3942,4,3.6644,1,24.95,4,4.7651,1,0
+'22-FEB-2024 13:42:38.00',3738.0,1,28.5,1,3.6668,1,2.924737,4,1.8046,1,-99.0,9,82.69,1,0.1417,1,0.00165,1,31.3934,4,3.6651,1,24.9494,4,4.7683,1,0
+'22-FEB-2024 13:42:39.00',3748.0,1,29.0,1,3.6675,1,2.924737,4,1.8058,1,-99.0,9,82.7565,1,0.137,1,0.00165,1,31.3925,4,3.6658,1,24.9486,4,4.7731,1,0
+'22-FEB-2024 13:42:40.00',3760.0,1,29.5,1,3.6682,1,2.924761,4,1.8072,1,-99.0,9,82.8422,1,0.1302,1,0.00165,1,31.3919,4,3.6664,1,24.948,4,4.7797,1,0
+'22-FEB-2024 13:42:42.00',3770.0,1,30.0,1,3.6695,1,2.92478,4,1.8084,1,-99.0,9,82.8705,1,0.1304,1,0.00165,1,31.3906,4,3.6677,1,24.9469,4,4.7763,1,0
+'22-FEB-2024 13:42:43.00',3782.0,1,30.5,1,3.6707,1,2.924806,4,1.8089,1,-99.0,9,82.8488,1,0.1318,1,0.00165,1,31.3895,4,3.6689,1,24.9459,4,4.7814,1,0
+'22-FEB-2024 13:42:44.00',3793.0,1,31.0,1,3.6723,1,2.924822,4,1.8095,1,-99.0,9,82.8398,1,0.1304,1,0.00165,1,31.3879,4,3.6704,1,24.9445,4,4.7788,1,0
+'22-FEB-2024 13:42:46.00',3804.0,1,31.5,1,3.6745,1,2.924855,4,1.8093,1,-99.0,9,82.7538,1,0.1292,1,0.00165,1,31.386,4,3.6726,1,24.9427,4,4.776,1,0
+'22-FEB-2024 13:42:47.00',3815.0,1,32.0,1,3.6773,1,2.924896,4,1.8093,1,-99.0,9,82.7564,1,0.1259,1,0.00165,1,31.3834,4,3.6754,1,24.9405,4,4.7779,1,0
+'22-FEB-2024 13:42:49.00',3826.0,1,32.5,1,3.6798,1,2.924912,4,1.8091,1,-99.0,9,82.7167,1,0.1234,1,0.00165,1,31.3809,4,3.6779,1,24.9383,4,4.7743,1,0
+'22-FEB-2024 13:42:50.00',3838.0,1,33.0,1,3.682,1,2.92497,4,1.8088,1,-99.0,9,82.7394,1,0.1156,1,0.00165,1,31.3793,4,3.6799,1,24.9368,4,4.7767,1,0
+'22-FEB-2024 13:42:51.00',3849.0,1,33.5,1,3.6833,1,2.924988,4,1.8085,1,-99.0,9,82.7014,1,0.1174,1,0.00165,1,31.378,4,3.6813,1,24.9356,4,4.7714,1,0
+'22-FEB-2024 13:42:53.00',3860.0,1,34.0,1,3.6845,1,2.925057,4,1.8084,1,-99.0,9,82.618,1,0.1264,1,0.00165,1,31.3774,4,3.6825,1,24.935,4,4.7793,1,0
+'22-FEB-2024 13:42:54.00',3872.0,1,34.5,1,3.6851,1,2.92509,4,1.8091,1,-99.0,9,82.6462,1,0.1138,1,0.00165,1,31.377,4,3.683,1,24.9347,4,4.7769,1,0
+'22-FEB-2024 13:42:56.00',3882.0,1,35.0,1,3.687,1,2.925168,4,1.8088,1,-99.0,9,82.5689,1,0.1122,1,0.00165,1,31.3758,4,3.6849,1,24.9336,4,4.7735,1,0
+'22-FEB-2024 13:42:57.00',3895.0,1,35.5,1,3.6882,1,2.925199,4,1.8081,1,-99.0,9,82.6275,1,0.1136,1,0.00165,1,31.3748,4,3.6861,1,24.9326,4,4.7686,1,0
+'22-FEB-2024 13:42:58.00',3905.0,1,36.0,1,3.6896,1,2.925245,4,1.807,1,-99.0,9,82.6532,1,-99.0,9,0.00165,1,31.3737,4,3.6874,1,24.9316,4,4.7636,1,0
+'22-FEB-2024 13:43:00.00',3915.0,1,36.5,1,3.6917,1,2.925303,4,1.8063,1,-99.0,9,82.6904,1,-99.0,9,0.00165,1,31.3721,4,3.6895,1,24.9302,4,4.7581,1,0
+'22-FEB-2024 13:43:01.00',3925.0,1,37.0,1,3.6948,1,2.925366,4,1.8048,1,-99.0,9,82.7358,1,-99.0,9,0.00165,1,31.3696,4,3.6926,1,24.9279,4,4.7574,1,0
+'22-FEB-2024 13:43:03.00',3938.0,1,37.5,1,3.6986,1,2.925455,4,1.8044,1,-99.0,9,82.8679,1,-99.0,9,0.00165,1,31.3668,4,3.6963,1,24.9253,4,4.7551,1,0
+'22-FEB-2024 13:43:04.00',3947.0,1,38.0,1,3.7034,1,2.925558,4,1.8035,1,-99.0,9,82.8951,1,-99.0,9,0.00165,1,31.3631,4,3.7011,1,24.922,4,4.7512,1,0
+'22-FEB-2024 13:43:05.00',3959.0,1,38.5,1,3.7054,1,2.925619,4,1.8026,1,-99.0,9,82.8955,1,-99.0,9,0.00165,1,31.3617,4,3.7031,1,24.9207,4,4.7474,1,0
+'22-FEB-2024 13:43:06.00',3968.0,1,39.0,1,3.7074,1,2.925706,4,1.8015,1,-99.0,9,82.9804,1,-99.0,9,0.00165,1,31.3605,4,3.705,1,24.9195,4,4.7416,1,0
+'22-FEB-2024 13:43:07.00',3977.0,1,39.5,1,3.7107,1,2.925795,4,1.8007,1,-99.0,9,83.1028,1,-99.0,9,0.00165,1,31.3582,4,3.7083,1,24.9174,4,4.7414,1,0
+'22-FEB-2024 13:43:09.00',3987.0,1,40.0,1,3.7163,1,2.925886,4,1.7997,1,-99.0,9,83.0298,1,-99.0,9,0.00165,1,31.3536,4,3.7139,1,24.9132,4,4.734,1,0
+'22-FEB-2024 13:43:10.00',3996.0,1,40.5,1,3.7246,1,2.92603,4,1.7989,1,-99.0,9,83.0991,1,-99.0,9,0.00165,1,31.347,4,3.7222,1,24.9073,4,4.7351,1,0
+'22-FEB-2024 13:43:11.00',4007.0,1,41.0,1,3.7337,1,2.926175,4,1.7982,1,-99.0,9,83.064,1,-99.0,9,0.00165,1,31.3397,4,3.7312,1,24.9006,4,4.7336,1,0
+'22-FEB-2024 13:43:12.00',4016.0,1,41.5,1,3.7528,1,2.926359,4,1.7979,1,-99.0,9,83.0183,1,-99.0,9,0.00165,1,31.3233,4,3.7503,1,24.8858,4,4.7256,1,0
+'22-FEB-2024 13:43:14.00',4027.0,1,42.0,1,3.7649,1,2.926511,4,1.7965,1,-99.0,9,83.0609,1,-99.0,9,0.00165,1,31.3132,4,3.7624,1,24.8767,4,4.7218,1,0
+'22-FEB-2024 13:43:15.00',4036.0,1,42.5,1,3.7783,1,2.926699,4,1.7956,1,-99.0,9,83.0774,1,-99.0,9,0.00165,1,31.3024,4,3.7757,1,24.8669,4,4.7182,1,0
+'22-FEB-2024 13:43:16.00',4047.0,1,43.0,1,3.7882,1,2.926872,4,1.7953,1,-99.0,9,83.0343,1,-99.0,9,0.00165,1,31.2947,4,3.7856,1,24.8598,4,4.718,1,0
+'22-FEB-2024 13:43:17.00',4056.0,1,43.5,1,3.8075,1,2.927113,4,1.7948,1,-99.0,9,83.0796,1,-99.0,9,0.00165,1,31.2788,4,3.8048,1,24.8454,4,4.7141,1,0
+'22-FEB-2024 13:43:19.00',4068.0,1,44.0,1,3.819,1,2.927311,4,1.7937,1,-99.0,9,83.0497,1,-99.0,9,0.00165,1,31.2698,4,3.8163,1,24.8372,4,4.7062,1,0
+'22-FEB-2024 13:43:20.00',4077.0,1,44.5,1,3.8319,1,2.92751,4,1.793,1,-99.0,9,83.04,1,-99.0,9,0.00165,1,31.2596,4,3.8292,1,24.8278,4,4.7,1,0
+'22-FEB-2024 13:43:21.00',4086.0,1,45.0,1,3.8443,1,2.927725,4,1.7915,1,-99.0,9,83.0596,1,-99.0,9,0.00165,1,31.2501,4,3.8415,1,24.8191,4,4.6956,1,0
+'22-FEB-2024 13:43:23.00',4099.0,1,45.5,1,3.8532,1,2.927981,4,1.7906,1,-99.0,9,83.0734,1,-99.0,9,0.00165,1,31.2443,4,3.8504,1,24.8137,4,4.6943,1,0
+'22-FEB-2024 13:43:24.00',4107.0,1,46.0,1,3.8655,1,2.928194,4,1.7898,1,-99.0,9,83.1846,1,-99.0,9,0.00165,1,31.2348,4,3.8627,1,24.8051,4,4.6865,1,0
+'22-FEB-2024 13:43:25.00',4118.0,1,46.5,1,3.8716,1,2.92842,4,1.7886,1,-99.0,9,83.1424,1,-99.0,9,0.00165,1,31.2314,4,3.8687,1,24.8017,4,4.6836,1,0
+'22-FEB-2024 13:43:26.00',4128.0,1,47.0,1,3.8781,1,2.928675,4,1.7876,1,-99.0,9,83.1032,1,-99.0,9,0.00165,1,31.2279,4,3.8752,1,24.7984,4,4.6825,1,0
+'22-FEB-2024 13:43:28.00',4139.0,1,47.5,1,3.8891,1,2.928949,4,1.7873,1,-99.0,9,83.0502,1,-99.0,9,0.00165,1,31.2203,4,3.8862,1,24.7914,4,4.6835,1,0
+'22-FEB-2024 13:43:29.00',4148.0,1,48.0,1,3.9034,1,2.929255,4,1.7873,1,-99.0,9,82.887,1,-99.0,9,0.00165,1,31.21,4,3.9005,1,24.7818,4,4.6861,1,0
+'22-FEB-2024 13:43:30.00',4160.0,1,48.5,1,3.9165,1,2.929542,4,1.7878,1,-99.0,9,82.874,1,-99.0,9,0.00165,1,31.2007,4,3.9135,1,24.7732,4,4.6848,1,0
+'22-FEB-2024 13:43:32.00',4170.0,1,49.0,1,3.9259,1,2.929837,4,1.788,1,-99.0,9,82.8757,1,-99.0,9,0.00165,1,31.1949,4,3.9229,1,24.7677,4,4.6866,1,0
+'22-FEB-2024 13:43:33.00',4182.0,1,49.5,1,3.9384,1,2.93016,4,1.788,1,-99.0,9,82.9329,1,-99.0,9,0.00165,1,31.1865,4,3.9353,1,24.7599,4,4.6782,1,0
+'22-FEB-2024 13:43:34.00',4191.0,1,50.0,1,3.9473,1,2.930402,4,1.7871,1,-99.0,9,82.9357,1,-99.0,9,0.00165,1,31.1807,4,3.9442,1,24.7545,4,4.6704,1,0
+'22-FEB-2024 13:43:36.00',4203.0,1,50.5,1,3.9519,1,2.930727,4,1.7854,1,-99.0,9,82.9687,1,-99.0,9,0.00165,1,31.1798,4,3.9488,1,24.7533,4,4.6625,1,0
+'22-FEB-2024 13:43:37.00',4213.0,1,51.0,1,3.9552,1,2.931,4,1.7836,1,-99.0,9,82.9634,1,-99.0,9,0.00165,1,31.1797,4,3.952,1,24.7529,4,4.6479,1,0
+'22-FEB-2024 13:43:38.00',4223.0,1,51.5,1,3.9572,1,2.931279,4,1.781,1,-99.0,9,83.1558,1,-99.0,9,0.00165,1,31.1809,4,3.954,1,24.7536,4,4.6421,1,0
+'22-FEB-2024 13:43:40.00',4235.0,1,52.0,1,3.96,1,2.931602,4,1.7791,1,-99.0,9,83.1842,1,-99.0,9,0.00165,1,31.1817,4,3.9567,1,24.7541,4,4.6348,1,0
+'22-FEB-2024 13:43:41.00',4245.0,1,52.5,1,3.9621,1,2.931891,4,1.7766,1,-99.0,9,83.1496,1,-99.0,9,0.00165,1,31.1828,4,3.9588,1,24.7547,4,4.6241,1,0
+'22-FEB-2024 13:43:43.00',4258.0,1,53.0,1,3.9638,1,2.932252,4,1.7741,1,-99.0,9,83.03,1,-99.0,9,0.00165,1,31.1852,4,3.9605,1,24.7564,4,4.6209,1,0
+'22-FEB-2024 13:43:44.00',4269.0,1,53.5,1,3.9659,1,2.932584,4,1.7725,1,-99.0,9,83.216,1,-99.0,9,0.00165,1,31.1868,4,3.9626,1,24.7576,4,4.6146,1,0
+'22-FEB-2024 13:43:45.00',4278.0,1,54.0,1,3.9718,1,2.932867,4,1.7715,1,-99.0,9,83.0733,1,-99.0,9,0.00165,1,31.1843,4,3.9684,1,24.7551,4,4.6175,1,0
+'22-FEB-2024 13:43:47.00',4292.0,1,54.5,1,3.9741,1,2.933263,4,1.771,1,-99.0,9,82.8469,1,-99.0,9,0.00165,1,31.1865,4,3.9707,1,24.7566,4,4.6184,1,0
+'22-FEB-2024 13:43:48.00',4300.0,1,55.0,1,3.9813,1,2.933572,4,1.7704,1,-99.0,9,82.812,1,0.1011,1,0.00165,1,31.1831,4,3.9779,1,24.7531,4,4.6133,1,0
+'22-FEB-2024 13:43:50.00',4314.0,1,55.5,1,3.9827,1,2.933924,4,1.7695,1,-99.0,9,82.8864,1,0.1073,1,0.00165,1,31.1856,4,3.9792,1,24.755,4,4.6081,1,0
+'22-FEB-2024 13:43:51.00',4323.0,1,56.0,1,3.9846,1,2.934201,4,1.7689,1,-99.0,9,83.015,1,0.1119,1,0.00165,1,31.1868,4,3.9811,1,24.7558,4,4.6078,1,0
+'22-FEB-2024 13:43:52.00',4336.0,1,56.5,1,3.9863,1,2.934538,4,1.7681,1,-99.0,9,83.0644,1,0.1087,1,0.00165,1,31.1889,4,3.9827,1,24.7573,4,4.6037,1,0
+'22-FEB-2024 13:43:54.00',4346.0,1,57.0,1,3.9893,1,2.934846,4,1.7674,1,-99.0,9,82.9493,1,0.1033,1,0.00165,1,31.1894,4,3.9857,1,24.7575,4,4.6011,1,0
+'22-FEB-2024 13:43:55.00',4358.0,1,57.5,1,3.9914,1,2.935189,4,1.766,1,-99.0,9,83.0976,1,0.1071,1,0.00165,1,31.1911,4,3.9878,1,24.7586,4,4.5895,1,0
+'22-FEB-2024 13:43:57.00',4370.0,1,58.0,1,3.9932,1,2.935545,4,1.7639,1,-99.0,9,83.073,1,0.1028,1,0.00165,1,31.1934,4,3.9896,1,24.7602,4,4.5846,1,0
+'22-FEB-2024 13:43:58.00',4382.0,1,58.5,1,3.995,1,2.935891,4,1.7627,1,-99.0,9,83.0849,1,0.1013,1,0.00165,1,31.1954,4,3.9913,1,24.7617,4,4.5844,1,0
+'22-FEB-2024 13:44:00.00',4393.0,1,59.0,1,3.997,1,2.936223,4,1.7624,1,-99.0,9,82.9087,1,0.111,1,0.00165,1,31.1972,4,3.9933,1,24.7629,4,4.5813,1,0
+'22-FEB-2024 13:44:01.00',4403.0,1,59.5,1,4.0014,1,2.936547,4,1.7611,1,-99.0,9,82.7535,1,0.1093,1,0.00165,1,31.1966,4,3.9977,1,24.7621,4,4.5781,1,0
+'22-FEB-2024 13:44:02.00',4417.0,1,60.0,1,4.0039,1,2.936933,4,1.7597,1,-99.0,9,82.594,1,0.1052,1,0.00165,1,31.1985,4,4.0001,1,24.7633,4,4.5672,1,0
+'22-FEB-2024 13:44:04.00',4428.0,1,60.5,1,4.0058,1,2.937249,4,1.7582,1,-99.0,9,82.4537,1,0.106,1,0.00165,1,31.2001,4,4.002,1,24.7644,4,4.5652,1,0
+'22-FEB-2024 13:44:05.00',4438.0,1,61.0,1,4.0076,1,2.937548,4,1.7573,1,-99.0,9,82.4632,1,0.1012,1,0.00165,1,31.2017,4,4.0038,1,24.7655,4,4.5656,1,0
+'22-FEB-2024 13:44:07.00',4451.0,1,61.5,1,4.0091,1,2.937904,4,1.7569,1,-99.0,9,82.4869,1,0.0977,1,0.00165,1,31.2041,4,4.0052,1,24.7673,4,4.5662,1,0
+'22-FEB-2024 13:44:08.00',4461.0,1,62.0,1,4.0129,1,2.938203,4,1.7563,1,-99.0,9,82.243,1,0.0978,1,0.00165,1,31.2038,4,4.009,1,24.7667,4,4.5607,1,0
+'22-FEB-2024 13:44:09.00',4472.0,1,62.5,1,4.0149,1,2.938541,4,1.7555,1,-99.0,9,82.2484,1,0.1028,1,0.00165,1,31.2056,4,4.011,1,24.7679,4,4.5585,1,0
+'22-FEB-2024 13:44:11.00',4485.0,1,63.0,1,4.0168,1,2.938879,4,1.7546,1,-99.0,9,82.2959,1,0.101,1,0.00165,1,31.2075,4,4.0128,1,24.7693,4,4.5508,1,0
+'22-FEB-2024 13:44:12.00',4495.0,1,63.5,1,4.0182,1,2.939202,4,1.7533,1,-99.0,9,82.1682,1,0.1027,1,0.00165,1,31.2097,4,4.0142,1,24.7709,4,4.5485,1,0
+'22-FEB-2024 13:44:14.00',4509.0,1,64.0,1,4.0199,1,2.939552,4,1.7518,1,-99.0,9,82.2398,1,0.1012,1,0.00165,1,31.2119,4,4.0159,1,24.7725,4,4.5423,1,0
+'22-FEB-2024 13:44:15.00',4518.0,1,64.5,1,4.0224,1,2.939839,4,1.7513,1,-99.0,9,82.3201,1,0.1083,1,0.00165,1,31.2127,4,4.0183,1,24.7728,4,4.5421,1,0
+'22-FEB-2024 13:44:17.00',4531.0,1,65.0,1,4.0246,1,2.940214,4,1.75,1,-99.0,9,82.3138,1,0.0992,1,0.00165,1,31.2148,4,4.0205,1,24.7743,4,4.5356,1,0
+'22-FEB-2024 13:44:18.00',4543.0,1,65.5,1,4.0263,1,2.940569,4,1.7486,1,-99.0,9,82.4311,1,0.0979,1,0.00165,1,31.217,4,4.0222,1,24.776,4,4.5271,1,0
+'22-FEB-2024 13:44:20.00',4555.0,1,66.0,1,4.0279,1,2.9409,4,1.7462,1,-99.0,9,82.4848,1,0.1071,1,0.00165,1,31.2191,4,4.0237,1,24.7775,4,4.5199,1,0
+'22-FEB-2024 13:44:21.00',4565.0,1,66.5,1,4.0292,1,2.941206,4,1.7456,1,-99.0,9,82.5056,1,0.0988,1,0.00165,1,31.2212,4,4.025,1,24.779,4,4.5187,1,0
+'22-FEB-2024 13:44:23.00',4579.0,1,67.0,1,4.031,1,2.941556,4,1.7437,1,-99.0,9,82.4151,1,0.1054,1,0.00165,1,31.2234,4,4.0268,1,24.7806,4,4.5134,1,0
+'22-FEB-2024 13:44:24.00',4589.0,1,67.5,1,4.0322,1,2.941881,4,1.743,1,-99.0,9,82.3607,1,0.1001,1,0.00165,1,31.2258,4,4.0279,1,24.7824,4,4.5124,1,0
+'22-FEB-2024 13:44:26.00',4602.0,1,68.0,1,4.035,1,2.942195,4,1.7418,1,-99.0,9,82.2987,1,0.0982,1,0.00165,1,31.2266,4,4.0307,1,24.7827,4,4.5098,1,0
+'22-FEB-2024 13:44:27.00',4613.0,1,68.5,1,4.0372,1,2.94257,4,1.7408,1,-99.0,9,82.2039,1,0.0986,1,0.00165,1,31.2286,4,4.0329,1,24.7841,4,4.5008,1,0
+'22-FEB-2024 13:44:29.00',4625.0,1,69.0,1,4.0389,1,2.94289,4,1.7399,1,-99.0,9,82.2173,1,0.1046,1,0.00165,1,31.2306,4,4.0345,1,24.7855,4,4.5058,1,0
+'22-FEB-2024 13:44:30.00',4636.0,1,69.5,1,4.0401,1,2.943174,4,1.7395,1,-99.0,9,82.3041,1,0.0973,1,0.00165,1,31.2324,4,4.0357,1,24.7869,4,4.499,1,0
+'22-FEB-2024 13:44:31.00',4649.0,1,70.0,1,4.0415,1,2.94349,4,1.7379,1,-99.0,9,82.283,1,0.095,1,0.00165,1,31.2345,4,4.0371,1,24.7884,4,4.4899,1,0
+'22-FEB-2024 13:44:33.00',4658.0,1,70.5,1,4.0427,1,2.943751,4,1.7363,1,-99.0,9,82.2088,1,0.0957,1,0.00165,1,31.2362,4,4.0383,1,24.7896,4,4.4833,1,0
+'22-FEB-2024 13:44:34.00',4671.0,1,71.0,1,4.0442,1,2.944077,4,1.7349,1,-99.0,9,82.227,1,0.095,1,0.00165,1,31.2384,4,4.0397,1,24.7913,4,4.4829,1,0
+'22-FEB-2024 13:44:36.00',4681.0,1,71.5,1,4.0455,1,2.944331,4,1.734,1,-99.0,9,82.1149,1,0.096,1,0.00165,1,31.2398,4,4.041,1,24.7923,4,4.4752,1,0
+'22-FEB-2024 13:44:37.00',4694.0,1,72.0,1,4.047,1,2.944675,4,1.7321,1,-99.0,9,81.8329,1,0.0974,1,0.00165,1,31.2422,4,4.0424,1,24.794,4,4.4711,1,0
+'22-FEB-2024 13:44:39.00',4706.0,1,72.5,1,4.0486,1,2.944943,4,1.731,1,-99.0,9,81.7914,1,-99.0,9,0.00165,1,31.2436,4,4.044,1,24.795,4,4.4682,1,0
+'22-FEB-2024 13:44:40.00',4715.0,1,73.0,1,4.0498,1,2.945204,4,1.73,1,-99.0,9,81.8238,1,-99.0,9,0.00165,1,31.2453,4,4.0452,1,24.7962,4,4.4636,1,0
+'22-FEB-2024 13:44:41.00',4729.0,1,73.5,1,4.0517,1,2.945528,4,1.7283,1,-99.0,9,81.9762,1,-99.0,9,0.00165,1,31.247,4,4.047,1,24.7974,4,4.4557,1,0
+'22-FEB-2024 13:44:43.00',4739.0,1,74.0,1,4.053,1,2.945786,4,1.7272,1,-99.0,9,82.0614,1,-99.0,9,0.00165,1,31.2485,4,4.0483,1,24.7985,4,4.4538,1,0
+'22-FEB-2024 13:44:44.00',4750.0,1,74.5,1,4.0546,1,2.946061,4,1.7261,1,-99.0,9,82.0088,1,-99.0,9,0.00165,1,31.25,4,4.0499,1,24.7995,4,4.4514,1,0
+'22-FEB-2024 13:44:45.00',4761.0,1,75.0,1,4.056,1,2.946331,4,1.7249,1,-99.0,9,82.042,1,-99.0,9,0.00165,1,31.2516,4,4.0512,1,24.8006,4,4.4426,1,0
+'22-FEB-2024 13:44:47.00',4772.0,1,75.5,1,4.0576,1,2.946638,4,1.7232,1,-99.0,9,82.1267,1,-99.0,9,0.00165,1,31.2534,4,4.0528,1,24.8019,4,4.44,1,0
+'22-FEB-2024 13:44:48.00',4785.0,1,76.0,1,4.0592,1,2.946895,4,1.7223,1,-99.0,9,82.0433,1,-99.0,9,0.00165,1,31.2546,4,4.0544,1,24.8027,4,4.4369,1,0
+'22-FEB-2024 13:44:49.00',4792.0,1,76.5,1,4.0602,1,2.947166,4,1.7215,1,-99.0,9,81.8653,1,-99.0,9,0.00165,1,31.2566,4,4.0553,1,24.8042,4,4.4351,1,0
+'22-FEB-2024 13:44:51.00',4807.0,1,77.0,1,4.0623,1,2.947473,4,1.7211,1,-99.0,9,81.8086,1,-99.0,9,0.00165,1,31.258,4,4.0574,1,24.8051,4,4.4435,1,0
+'22-FEB-2024 13:44:52.00',4816.0,1,77.5,1,4.0637,1,2.947673,4,1.7215,1,-99.0,9,81.7276,1,-99.0,9,0.00165,1,31.2586,4,4.0588,1,24.8055,4,4.4424,1,0
+'22-FEB-2024 13:44:54.00',4828.0,1,78.0,1,4.0654,1,2.947969,4,1.7218,1,-99.0,9,81.8115,1,-99.0,9,0.00165,1,31.2603,4,4.0604,1,24.8067,4,4.446,1,0
+'22-FEB-2024 13:44:55.00',4840.0,1,78.5,1,4.067,1,2.948243,4,1.7222,1,-99.0,9,81.9188,1,-99.0,9,0.00165,1,31.2617,4,4.062,1,24.8077,4,4.4413,1,0
+'22-FEB-2024 13:44:56.00',4848.0,1,79.0,1,4.0688,1,2.94849,4,1.7219,1,-99.0,9,81.9843,1,-99.0,9,0.00165,1,31.2627,4,4.0638,1,24.8083,4,4.4422,1,0
+'22-FEB-2024 13:44:58.00',4863.0,1,79.5,1,4.0703,1,2.948916,4,1.7215,1,-99.0,9,81.7973,1,-99.0,9,0.00165,1,31.266,4,4.0652,1,24.8107,4,4.4383,1,0
+'22-FEB-2024 13:44:59.00',4872.0,1,80.0,1,4.0715,1,2.949157,4,1.7208,1,-99.0,9,81.6459,1,-99.0,9,0.00165,1,31.2674,4,4.0664,1,24.8118,4,4.4339,1,0
+'22-FEB-2024 13:45:01.00',4884.0,1,80.5,1,4.073,1,2.949436,4,1.7201,1,-99.0,9,81.6553,1,-99.0,9,0.00165,1,31.2689,4,4.0679,1,24.8128,4,4.4286,1,0
+'22-FEB-2024 13:45:02.00',4894.0,1,81.0,1,4.0743,1,2.949715,4,1.7187,1,-99.0,9,81.8335,1,-99.0,9,0.00165,1,31.2707,4,4.0692,1,24.8142,4,4.4233,1,0
+'22-FEB-2024 13:45:04.00',4905.0,1,81.5,1,4.0758,1,2.949995,4,1.7174,1,2.5397,1,81.8011,1,-99.0,9,0.00165,1,31.2724,4,4.0706,1,24.8153,4,4.4197,1,0
+'22-FEB-2024 13:45:05.00',4916.0,1,82.0,1,4.0772,1,2.950273,4,1.7163,1,2.5736,1,81.9596,1,-99.0,9,0.00165,1,31.2741,4,4.072,1,24.8165,4,4.4137,1,0
+'22-FEB-2024 13:45:06.00',4928.0,1,82.5,1,4.0791,1,2.950562,4,1.7146,1,2.5198,1,82.0008,1,-99.0,9,0.00165,1,31.2753,4,4.0738,1,24.8173,4,4.4082,1,0
+'22-FEB-2024 13:45:08.00',4939.0,1,83.0,1,4.0809,1,2.950852,4,1.7132,1,2.5861,1,81.9163,1,-99.0,9,0.00165,1,31.2767,4,4.0756,1,24.8183,4,4.401,1,0
+'22-FEB-2024 13:45:09.00',4953.0,1,83.5,1,4.0835,1,2.951174,4,1.7114,1,2.5282,1,81.9873,1,-99.0,9,0.00165,1,31.2778,4,4.0782,1,24.8189,4,4.3976,1,0
+'22-FEB-2024 13:45:11.00',4962.0,1,84.0,1,4.0852,1,2.951403,4,1.7105,1,2.6807,1,81.9131,1,-99.0,9,0.00165,1,31.2787,4,4.0798,1,24.8194,4,4.3968,1,0
+'22-FEB-2024 13:45:12.00',4974.0,1,84.5,1,4.0875,1,2.951734,4,1.7092,1,2.7201,1,81.8032,1,-99.0,9,0.00165,1,31.2801,4,4.0821,1,24.8203,4,4.3879,1,0
+'22-FEB-2024 13:45:14.00',4986.0,1,85.0,1,4.0898,1,2.952037,4,1.7082,1,2.6053,1,81.8618,1,-99.0,9,0.00165,1,31.2812,4,4.0844,1,24.821,4,4.3876,1,0
+'22-FEB-2024 13:45:15.00',4998.0,1,85.5,1,4.0924,1,2.952345,4,1.7066,1,2.7621,1,81.629,1,0.0754,1,0.00165,1,31.2821,4,4.0869,1,24.8214,4,4.3809,1,0
+'22-FEB-2024 13:45:17.00',5009.0,1,86.0,1,4.0946,1,2.952652,4,1.7057,1,2.6286,1,81.6664,1,0.0925,1,0.00165,1,31.2833,4,4.0891,1,24.8222,4,4.3761,1,0
+'22-FEB-2024 13:45:18.00',5022.0,1,86.5,1,4.0975,1,2.952957,4,1.7044,1,2.6681,1,81.7904,1,0.0901,1,0.00165,1,31.2839,4,4.092,1,24.8224,4,4.3766,1,0
+'22-FEB-2024 13:45:19.00',5032.0,1,87.0,1,4.0994,1,2.95324,4,1.7036,1,2.6092,1,81.6733,1,0.0906,1,0.00165,1,31.2851,4,4.0938,1,24.8232,4,4.3683,1,0
+'22-FEB-2024 13:45:21.00',5044.0,1,87.5,1,4.1019,1,2.953545,4,1.7026,1,2.5755,1,81.5507,1,0.092,1,0.00165,1,31.286,4,4.0963,1,24.8237,4,4.3682,1,0
+'22-FEB-2024 13:45:22.00',5055.0,1,88.0,1,4.1047,1,2.953878,4,1.7013,1,2.5915,1,81.588,1,0.0923,1,0.00165,1,31.2871,4,4.0991,1,24.8243,4,4.3606,1,0
+'22-FEB-2024 13:45:24.00',5068.0,1,88.5,1,4.1073,1,2.954204,4,1.7001,1,2.5759,1,81.7214,1,0.0872,1,0.00165,1,31.2881,4,4.1016,1,24.8249,4,4.3566,1,0
+'22-FEB-2024 13:45:25.00',5078.0,1,89.0,1,4.1096,1,2.954514,4,1.6989,1,2.5884,1,81.7342,1,0.0882,1,0.00165,1,31.2893,4,4.1039,1,24.8256,4,4.3539,1,0
+'22-FEB-2024 13:45:27.00',5090.0,1,89.5,1,4.1125,1,2.954819,4,1.6981,1,2.4799,1,81.8851,1,0.0909,1,0.00165,1,31.2899,4,4.1067,1,24.8258,4,4.3499,1,0
+'22-FEB-2024 13:45:28.00',5102.0,1,90.0,1,4.1152,1,2.955155,4,1.697,1,2.6435,1,81.8976,1,0.0891,1,0.00165,1,31.291,4,4.1094,1,24.8264,4,4.3508,1,0
+'22-FEB-2024 13:45:29.00',5112.0,1,90.5,1,4.1178,1,2.955442,4,1.697,1,2.6454,1,81.9359,1,-99.0,9,0.00165,1,31.2916,4,4.112,1,24.8266,4,4.3492,1,0
+'22-FEB-2024 13:45:31.00',5125.0,1,91.0,1,4.121,1,2.955779,4,1.696,1,2.6033,1,82.1232,1,-99.0,9,0.00165,1,31.2922,4,4.1152,1,24.8268,4,4.3445,1,0
+'22-FEB-2024 13:45:41.00',5202.0,1,91.5,1,4.1446,1,2.958166,4,1.6911,1,2.5825,1,82.0117,1,0.0827,1,0.00165,1,31.2974,4,4.1387,1,24.8287,4,4.3251,1,0
+'22-FEB-2024 13:46:40.00',5678.0,1,92.0,1,4.2685,1,2.971713,4,1.6751,1,2.7241,1,81.3753,1,0.0838,1,0.00165,1,31.3374,4,4.2624,1,24.8484,4,4.2693,1,0

@@ -1,0 +1,629 @@
+ODF_HEADER,
+  FILE_SPECIFICATION = 'CTD_2000037_102_1_DN',
+CRUISE_HEADER,
+  COUNTRY_INSTITUTE_CODE = 1830,
+  CRUISE_NUMBER = '2000037',
+  ORGANIZATION = 'DPMM',
+  CHIEF_SCIENTIST = 'DArchambault, BMorin',
+  START_DATE = '03-AUG-2000 00:00:00.00',
+  END_DATE = '02-SEP-2000 23:50:00.00',
+  PLATFORM = 'Needler',
+  CRUISE_NAME = 'Releve estival multidisciplinaire 2000',
+  CRUISE_DESCRIPTION = '',
+EVENT_HEADER,
+  DATA_TYPE = 'CTD',
+  EVENT_NUMBER = '102',
+  EVENT_QUALIFIER1 = '1',
+  EVENT_QUALIFIER2 = 'DN',
+  CREATION_DATE = '11-JAN-2024 10:04:29.40',
+  ORIG_CREATION_DATE = '30-OCT-2000 09:01:31.34',
+  START_DATE_TIME = '14-AUG-2000 17:24:52.00',
+  END_DATE_TIME = '14-AUG-2000 17:30:00.00',
+  INITIAL_LATITUDE = 50.775500,
+  INITIAL_LONGITUDE = -57.380333,
+  END_LATITUDE = 50.777330,
+  END_LONGITUDE = -57.379330,
+  MIN_DEPTH = 1.19,
+  MAX_DEPTH = 35.29,
+  SAMPLING_INTERVAL = -99.00,
+  SOUNDING = 43.00,
+  DEPTH_OFF_BOTTOM = 7.71,
+  STATION_NAME = '',
+  SET_NUMBER = '',
+  EVENT_COMMENTS = 'Jeff is a dufus',
+  EVENT_COMMENTS = 'This cast was amazing!',
+METEO_HEADER,
+  AIR_TEMPERATURE = 17.20,
+  ATMOSPHERIC_PRESSURE = 1019.50,
+  WIND_SPEED = 9.25,
+  WIND_DIRECTION = 200.00,
+  SEA_STATE = -99,
+  CLOUD_COVER = -99,
+  ICE_THICKNESS = -99.000,
+  METEO_COMMENTS =  'Air_Temperature: degrees C',
+  METEO_COMMENTS =  'Wind_Speed: m/s',
+  METEO_COMMENTS =  'Wind_Direction(0-360): True North degrees',
+  METEO_COMMENTS =  'Atmospheric_Pressure: hpa',
+  METEO_COMMENTS =  'Sea_State(0->9): WMO code table 3700',
+  METEO_COMMENTS =  'Cloud_Cover(0->9): WMO code table 2700',
+  METEO_COMMENTS =  'Ice_Thickness: m',
+INSTRUMENT_HEADER,
+  INST_TYPE = 'Sea-Bird',
+  MODEL = 'SBE 9',
+  SERIAL_NUMBER = '516',
+  DESCRIPTION = 'Q0037102.DAT Q0037102.CON',
+QUALITY_HEADER,
+  QUALITY_DATE = '25-AUG-2000 10:44:51.65',
+  QUALITY_TESTS = 'Test 1.1: GTSPP Platform Identification',
+  QUALITY_TESTS = 'Test 1.2: GTSPP Impossible Date/Time',
+  QUALITY_TESTS = 'Test 1.3: GTSPP Impossible Location',
+  QUALITY_TESTS = 'Test 1.4: GTSPP Position on Land',
+  QUALITY_TESTS = 'Test 1.5: GTSPP Impossible Speed',
+  QUALITY_TESTS = 'Test 1.6: GTSPP Impossible Sounding',
+  QUALITY_TESTS = 'Test 5.1: GTSPP Cruise Track Visual Inspection',
+  QUALITY_TESTS = 'Test 2.0: IML Minimum Descent Rate (2) (0.10m/s)',
+  QUALITY_TESTS = 'Test 2.1: GTSPP Global Impossible Parameter Values (4)',
+  QUALITY_TESTS = 'Test 2.2: GTSPP Regional Impossible Parameter Values (8)',
+  QUALITY_TESTS = 'Test 2.3: GTSPP Increasing Depth (16)',
+  QUALITY_TESTS = 'Test 2.4: GTSPP Profile Envelope (Temperature and Salinity) (32)',
+  QUALITY_TESTS = 'Test 2.6: GTSPP Freezing Point (128)',
+  QUALITY_TESTS = 'Test 2.7: GTSPP Spike in Temperature and Salinity (one point) (256)',
+  QUALITY_TESTS = 'Test 2.8: GTSPP Top and Bottom Spike in Temperature and Salinity (512)',
+  QUALITY_TESTS = 'Test 2.9: GTSPP Gradient in Temperature and Salinity (1024)',
+  QUALITY_TESTS = 'Test 2.10: GTSPP Density Inversion (point to point) (2048)',
+  QUALITY_TESTS = 'Test 2.11: IML Spike in Pressure, Temperature and Salinity (one point or more) (4096)',
+  QUALITY_TESTS = 'Test 2.12: IML Density Inversion (overall profile) (8192)',
+  QUALITY_TESTS = 'Test 3.5: IML Petrie Monthly Climatology (Temperature, Salinity and Sigma-T)',
+  QUALITY_TESTS = 'Test 4.2: IML Annual Deep Water Profile Consistency',
+  QUALITY_TESTS = 'Test 5.2: GTSPP Profile Visual Inspection',
+  QUALITY_COMMENTS = 'QCFF values are derived from tests of GTSPP stage 2',
+  QUALITY_COMMENTS = 'A quality flag modified by hand has a QCFF value of 1',
+  QUALITY_COMMENTS = 'Salinity-Bottle differences: Mean(AutoSAL-CTD) = 0.032 ±0.022 (22 data)',
+GENERAL_CAL_HEADER,
+  PARAMETER_CODE = 'PRES_01',
+  CALIBRATION_TYPE = 'PRES04',
+  CALIBRATION_DATE = '04-NOV-1997 00:00:00.00',
+  APPLICATION_DATE = '23-AUG-2000 11:56:23.00',
+  NUMBER_OF_COEFFICIENTS = 4,
+  COEFFICIENTS = -3.97110200e-02 -7.14514600e+03 0.00000000e+00 0.00000000e+00 ,
+  CALIBRATION_EQUATION = 'PRES = (C0 + C1*N + C2*N^2 + C3)/1.450377',
+  CALIBRATION_COMMENTS = '',
+GENERAL_CAL_HEADER,
+  PARAMETER_CODE = 'TE90_01',
+  CALIBRATION_TYPE = 'TEMP06',
+  CALIBRATION_DATE = '27-FEB-1999 00:00:00.00',
+  APPLICATION_DATE = '23-AUG-2000 11:56:23.00',
+  NUMBER_OF_COEFFICIENTS = 7,
+  COEFFICIENTS = 4.32348185e-03 6.39877778e-04 2.27959612e-05 2.20480176e-06 1.00000000e+03 1.00000000e+00 0.00000000e+00 ,
+  CALIBRATION_EQUATION = 'TE90 = ( 1 / (C0 + C1*ln(C4/N) + C2*(ln(C4/N))^2 + C3*(ln(C4/N))^3) - 273.15)*C5 + C6',
+  CALIBRATION_COMMENTS = '',
+GENERAL_CAL_HEADER,
+  PARAMETER_CODE = 'CNDC_01',
+  CALIBRATION_TYPE = 'COND04',
+  CALIBRATION_DATE = '16-MAR-1999 00:00:00.00',
+  APPLICATION_DATE = '23-AUG-2000 11:56:23.00',
+  NUMBER_OF_COEFFICIENTS = 8,
+  COEFFICIENTS = -1.06834400e+01 1.45043845e+00 -2.83460452e-03 2.98323276e-04 3.25000000e-06 -9.57000000e-08 1.00000000e+00 0.00000000e+00 ,
+  CALIBRATION_EQUATION = 'CNDC = ((C0 + C1*N^2 + C2*N^3 + C3*N^4)/(10(1+C4*TEMP+C5*PRES)))*C6 + C7',
+  CALIBRATION_COMMENTS = '',
+GENERAL_CAL_HEADER,
+  PARAMETER_CODE = 'FLOR_01',
+  CALIBRATION_TYPE = 'FLUO02',
+  CALIBRATION_DATE = '27-FEB-1997 00:00:00.00',
+  APPLICATION_DATE = '23-AUG-2000 11:56:23.00',
+  NUMBER_OF_COEFFICIENTS = 2,
+  COEFFICIENTS = 7.30000000e-02 1.68580000e+01 ,
+  CALIBRATION_EQUATION = 'FLOR = (N - C0)*C1',
+  CALIBRATION_COMMENTS = '',
+HISTORY_HEADER,
+  CREATION_DATE = '24-AUG-2000 10:03:18.00',
+  PROCESS = '* Sea-Bird SBE 9 Raw Data File:',
+  PROCESS = '* FileName = D:\DONNEES\NEEDLER\DAT\Q0037102.DAT',
+  PROCESS = '* Software Version 4.243',
+  PROCESS = '* Temperature SN = 2701',
+  PROCESS = '* Conductivity SN = 2269',
+  PROCESS = '* Number of Bytes Per Scan = 18',
+  PROCESS = '* Number of Voltage Words = 2',
+  PROCESS = '* Number of Scans Averaged by the Deck Unit = 1',
+  PROCESS = '* System UpLoad Time = Aug 14 2000 17:24:52',
+  PROCESS = '* NMEA Latitude = 50 46.53 N',
+  PROCESS = '* NMEA Longitude = 057 22.82 W',
+  PROCESS = '* NMEA UTC (Time) = Aug 14 2000 17:24:52',
+  PROCESS = '* Store Lat/Lon Data = Add to Header Only',
+  PROCESS = '* Command Line = seasave',
+  PROCESS = '** Mission Needler2000',
+  PROCESS = '** Chef de Mission: Diane Archambault',
+  PROCESS = '** Navire: Needler',
+  PROCESS = '** Latitude: 50 46.52',
+  PROCESS = '** Longitude: 57 22.83',
+  PROCESS = '** Profondeur: 43',
+  PROCESS = '** Station: 102',
+  PROCESS = '# nquan = 11',
+  PROCESS = '# nvalues = 350',
+  PROCESS = '# units = metric',
+  PROCESS = '# name 0 = scan: scan number',
+  PROCESS = '# name 1 = pr: pressure [db]',
+  PROCESS = '# name 2 = t090: temperature, ITS-90 [deg C]',
+  PROCESS = '# name 3 = c0S/m: conductivity [S/m]',
+  PROCESS = '# name 4 = wetStar: WET Labs, WETStar chlorophyll concentration [æg/l]',
+  PROCESS = '# name 5 = dz/dt: descent rate [m/s]',
+  PROCESS = '# name 6 = sigma-t00: density, sigma-t [kg/m^3]',
+  PROCESS = '# name 7 = depS: depth, salt water [m]',
+  PROCESS = '# name 8 = sal00: salinity, PSS-78 [PSU]',
+  PROCESS = '# name 9 = flag: 0.000e+00',
+  PROCESS = '# name 10 = nbin: number of scans per bin',
+  PROCESS = '# span 0 = 3082, 6725',
+  PROCESS = '# span 1 = 0.200, 35.600',
+  PROCESS = '# span 2 = 9.5792, 16.5647',
+  PROCESS = '# span 3 = 3.372962, 3.908612',
+  PROCESS = '# span 4 = 1.5813, 3.0683',
+  PROCESS = '# span 5 = -1.525, 1.255',
+  PROCESS = '# span 6 = 21.8792, 23.8868',
+  PROCESS = '# span 7 = 0.198, 35.289',
+  PROCESS = '# span 8 = 30.1294, 30.9921',
+  PROCESS = '# span 9 = 0.000e+00, 0.000e+00',
+  PROCESS = '# span 10 = 3.0000, 23.0000',
+  PROCESS = '# interval = decibars: 0.2',
+  PROCESS = '# start_time = Aug 14 2000 17:24:52',
+  PROCESS = '# bad_flag = -9.990e-29',
+  PROCESS = '# sensor 0 = Frequency 0 temperature, 2701, 27 Feb 99',
+  PROCESS = '# sensor 1 = Frequency 1 conductivity, 2269, 16 Mar 99, cpcor = -9.5700e-08',
+  PROCESS = '# sensor 2 = Frequency 2 pressure, 70966, 04 Nov 97',
+  PROCESS = '# sensor 3 = Extrnl Volt 0 WET Labs, WETStar fluorometer, 251, 27-02-1997',
+  PROCESS = '# sensor 4 = Extrnl Volt 2 userpoly 0, altimetre, 02-09-1999',
+  PROCESS = '# datcnv_date = Aug 23 2000 11:56:23, 4.245',
+  PROCESS = '# datcnv_in = Q0037102.DAT Q0037102.CON',
+  PROCESS = '# datcnv_skipover = 0',
+  PROCESS = '# wildedit_date = Aug 23 2000 15:48:55, 4.245',
+  PROCESS = '# wildedit_in = Q0037102.CNV',
+  PROCESS = '# wildedit_pass1_nstd = 2.0',
+  PROCESS = '# wildedit_pass2_nstd = 4.0',
+  PROCESS = '# wildedit_pass2_mindelta = 0.000e+000',
+  PROCESS = '# wildedit_npoint = 12',
+  PROCESS = '# wildedit_vars = pr t090 c0S/m wetStar dz/dt',
+  PROCESS = '# wildedit_excl_bad_scans = yes',
+  PROCESS = '# alignctd_date = Aug 23 2000 15:57:54, 4.245',
+  PROCESS = '# alignctd_in = Q0037102.CNV',
+  PROCESS = '# alignctd_cond_advSecs = 0.000, 0.000',
+  PROCESS = '# alignctd_temp_advSecs = 0.000, 0.000',
+  PROCESS = '# alignctd_oxygen_current_advSecs = 0.000, 0.000',
+  PROCESS = '# alignctd_oxygen_temp_advSecs = 0.000, 0.000',
+  PROCESS = '# alignctd_wetstar_advSecs = 5.000',
+  PROCESS = '# filter_date = Aug 23 2000 16:13:11, 4.245',
+  PROCESS = '# filter_in = Q0037102.CNV',
+  PROCESS = '# filter_low_pass_tc_A = 0.150',
+  PROCESS = '# filter_low_pass_tc_B = 0.050',
+  PROCESS = '# filter_low_pass_A_vars = pr',
+  PROCESS = '# filter_low_pass_B_vars = t090 c0S/m',
+  PROCESS = '# loopedit_date = Aug 23 2000 16:25:05, 4.245',
+  PROCESS = '# loopedit_in = Q0037102.CNV',
+  PROCESS = '# loopedit_minVelocity = 0.100',
+  PROCESS = '# loopedit_excl_bad_scans = yes',
+  PROCESS = '# celltm_date = Aug 23 2000 16:33:55, 4.245',
+  PROCESS = '# celltm_in = Q0037102.CNV',
+  PROCESS = '# celltm_alpha = 0.0300, 0.0000',
+  PROCESS = '# celltm_tau = 7.0000, 0.0000',
+  PROCESS = '# celltm_temp_sensor_use_for_cond = primary,',
+  PROCESS = '# binavg_date = Aug 23 2000 16:41:55, 4.245',
+  PROCESS = '# binavg_in = Q0037102.CNV',
+  PROCESS = '# binavg_bintype = Pressure Bins',
+  PROCESS = '# binavg_binsize = 0.20',
+  PROCESS = '# binavg_excl_bad_scans = yes',
+  PROCESS = '# binavg_downcast_only = no',
+  PROCESS = '# binavg_skipover = 0',
+  PROCESS = '# binavg_surface_bin = no, min = 0.000, max = 0.000, value = 0.000',
+  PROCESS = '# derive_date = Aug 24 2000 10:03:18, 4.245',
+  PROCESS = '# derive_in = Q0037102.CNV Q0037102.CON',
+  PROCESS = '# file_type = ascii',
+  PROCESS = '*END*',
+HISTORY_HEADER,
+  CREATION_DATE = '25-AUG-2000 10:28:57.87',
+  PROCESS = 'Conversion from CNV to ODF',
+HISTORY_HEADER,
+  CREATION_DATE = '11-JAN-2024 10:04:29.40',
+  PROCESS = 'Initial creation of this ODF file.',
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Counter',
+  UNITS = '(none)',
+  CODE = 'CNTR_01',
+  NULL_VALUE = -99.00,
+  PRINT_FIELD_WIDTH = 10,
+  PRINT_DECIMAL_PLACES = 0,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 3082.0,
+  MAXIMUM_VALUE = 4199.0,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Sea Pressure (sea surface - 0)',
+  UNITS = 'decibars',
+  CODE = 'PRES_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 10,
+  PRINT_DECIMAL_PLACES = 3,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 1.2,
+  MAXIMUM_VALUE = 35.6,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Quality flag: Sea Pressure (sea surface - 0)',
+  UNITS = 'none',
+  CODE = 'QQQQ_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 1,
+  PRINT_DECIMAL_PLACES = 0,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 1.0,
+  MAXIMUM_VALUE = 1.0,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Temperature (1990 scale)',
+  UNITS = 'degrees C',
+  CODE = 'TE90_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 10,
+  PRINT_DECIMAL_PLACES = 4,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 9.6,
+  MAXIMUM_VALUE = 16.6,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Quality flag: Temperature (1990 scale)',
+  UNITS = 'none',
+  CODE = 'QQQQ_02',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 1,
+  PRINT_DECIMAL_PLACES = 0,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 1.0,
+  MAXIMUM_VALUE = 1.0,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Sensor Depth below Sea Surface',
+  UNITS = 'metres',
+  CODE = 'DEPH_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 10,
+  PRINT_DECIMAL_PLACES = 3,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 1.2,
+  MAXIMUM_VALUE = 35.3,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Quality flag: Sensor Depth below Sea Surface',
+  UNITS = 'none',
+  CODE = 'QQQQ_03',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 1,
+  PRINT_DECIMAL_PLACES = 0,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 1.0,
+  MAXIMUM_VALUE = 1.0,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Practical Salinity',
+  UNITS = 'psu',
+  CODE = 'PSAL_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 10,
+  PRINT_DECIMAL_PLACES = 4,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 30.1,
+  MAXIMUM_VALUE = 31.0,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Quality flag: Practical Salinity',
+  UNITS = 'none',
+  CODE = 'QQQQ_04',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 1,
+  PRINT_DECIMAL_PLACES = 0,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 1.0,
+  MAXIMUM_VALUE = 3.0,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Sigma-T',
+  UNITS = 'kg/m**3',
+  CODE = 'SIGT_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 10,
+  PRINT_DECIMAL_PLACES = 4,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 21.9,
+  MAXIMUM_VALUE = 23.9,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Quality flag: Sigma-T',
+  UNITS = 'none',
+  CODE = 'QQQQ_05',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 1,
+  PRINT_DECIMAL_PLACES = 0,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 1.0,
+  MAXIMUM_VALUE = 3.0,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Lowering Rate',
+  UNITS = 'metres/sec',
+  CODE = 'DPDT_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 10,
+  PRINT_DECIMAL_PLACES = 3,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = -0.4,
+  MAXIMUM_VALUE = 1.3,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Electrical Conductivity',
+  UNITS = 'mhos/m',
+  CODE = 'CNDC_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 10,
+  PRINT_DECIMAL_PLACES = 6,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 3.4,
+  MAXIMUM_VALUE = 3.9,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Fluorescence',
+  UNITS = 'mg/m**3',
+  CODE = 'FLOR_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 10,
+  PRINT_DECIMAL_PLACES = 4,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 1.6,
+  MAXIMUM_VALUE = 3.1,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+PARAMETER_HEADER,
+  TYPE = 'DOUB',
+  NAME = 'Quality flag: QCFF',
+  UNITS = 'none',
+  CODE = 'QCFF_01',
+  NULL_VALUE = 173.00,
+  PRINT_FIELD_WIDTH = 4,
+  PRINT_DECIMAL_PLACES = 0,
+  ANGLE_OF_SECTION = 0.000000,
+  MAGNETIC_VARIATION = 0.000000,
+  DEPTH = 0.000000,
+  MINIMUM_VALUE = 0.0,
+  MAXIMUM_VALUE = 4096.0,
+  NUMBER_VALID = -99,
+  NUMBER_NULL = 0,
+RECORD_HEADER,
+  NUM_CALIBRATION = 0,
+  NUM_HISTORY = 2,
+  NUM_SWING = 0,
+  NUM_PARAM = 15,
+  NUM_CYCLE = 173,
+-- DATA --
+      3082      1.200 1    16.5535 1      1.190 1    30.1362 1    21.8867 1     -0.449   3.887753     2.2152    0
+      3101      1.400 1    16.5536 1      1.388 1    30.1361 1    21.8866 1     -0.116   3.887760     2.2334    0
+      3130      1.600 1    16.5540 1      1.586 1    30.1361 1    21.8865 1      0.169   3.887796     2.1677    0
+      3150      1.800 1    16.5555 1      1.784 1    30.1363 1    21.8863 1      0.160   3.887967     2.2462    0
+      3157      2.000 1    16.5559 1      1.983 1    30.1361 1    21.8861 1      0.203   3.887986     2.2740    0
+      3162      2.200 1    16.5541 1      2.181 1    30.1361 1    21.8865 1      0.278   3.887839     2.2980    0
+      3167      2.400 1    16.5538 1      2.379 1    30.1364 1    21.8868 1      0.370   3.887855     2.3048    0
+      3171      2.600 1    16.5538 1      2.578 1    30.1364 1    21.8868 1      0.473   3.887856     2.2942    0
+      3175      2.800 1    16.5537 1      2.776 1    30.1364 1    21.8868 1      0.587   3.887861     2.3409    0
+      3179      3.000 1    16.5548 1      2.974 1    30.1363 1    21.8865 1      0.706   3.887953     2.3091    0
+      3183      3.200 1    16.5569 1      3.172 1    30.1360 1    21.8858 1      0.828   3.888104     2.3375    0
+      3187      3.400 1    16.5564 1      3.371 1    30.1355 1    21.8855 1      0.939   3.888013     2.3552    0
+      3191      3.600 1    16.5552 1      3.569 1    30.1356 1    21.8859 1      1.030   3.887930     2.3265    0
+      3195      3.800 1    16.5555 1      3.767 1    30.1360 1    21.8861 1      1.096   3.888010     2.3457    0
+      3200      4.000 1    16.5559 1      3.965 1    30.1359 1    21.8859 1      1.137   3.888039     2.3133    0
+      3205      4.200 1    16.5569 1      4.164 1    30.1360 1    21.8857 1      1.146   3.888142     2.3533    0
+      3210      4.400 1    16.5575 1      4.362 1    30.1355 1    21.8853 1      1.135   3.888154     2.3550    0
+      3215      4.600 1    16.5558 1      4.560 1    30.1350 1    21.8853 1      1.105   3.887953     2.3550    0
+      3220      4.800 1    16.5566 1      4.758 1    30.1355 1    21.8855 1      1.074   3.888085     2.3742    0
+      3225      5.000 1    16.5575 1      4.957 1    30.1354 1    21.8852 1      1.042   3.888158     2.3756    0
+      3230      5.200 1    16.5574 1      5.155 1    30.1354 1    21.8852 1      1.008   3.888160     2.3477    0
+      3236      5.400 1    16.5573 1      5.353 1    30.1355 1    21.8853 1      0.969   3.888173     2.3675    0
+      3243      5.600 1    16.5563 1      5.552 1    30.1355 1    21.8855 1      0.923   3.888093     2.3399    0
+      3249      5.800 1    16.5547 1      5.750 1    30.1353 1    21.8857 1      0.881   3.887937     2.3774    0
+      3255      6.000 1    16.5534 1      5.948 1    30.1356 1    21.8862 1      0.842   3.887864     2.3687    0
+      3261      6.200 1    16.5561 1      6.146 1    30.1356 1    21.8856 1      0.814   3.888105     2.3754    0
+      3267      6.400 1    16.5571 1      6.345 1    30.1352 1    21.8851 1      0.799   3.888158     2.4345    0
+      3273      6.600 1    16.5575 1      6.543 1    30.1354 1    21.8851 1      0.794   3.888219     2.4247    0
+      3279      6.800 1    16.5578 1      6.741 1    30.1353 1    21.8851 1      0.791   3.888249     2.4468    0
+      3286      7.000 1    16.5573 1      6.939 1    30.1355 1    21.8853 1      0.786   3.888232     2.4294    0
+      3294      7.200 1    16.5580 1      7.138 1    30.1355 1    21.8851 1      0.769   3.888299     2.5219    0
+      3301      7.400 1    16.5555 1      7.336 1    30.1352 1    21.8855 1      0.734   3.888057     2.4797    0
+      3309      7.600 1    16.5547 1      7.534 1    30.1351 1    21.8856 1      0.692   3.887988     2.3979    0
+      3316      7.800 1    16.5535 1      7.732 1    30.1351 1    21.8859 1      0.664   3.887888     2.4744    0
+      3323      8.000 1    16.5536 1      7.931 1    30.1350 1    21.8858 1      0.652   3.887893     2.4331    0
+      3330      8.200 1    16.5534 1      8.129 1    30.1350 1    21.8858 1      0.652   3.887882     2.5202    0
+      3336      8.400 1    16.5524 1      8.327 1    30.1348 1    21.8859 1      0.665   3.887785     2.4731    0
+      3341      8.600 1    16.5534 1      8.525 1    30.1351 1    21.8859 1      0.688   3.887909     2.4810    0
+      3347      8.800 1    16.5541 1      8.724 1    30.1351 1    21.8857 1      0.720   3.887982     2.5093    0
+      3352      9.000 1    16.5545 1      8.922 1    30.1352 1    21.8857 1      0.757   3.888037     2.4767    0
+      3357      9.200 1    16.5548 1      9.120 1    30.1353 1    21.8857 1      0.797   3.888083     2.4396    0
+      3362      9.400 1    16.5548 1      9.319 1    30.1354 1    21.8858 1      0.838   3.888101     2.4640    0
+      3367      9.600 1    16.5558 1      9.517 1    30.1353 1    21.8855 1      0.877   3.888183     2.4852    0
+      3372      9.800 1    16.5565 1      9.715 1    30.1353 1    21.8854 1      0.910   3.888257     2.4907    0
+      3377     10.000 1    16.5557 1      9.913 1    30.1354 1    21.8856 1      0.933   3.888199     2.4616    0
+      3383     10.200 1    16.5542 1     10.112 1    30.1355 1    21.8860 1      0.942   3.888089     2.4397    0
+      3388     10.400 1    16.5545 1     10.310 1    30.1355 1    21.8859 1      0.936   3.888127     2.5253    0
+      3395     10.600 1    16.5534 1     10.508 1    30.1353 1    21.8861 1      0.913   3.888019     2.4836    0
+      3403     10.800 1    16.5536 1     10.706 1    30.1359 1    21.8864 1      0.861   3.888105     2.5188    0
+      3411     11.000 1    16.5537 1     10.905 1    30.1358 1    21.8863 1      0.773   3.888110     2.5250    0
+      3420     11.200 1    16.5542 1     11.103 1    30.1358 1    21.8862 1      0.681   3.888160     2.5224    0
+      3429     11.400 1    16.5548 1     11.301 1    30.1358 1    21.8861 1      0.609   3.888230     2.5260    0
+      3437     11.600 1    16.5560 1     11.499 1    30.1358 1    21.8858 1      0.567   3.888342     2.5393    0
+      3444     11.800 1    16.5580 1     11.698 1    30.1361 1    21.8856 1      0.561   3.888550     2.4899    0
+      3451     12.000 1    16.5593 1     11.896 1    30.1360 1    21.8852 1      0.581   3.888667     2.5256    0
+      3458     12.200 1    16.5588 1     12.094 1    30.1356 1    21.8850 1      0.609   3.888578     2.5224    0
+      3464     12.400 1    16.5534 1     12.292 1    30.1354 1    21.8861 1      0.641   3.888097     2.5836    0
+      3470     12.600 1    16.5411 1     12.491 1    30.1366 1    21.8898 1      0.675   3.887172     2.6344    0
+      3476     12.800 1    16.5340 1     12.689 1    30.1380 1    21.8925 1      0.712   3.886720     2.6115    0
+      3481     13.000 1    16.5316 1     12.887 1    30.1390 1    21.8938 1      0.748   3.886635     2.5901    0
+      3486     13.200 1    16.5311 1     13.086 1    30.1393 1    21.8941 1      0.783   3.886638     2.6103    0
+      3491     13.400 1    16.5309 1     13.284 1    30.1393 1    21.8942 1      0.818   3.886624     2.6925    0
+      3496     13.600 1    16.5284 1     13.482 1    30.1405 1    21.8956 1      0.851   3.886550     2.7705    0
+      3501     13.800 1    16.5247 1     13.680 1    30.1422 1    21.8978 1      0.882   3.886442     2.7229    0
+      3506     14.000 1    16.5252 1     13.879 1    30.1423 1    21.8977 1      0.911   3.886499     2.7214    0
+      3510     14.200 1    16.5243 1     14.077 1    30.1424 1    21.8980 1      0.936   3.886436     2.6288    0
+      3515     14.400 1    16.5253 1     14.275 1    30.1420 1    21.8975 1      0.958   3.886490     2.6350    0
+      3520     14.600 1    16.5248 1     14.473 1    30.1422 1    21.8977 1      0.978   3.886474     2.6623    0
+      3525     14.800 1    16.5243 1     14.672 1    30.1423 1    21.8979 1      0.993   3.886451     2.6678    0
+      3530     15.000 1    16.5231 1     14.870 1    30.1428 1    21.8986 1      0.997   3.886411     2.6666    0
+      3537     15.200 1    16.5237 1     15.068 1    30.1424 1    21.8981 1      0.981   3.886426     2.6855    0
+      3545     15.400 1    16.5219 1     15.266 1    30.1433 1    21.8993 1      0.916   3.886388     2.6551    0
+      3556     15.600 1    16.5201 1     15.465 1    30.1440 1    21.9002 1      0.752   3.886311     2.6511    0
+      3571     15.800 1    16.5158 1     15.663 1    30.1473 1    21.9037 1      0.502   3.886325     2.6509    0
+      3583     16.000 1    16.5129 1     15.861 1    30.1488 1    21.9055 1      0.376   3.886261     2.6369    0
+      3591     16.200 1    16.5081 1     16.059 1    30.1509 1    21.9082 1      0.366   3.886095     2.6808    0
+      3596     16.400 1    16.4983 1     16.258 1    30.1646 1    21.9209 1      0.405   3.886833     2.6758    0
+      3601     16.600 1    16.4941 1     16.456 1    30.1717 1    21.9273 1      0.469   3.887294     2.6460    0
+      3606     16.800 1    16.4930 1     16.654 1    30.1716 1    21.9274 1      0.547   3.887190     2.6857    0
+      3610     17.000 1    16.4925 1     16.852 1    30.1717 1    21.9276 1      0.636   3.887167     2.6432    0
+      3614     17.200 1    16.4934 1     17.051 1    30.1712 1    21.9271 1      0.731   3.887205     2.6076    0
+      3617     17.400 1    16.4959 1     17.249 1    30.1782 1    21.9319 1      0.825   3.888241     2.6690    0
+      3621     17.600 1    16.5018 1     17.447 1    30.1934 1    21.9422 1      0.913   3.890517     2.6365    0
+      3625     17.800 1    16.5105 1     17.645 1    30.2078 1    21.9513 1      0.994   3.892954     2.6390    0
+      3629     18.000 1    16.5154 1     17.844 1    30.2120 1    21.9534 1      1.065   3.893882     2.7234    0
+      3632     18.200 1    16.5189 1     18.042 1    30.2172 1    21.9566 1      1.129   3.894795     2.6350    0
+      3636     18.400 1    16.5215 1     18.240 1    30.2191 1    21.9575 1      1.183   3.895248     2.5234    0
+      3640     18.600 1    16.5225 1     18.438 1    30.2222 1    21.9596 1      1.227   3.895704     2.5521    0
+      3644     18.800 1    16.5271 1     18.637 1    30.2322 1    21.9662 1      1.255   3.897270     2.5162    0
+      3650     19.000 1    16.5396 1     18.835 1    30.2591 1    21.9841 1      1.249   3.901496     2.5246    0
+      3659     19.200 1    16.5467 1     19.033 1    30.2735 1    21.9935 1      1.145   3.903794     2.5757    0
+      3675     19.400 1    16.5489 1     19.231 1    30.2767 1    21.9954 1      0.727   3.904357     2.5821    0
+      3697     19.600 1    16.5517 1     19.430 1    30.2855 1    22.0015 1      0.234   3.905631     2.6515    0
+      3706     19.800 1    16.5508 1     19.628 1    30.2821 1    21.9992 1      0.228   3.905173     2.6600    0
+      3712     20.000 1    16.5304 1     19.826 1    30.3218 1    22.0342 1      0.282   3.907984     2.5734    0
+      3717     20.200 1    16.4865 1     20.024 1    30.3604 1    22.0737 1      0.366   3.908612     2.6094    0
+      3721     20.400 1    16.4284 1     20.223 1    30.3767 1    22.0992 1      0.467   3.905398     2.6285    0
+      3726     20.600 1    16.3959 1     20.421 1    30.3863 1    22.1139 1      0.577   3.903661     2.7215    0
+      3730     20.800 1    16.3714 1     20.619 1    30.3893 1    22.1217 1      0.689   3.901874     2.6650    0
+      3734     21.000 1    16.3507 1     20.817 1    30.3936 1    22.1296 1      0.793   3.900555     2.5932    0
+      3738     21.200 1    16.3328 1     21.016 1    30.3963 1    22.1357 1      0.886   3.899301     2.6394    0
+      3742     21.400 1    16.3163 1     21.214 1    30.3994 1    22.1418 1      0.969   3.898217     2.6624    0
+      3746     21.600 1    16.3041 1     21.412 1    30.4015 1    22.1461 1      1.038   3.897401     2.6201    0
+      3750     21.800 1    16.2902 1     21.610 1    30.4024 1    22.1500 1      1.095   3.896297     2.5954    0
+      3754     22.000 1    16.2751 1     21.809 1    30.4081 1    22.1577 1      1.139   3.895637     2.6405    0
+      3759     22.200 1    16.2538 1     22.007 1    30.4210 1    22.1723 1      1.166   3.895254     2.6829    0
+      3764     22.400 1    16.2470 1     22.205 1    30.4289 1    22.1799 1      1.166   3.895575     2.6738    0
+      3771     22.600 1    16.2426 1     22.403 1    30.4324 1    22.1836 1      1.121   3.895598     2.6915    0
+      3779     22.800 1    16.2067 1     22.602 1    30.4239 1    22.1851 1      1.020   3.891483     2.6931    0
+      3787     23.000 1    16.1420 1     22.800 1    30.4236 1    22.1992 1      0.865   3.885778     2.7057    0
+      3796     23.200 1    16.0526 1     22.998 1    30.4264 1    22.2212 1      0.702   3.878265     2.7584    0
+      3806     23.400 1    15.9640 1     23.196 1    30.4400 1    22.2512 1      0.588   3.872055     2.8043    0
+      3814     23.600 1    15.9049 1     23.395 1    30.4501 1    22.2720 1      0.546   3.868039     2.7623    0
+      3821     23.800 1    15.8591 1     23.593 1    30.4572 1    22.2875 1      0.545   3.864848     2.8044    0
+      3827     24.000 1    15.8431 1     23.791 1    30.4644 1    22.2965 1      0.571   3.864266     2.8038    0
+      3833     24.200 1    15.8365 1     23.989 1    30.4663 1    22.2994 1      0.609   3.863913     2.8203    0
+      3839     24.400 1    15.8287 1     24.188 1    30.4657 1    22.3007 1      0.657   3.863172     2.7956    0
+      3844     24.600 1    15.7781 1     24.386 1    30.4595 1    22.3070 1      0.707   3.858044     2.8581    0
+      3850     24.800 1    15.7108 1     24.584 1    30.4617 1    22.3234 1      0.755   3.852407     2.9236    0
+      3856     25.000 1    15.6756 1     24.782 1    30.4650 1    22.3336 1      0.791   3.849710     2.9066    0
+      3862     25.200 1    15.6415 1     24.981 1    30.4638 1    22.3401 1      0.815   3.846590     2.8979    0
+      3868     25.400 1    15.6110 1     25.179 1    30.4602 1    22.3440 1      0.824   3.843524     2.8834    0
+      3875     25.600 1    15.5357 1     25.377 1    30.4575 1    22.3582 1      0.819   3.836635     2.8577    0
+      3882     25.800 1    15.4904 1     25.575 1    30.4627 1    22.3720 1      0.799   3.833271     2.9147    0
+      3889     26.000 1    15.4729 1     25.774 1    30.4622 1    22.3754 1      0.769   3.831691     2.9296    0
+      3896     26.200 1    15.4169 1     25.972 1    30.4604 1    22.3861 1      0.738   3.826602     3.0683    0
+      3902     26.400 1    15.3162 1     26.170 1    30.4588 1    22.4065 1      0.713   3.817635     2.9539    0
+      3909     26.600 1    15.1875 1     26.368 1    30.4756 1    22.4469 1      0.702   3.808296     2.9134    0
+      3914     26.800 1    15.1334 1     26.567 1    30.4857 1    22.4662 1      0.706   3.804714     2.8375    0
+      3920     27.000 1    15.0590 1     26.765 1    30.4829 1    22.4799 1      0.725   3.797917     2.7679    0
+      3925     27.200 1    14.9308 1     26.963 1    30.4984 1    22.5190 1      0.754   3.788490     2.7863    0
+      3930     27.400 1    14.8412 1     27.161 1    30.5093 1    22.5462 1      0.790   3.781904     2.6663    0
+      3935     27.600 1    14.7374 1     27.360 1    30.5234 1    22.5788 1      0.830   3.774431     2.5053    0
+      3940     27.800 1    14.6378 1     27.558 1    30.5365 1    22.6097 1      0.870   3.767221     2.3714    0
+      3945     28.000 1    14.5458 1     27.756 1    30.5520 1    22.6407 1      0.904   3.760930     2.3712    0
+      3950     28.200 1    14.5062 1     27.954 1    30.5602 1    22.6553 1      0.929   3.758403     2.3050    0
+      3956     28.400 1    14.4823 1     28.153 1    30.5623 1    22.6618 1      0.936   3.756556     2.2962    0
+      3963     28.600 1    14.4393 1     28.351 1    30.5648 1    22.6726 1      0.915   3.753097     2.1259    0
+      3971     28.800 1    14.3919 1     28.549 1    30.5685 1    22.6852 1      0.856   3.749389     2.0299    0
+      3979     29.000 1    14.2737 1     28.747 1    30.5844 1    22.7218 1      0.770   3.740867     1.8658    0
+      3988     29.200 1    14.2018 1     28.946 1    30.6065 1    22.7535 1      0.680   3.737043     1.7473    0
+      3996     29.400 1    14.1811 1     29.144 1    30.6122 1    22.7621 1      0.614   3.735878     1.7314    0
+      4004     29.600 1    14.0997 1     29.342 1    30.6182 1    22.7833 1      0.584   3.729470     1.7133    0
+      4011     29.800 1    13.8769 1     29.540 1    30.6532 1    22.8553 1      0.582   3.713930     1.7511    0
+      4017     30.000 1    13.6971 1     29.739 1    30.6823 1    22.9138 1      0.603   3.701478     1.6899    0
+      4022     30.200 1    13.4862 1     29.937 1    30.6991 1    22.9686 1      0.639   3.684999     1.6685    0
+      4028     30.400 1    13.1417 1     30.135 1    30.7121 1    23.0461 1      0.681   3.656542     1.6477    0
+      4033     30.600 1    12.7124 1     30.333 1    30.7155 1    23.1311 1      0.727   3.619797     1.6309    0
+      4038     30.800 1    12.4040 1     30.532 1    30.7667 1    23.2288 1      0.776   3.598612     1.6344    0
+      4042     31.000 1    12.2135 1     30.730 1    30.7889 1    23.2814 1      0.824   3.584533     1.5813    0
+      4047     31.200 1    12.0413 1     30.928 1    30.7840 1    23.3093 1      0.872   3.569199     1.5890    0
+      4051     31.400 1    11.9237 1     31.126 1    30.7929 1    23.3377 1      0.916   3.560018     1.5993    0
+      4056     31.600 1    11.8538 1     31.324 1    30.7953 1    23.3522 1      0.954   3.554264     1.6531    0
+      4060     31.800 1    11.7695 1     31.523 1    30.7846 1    23.3592 1      0.989   3.545921     1.8242    0
+      4065     32.000 1    11.6230 1     31.721 1    30.7805 1    23.3823 1      1.017   3.532933     1.9099    0
+      4070     32.200 1    11.4497 1     31.919 1    30.7974 1    23.4263 1      1.038   3.519833     1.9105    0
+      4075     32.400 1    11.2207 1     32.117 1    30.8046 1    23.4722 1      1.047   3.500976     1.9229    0
+      4081     32.600 1    10.9396 1     32.316 1    30.8246 1    23.5365 1      1.031   3.478999     1.9664    0
+      4088     32.800 1    10.6829 1     32.514 1    30.8699 1    23.6156 1      0.977   3.461690     1.8507    0
+      4098     33.000 1    10.5686 1     32.712 1    30.8765 1    23.6401 1      0.860   3.452611     1.7870    0
+      4110     33.200 1    10.4831 1     32.910 1    30.8905 1    23.6653 1      0.650   3.446741     1.8196    0
+      4125     33.400 1    10.4576 1     33.109 1    30.8948 1    23.6729 1      0.425   3.445008     1.8721    0
+      4135     33.600 1    10.4380 1     33.307 1    30.8925 1    23.6744 1      0.359   3.443116     1.9031    0
+      4142     33.800 1    10.3964 1     33.505 1    30.8902 1    23.6796 1      0.374   3.439348     1.8920    0
+      4148     34.000 1    10.3495 1     33.703 1    30.8958 1    23.6917 1      0.426   3.435920     1.8655    0
+      4153     34.200 1    10.3283 1     33.902 1    30.8997 1    23.6982 1      0.499   3.434511     1.8819    0
+      4158     34.400 1    10.2824 1     34.100 1    30.8994 1    23.7056 1      0.584   3.430578     1.8934    0
+      4162     34.600 1    10.1786 1     34.298 1    30.8938 1    23.7184 1      0.672   3.421199     1.9268    0
+      4166     34.800 1    10.0551 1     34.496 1    30.8955 1    23.7399 1      0.759   3.410881     1.9493    0
+      4171     35.000 1     9.8902 1     34.695 1    30.8756 1    23.7511 1      0.841   3.394913     1.9601    0
+      4175     35.200 1     9.7129 1     34.893 1    30.8728 3    23.7774 3      0.917   3.379624     1.9598 4096
+      4179     35.400 1     9.5792 1     35.091 1    30.9200 1    23.8354 1      0.989   3.372962     1.8982    0
+      4199     35.600 1     9.6099 1     35.289 1    30.9921 1    23.8868 1      0.760   3.382665     1.9025    0
