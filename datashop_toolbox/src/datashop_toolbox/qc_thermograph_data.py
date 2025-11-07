@@ -144,12 +144,12 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
 def main():
 
     # input_path = 'C:/DFO-MPO/DEV/MTR/999_Test/'
-    input_path = 'C:/DFO-MPO/DEV/MTR/Prodyut/BCD2014999/BCD2014999/Hobos/Step_1_Create_ODF'
+    input_path = 'C:/Users/ROYPR/Desktop/DFO-ODIS-SSPPI/Python_Development/Testing_DataShop_Toolbox/Library_Testing/lasso'
 
     wildcard = '*.ODF'
 
     # output_path = 'C:/DFO-MPO/DEV/MTR/999_Test/Step_1_Create_ODF/'
-    output_path = 'C:/DFO-MPO/DEV/MTR/Prodyut/BCD2014999/BCD2014999/Hobos/Step_2_Visual_Inspection'
+    output_path = 'C:/Users/ROYPR/Desktop/DFO-ODIS-SSPPI/Python_Development/Testing_DataShop_Toolbox/Library_Testing/lasso'
 
     qc_thermograph_data(input_path, wildcard, output_path)
 

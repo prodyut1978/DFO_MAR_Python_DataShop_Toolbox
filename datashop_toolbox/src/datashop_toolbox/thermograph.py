@@ -756,8 +756,8 @@ def main():
         else:
             operator = select_inputs.line_edit_text
 
-        institution = select_inputs.institution
-        instrument = select_inputs.instrument
+        institution = select_inputs.institution.upper()
+        instrument = select_inputs.instrument.lower()
         user_input_metadata = select_inputs.user_input_meta
 
         # Change to folder containing files to be modified
