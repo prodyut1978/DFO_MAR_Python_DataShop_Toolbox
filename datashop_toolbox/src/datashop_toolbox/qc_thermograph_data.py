@@ -149,7 +149,7 @@ def main():
     wildcard = '*.ODF'
 
     # output_path = 'C:/DFO-MPO/DEV/MTR/999_Test/Step_1_Create_ODF/'
-    output_path = 'C:/Users/ROYPR/Desktop/DFO-ODIS-SSPPI/Python_Development/Testing_DataShop_Toolbox/Library_Testing/lasso'
+    output_path = 'C:/Users/ROYPR/Desktop/DFO-ODIS-SSPPI/Python_Development/Testing_DataShop_Toolbox/Library_Testing/lasso/step_2'
 
     qc_thermograph_data(input_path, wildcard, output_path)
 
