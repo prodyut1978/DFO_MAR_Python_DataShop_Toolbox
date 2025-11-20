@@ -798,6 +798,13 @@ def main():
             file_spec = mtr.generate_file_spec()
             mtr.file_specification = file_spec
 
+            mtr.add_quality_flags()
+ 
+            quality_header = QualityHeader()
+            quality_header.quality_date = get_current_date_time()
+            quality_header.add_quality_codes()
+            mtr.quality_header = quality_header
+
             mtr.update_odf()
 
             odf_file_path = os.path.join(odf_path, file_spec + '.ODF')

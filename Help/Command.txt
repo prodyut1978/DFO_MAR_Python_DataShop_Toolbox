@@ -3,9 +3,15 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 
 
 After pulling new version from GitHub using VS code
-uv build --wheel
+cd .\datashop_toolbox\ 
 
+If no venv
+uv init   
 uv venv
- 
+.venv\Scripts\activate  
+
+
+uv build --wheel
+uv sync
 uv pip install dist\datashop_toolbox-0.9.0-py3-none-any.whl
  
