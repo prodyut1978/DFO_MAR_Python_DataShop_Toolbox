@@ -25,12 +25,13 @@ def main():
         print('\n****  Operation cancelled by user, exiting program.  ****\n')
         exit()
 
-    if select_inputs.metadata_file == '' or select_inputs.data_folder == '':
+    if select_inputs.metadata_file == '' or select_inputs.input_data_folder == '' or select_inputs.output_data_folder == '':
         print('\n****  Improper selections made, exiting program.  ****\n')
         exit()
     else:
         metadata_file_path = select_inputs.metadata_file
-        data_folder_path = select_inputs.data_folder
+        input_data_folder_path = select_inputs.input_data_folder
+        Output_data_folder_path = select_inputs.output_data_folder
 
     # Get the operator's name so it is identified in the history header.
     if select_inputs.line_edit_text == '':
@@ -43,19 +44,20 @@ def main():
     user_input_metadata = select_inputs.user_input_meta
     
     # Change to folder containing files to be modified
-    os.chdir(data_folder_path)
+    os.chdir(input_data_folder_path)
 
     # Find all CSV files in the current directory.
     files = glob.glob('*.CSV')
 
     # Check if no data files were found.
     if files == []:
-        print(f"****  No data files found in selected folder {data_folder_path}  ****\n")
+        print(f"****  No data files found in selected folder {input_data_folder_path}  ****\n")
     else:
-        # Create the required subfolder, if necessary
-        if not os.path.isdir(os.path.join(data_folder_path, 'Step_1_Create_ODF')):
-            os.mkdir('Step_1_Create_ODF')
-        odf_path = posixpath.join(data_folder_path, 'Step_1_Create_ODF')
+        # Build full path to output folder
+        odf_path = os.path.join(Output_data_folder_path, 'Step_1_Create_ODF')
+        # Create folder if needed (safe even if it exists)
+        os.makedirs(odf_path, exist_ok=True)
+        print("Created output folder path for .odf files:", odf_path)
 
     # Loop through the CSV files to generate an ODF file for each.
     for file_name in files:
@@ -66,7 +68,7 @@ def main():
         print('#######################################################################')
         print()
 
-        mtr_path = posixpath.join(data_folder_path, file_name)
+        mtr_path = posixpath.join(input_data_folder_path, file_name)
         print(f'\nProcessing MTR raw file: {mtr_path}\n')
 
         mtr = ThermographHeader()

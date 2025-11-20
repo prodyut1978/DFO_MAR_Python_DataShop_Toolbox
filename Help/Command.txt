@@ -13,5 +13,5 @@ uv venv
 
 uv build --wheel
 uv sync
-uv pip install dist\datashop_toolbox-0.9.0-py3-none-any.whl
+uv pip install dist\datashop_toolbox-0.9.8-py3-none-any.whl
  

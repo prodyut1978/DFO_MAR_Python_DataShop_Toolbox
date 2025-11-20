@@ -729,7 +729,7 @@ class ThermographHeader(OdfHeader):
 
 def main():
 
-    use_gui = True
+    use_gui = False
 
     if use_gui:
 
@@ -743,12 +743,13 @@ def main():
             print('\n****  Operation cancelled by user, exiting program.  ****\n')
             exit()
 
-        if select_inputs.metadata_file == '' or select_inputs.data_folder == '':
+        if select_inputs.metadata_file == '' or select_inputs.input_data_folder == ''or select_inputs.output_data_folder == '':
             print('\n****  Improper selections made, exiting program.  ****\n')
             exit()
         else:
             metadata_file_path = select_inputs.metadata_file
-            data_folder_path = select_inputs.data_folder
+            input_data_folder_path = select_inputs.input_data_folder
+            Output_data_folder_path = select_inputs.output_data_folder
 
         # Get the operator's name so it is identified in the history header.
         if select_inputs.line_edit_text == '':
@@ -761,19 +762,20 @@ def main():
         user_input_metadata = select_inputs.user_input_meta
 
         # Change to folder containing files to be modified
-        os.chdir(data_folder_path)
+        os.chdir(input_data_folder_path)
 
         # Find all CSV files in the current directory.
         files = glob.glob('*.CSV')
 
         # Check if no data files were found.
         if files == []:
-            print(f"****  No data files found in selected folder {data_folder_path}  ****\n")
+            print(f"****  No data files found in selected folder {input_data_folder_path}  ****\n")
         else:
-            # Create the required subfolder, if necessary
-            if not os.path.isdir(os.path.join(data_folder_path, 'Step_1_Create_ODF')):
-                os.mkdir('Step_1_Create_ODF')
-            odf_path = os.path.join(data_folder_path, 'Step_1_Create_ODF')
+            # Build full path to output folder
+            odf_path = os.path.join(Output_data_folder_path, 'Step_1_Create_ODF')
+            # Create folder if needed (safe even if it exists)
+            os.makedirs(odf_path, exist_ok=True)
+            print("Created output folder path for .odf files:", odf_path)
 
         # Loop through the CSV files to generate an ODF file for each.
         for file_name in files:
@@ -784,7 +786,7 @@ def main():
             print('#######################################################################')
             print()
 
-            mtr_path = posixpath.join(data_folder_path, file_name)
+            mtr_path = posixpath.join(input_data_folder_path, file_name)
 
             mtr = ThermographHeader()
 
@@ -818,37 +820,50 @@ def main():
         # Generate an empty MTR object.
         mtr = ThermographHeader()
 
-        operator = 'Jeff Jackson'
+        operator = 'JProdyut Roy'
 
         # institution_name = 'FSRS'
         # instrument_type = 'minilog'
         # metadata_file = 'C:/DFO-MPO/DEV/MTR/FSRS_data_2013_2014/LatLong LFA 30_14.txt' # FSRS
-        # data_folder_path = 'C:/DFO-MPO/DEV/MTR/FSRS_data_2013_2014/LFA 30/' # FSRS
+        # input_data_folder_path = 'C:/DFO-MPO/DEV/MTR/FSRS_data_2013_2014/LFA 30/' # FSRS
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/FSRS_data_2013_2014/LFA 30/Minilog-II-T_354633_2014jmacleod_1.csv' # FSRS
 
         institution_name = 'BIO'
         #instrument_type = 'minilog'
         instrument_type = 'hobo'
-        metadata_file = 'C:/MTR_Data_Processing/BCD2014999/MetaData_BCD2014999.xlsx' # BIO
+        metadata_file = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/MetaData_BCD2014999.xlsx' # BIO
         # metadata_file = 'C:/DFO-MPO/DEV/MTR/999_Test/MetaData_BCD2015999_Reformatted.xlsx' # BIO
-        # data_folder_path = 'C:/DFO-MPO/DEV/MTR/999_Test/'  # BIO
-        # data_folder_path = 'C:/DFO-MPO/DEV/MTR/BCD2014999/Hobo/'  # BIO
-        data_folder_path = 'C:/MTR_Data_Processing/BCD2014999/RAW_Data/Hobos/MTR_Hobos_RAW_CSV'  # BIO
+        # input_data_folder_path = 'C:/DFO-MPO/DEV/MTR/999_Test/'  # BIO
+        # input_data_folder_path = 'C:/DFO-MPO/DEV/MTR/BCD2014999/Hobo/'  # BIO
+        input_data_folder_path = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/Hobos/MTR_Hobos_RAW_CSV'  # BIO
+        output_data_folder_path = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/Hobos'
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/999_Test/Liscomb_15m_352964_20160415_1.csv'  # BIO
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/999_Test/cape_sable_summer_2014.csv'  # BIO
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/999_Test/LTTMP_summer2014_HLFX_1273003_south.csv'  # BIO
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/BCD2014999/Hobo/Dundee_10231582.csv'  # BIO
-        data_file_path = 'C:/MTR_Data_Processing/BCD2014999/RAW_Data/Hobos/MTR_Hobos_RAW_CSV/baddeck_summer2014_1001597.csv'  # BIO
+        data_file_path = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/Hobos/MTR_Hobos_RAW_CSV/baddeck_10536701.csv'  # BIO
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/999_Test/Whycocomagh_885_north_10m.csv'  # BIO
+
+        user_input_metadata = {'organization': 'DFO BIO', 
+                               'chief_scientist': 'ADAM DROZDOWSKI', 
+                               'cruise_description': 'LONG TERM TEMPERATURE MONITORING PROGRAM (LTTMP)', 
+                               'platform_name': 'BIO CRUISE DATA (NO ICES CODE)', 
+                               'country_code': '1810'}
 
         history_header = HistoryHeader()
         history_header.creation_date = get_current_date_time()
         history_header.set_process(f'Initial file creation by {operator}')
         mtr.history_headers.append(history_header)
 
-        mtr.process_thermograph(institution_name.upper(), instrument_type.lower(), metadata_file, data_file_path)
+        mtr.process_thermograph(institution_name.upper(), instrument_type.lower(), metadata_file, data_file_path, user_input_metadata)
 
-        os.chdir(data_folder_path)
+        os.chdir(input_data_folder_path)
+
+        odf_path = os.path.join(output_data_folder_path, 'Step_1_Create_ODF')
+        # Create folder if needed (safe even if it exists)
+        os.makedirs(odf_path, exist_ok=True)
+        print("Created output folder path for .odf files:", odf_path)
+
 
         file_spec = mtr.generate_file_spec()
         mtr.file_specification = file_spec
@@ -862,7 +877,7 @@ def main():
 
         mtr.update_odf()
 
-        odf_file_path = os.path.join(data_folder_path, file_spec + '.ODF')
+        odf_file_path = os.path.join(odf_path, file_spec + '.ODF')
         mtr.write_odf(odf_file_path, version = 2.0)
     
 

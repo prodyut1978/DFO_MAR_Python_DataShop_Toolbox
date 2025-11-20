@@ -16,7 +16,8 @@ class MainWindow(QMainWindow):
         self.institution = "BIO"
         self.instrument = "Minilog"
         self.metadata_file = ""
-        self.data_folder = ""
+        self.input_data_folder = ""
+        self.output_data_folder = ""
         self.result = None
         self.user_input_meta = {}
         
@@ -66,7 +67,7 @@ class MainWindow(QMainWindow):
         self.populate_defaults("BIO")
 
         # --- Buttons for Metadata + Data Folder ---
-        self.file_button = QPushButton("Select the Metadata file\n(e.g. LFA .txt file, \nor Excel file)")
+        self.file_button = QPushButton("Select meta data file\n(e.g. LFA .txt file, \nor Excel file)")
         self.file_button.setFixedSize(225, 100)
         font = self.file_button.font()
         font.setPointSize(11)
@@ -75,14 +76,23 @@ class MainWindow(QMainWindow):
         self.file_button.setStyleSheet("font-weight: bold;")
         self.file_button.clicked.connect(self.choose_metadata_file)
 
-        self.folder_button = QPushButton("Select the Data folder\n(Location of *.csv files)")
-        self.folder_button.setFixedSize(225, 100)
-        font = self.folder_button.font()
+        self.input_data_folder_button = QPushButton("Select input data folder\n(Location of raw *.csv files)")
+        self.input_data_folder_button.setFixedSize(225, 100)
+        font = self.input_data_folder_button.font()
         font.setPointSize(11)
         font.setBold(True)
-        self.folder_button.setFont(font)
-        self.folder_button.setStyleSheet("font-weight: bold;")
-        self.folder_button.clicked.connect(self.choose_data_folder)
+        self.input_data_folder_button.setFont(font)
+        self.input_data_folder_button.setStyleSheet("font-weight: bold;")
+        self.input_data_folder_button.clicked.connect(self.choose_input_data_folder)
+
+        self.output_data_folder_button = QPushButton("Select output data folder\n(Location for *.odf files)")
+        self.output_data_folder_button.setFixedSize(225, 100)
+        font = self.output_data_folder_button.font()
+        font.setPointSize(11)
+        font.setBold(True)
+        self.output_data_folder_button.setFont(font)
+        self.output_data_folder_button.setStyleSheet("font-weight: bold;")
+        self.output_data_folder_button.clicked.connect(self.choose_output_data_folder)
 
          # --- Dialog Buttons ---
         buttons = (
@@ -102,12 +112,19 @@ class MainWindow(QMainWindow):
         self.metadata_file_label.setFixedHeight(25)
         self.metadata_file_path_text.setFixedHeight(25)
 
-        self.data_folder_label = QLabel("Data folder selected:")
-        self.data_folder_path_text = QLineEdit(" ")
-        self.data_folder_path_text.setFixedWidth(600)
-        self.data_folder_label.setFont(font)
-        self.data_folder_label.setFixedHeight(25)
-        self.data_folder_path_text.setFixedHeight(25)
+        self.input_data_folder_label = QLabel("Input data folder selected:")
+        self.input_data_folder_path_text = QLineEdit(" ")
+        self.input_data_folder_path_text.setFixedWidth(600)
+        self.input_data_folder_label.setFont(font)
+        self.input_data_folder_label.setFixedHeight(25)
+        self.input_data_folder_path_text.setFixedHeight(25)
+
+        self.output_data_folder_label = QLabel("output data folder selected:")
+        self.output_data_folder_path_text = QLineEdit(" ")
+        self.output_data_folder_path_text.setFixedWidth(600)
+        self.output_data_folder_label.setFont(font)
+        self.output_data_folder_label.setFixedHeight(25)
+        self.output_data_folder_path_text.setFixedHeight(25)
 
         
         # Vertical layout for label + line edit
@@ -162,7 +179,8 @@ class MainWindow(QMainWindow):
         # Horizontal layout for buttons to open file and folder dialogs
         h_layout2 = QHBoxLayout()
         h_layout2.addWidget(self.file_button)
-        h_layout2.addWidget(self.folder_button)
+        h_layout2.addWidget(self.input_data_folder_button)
+        h_layout2.addWidget(self.output_data_folder_button)
         v_layout1.addLayout(h_layout2)
 
         # Horizontal layout for label and lineedit containing selected file
@@ -172,20 +190,24 @@ class MainWindow(QMainWindow):
 
         # Horizontal layout for label and lineedit containing selected folder path
         h_layout4 = QHBoxLayout()
-        h_layout4.addWidget(self.data_folder_label)
-        h_layout4.addWidget(self.data_folder_path_text)
+        h_layout4.addWidget(self.input_data_folder_label)
+        h_layout4.addWidget(self.input_data_folder_path_text)
+        h_layout5 = QHBoxLayout()
+        h_layout5.addWidget(self.output_data_folder_label)
+        h_layout5.addWidget(self.output_data_folder_path_text)
 
         v_layout4 = QVBoxLayout()
         v_layout4.addLayout(h_layout3)
         v_layout4.addLayout(h_layout4)
+        v_layout4.addLayout(h_layout5)
         v_layout1.addLayout(v_layout4)
 
         # Horizontal layout for buttons used to close the window
-        h_layout5 = QHBoxLayout()
-        h_layout5.addStretch(1)
-        h_layout5.addWidget(self.buttonBox)
-        h_layout5.addStretch(1)
-        v_layout1.addLayout(h_layout5)
+        h_layout6 = QHBoxLayout()
+        h_layout6.addStretch(1)
+        h_layout6.addWidget(self.buttonBox)
+        h_layout6.addStretch(1)
+        v_layout1.addLayout(h_layout6)
 
         # Set the central widget of the Window.
         container = QWidget()
@@ -194,7 +216,7 @@ class MainWindow(QMainWindow):
 
     def editing_finished(self):
             self.line_edit_text = self.line_edit.text()
-            print(f"\n(1 of 3) Data processor: {self.line_edit_text}\n")
+            print(f"\n(1 of 4) Data processor: {self.line_edit_text}\n")
 
     def institution_text_changed(self, s):
         self.institution = s
@@ -218,15 +240,22 @@ class MainWindow(QMainWindow):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select the Metadata file")
         if file_path:
             self.metadata_file = file_path
-            print(f"\n(2 of 3) Metadata file chosen: {file_path}\n")
+            print(f"\n(2 of 4) Metadata file chosen: {file_path}\n")
             self.metadata_file_path_text.setText(self.metadata_file)
 
-    def choose_data_folder(self):
-        folder_path = QFileDialog.getExistingDirectory(self, "Select the Data folder")
-        if folder_path:
-            self.data_folder = folder_path
-            print(f"\n(3 of 3) Data file folder selected: {folder_path}\n")
-            self.data_folder_path_text.setText(self.data_folder)
+    def choose_input_data_folder(self):
+        input_folder_path = QFileDialog.getExistingDirectory(self, "Select the input data folder")
+        if input_folder_path:
+            self.input_data_folder = input_folder_path
+            print(f"\n(3 of 4) Input data file folder selected: {input_folder_path}\n")
+            self.input_data_folder_path_text.setText(self.input_data_folder)
+
+    def choose_output_data_folder(self):
+        output_folder_path = QFileDialog.getExistingDirectory(self, "Select the output data folder")
+        if output_folder_path:
+            self.output_data_folder = output_folder_path
+            print(f"\n(4 of 4) output data file folder selected: {output_folder_path}\n")
+            self.output_data_folder_path_text.setText(self.output_data_folder)
 
     def on_accept(self):
         self.result = "accept"
