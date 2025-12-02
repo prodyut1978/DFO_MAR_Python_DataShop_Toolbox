@@ -521,15 +521,15 @@ class ThermographHeader(OdfHeader):
         return dfmeta
 
 
-    def process_thermograph(self, institution_name: str, instrument_type: str, metadata_file_path: str, data_file_path: str, user_input_metadata):
+    def process_thermograph(self, institution_name: str, instrument_type: str, metadata_file_path: str, data_file_path: str, user_input_metadata: dict) -> None:
 
         if institution_name == 'FSRS':
             # Get user input metadata values with defaults
-            organization = user_input_metadata.get("organization", "FSRS")
-            chief_scientist = user_input_metadata.get("chief_scientist", "SHANNON SCOTT-TIBBETTS")
-            cruise_description = user_input_metadata.get("cruise_description", "FISHERMEN  AND SCIENTISTS RESEARCH SOCIETY")
-            platform_name = user_input_metadata.get("platform_name", "FSRS CRUISE DATA (NO ICES CODE)")
-            country_code = user_input_metadata.get("country_code", "1899")
+            organization = user_input_metadata.get("organization") or "FSRS"
+            chief_scientist = user_input_metadata.get("chief_scientist") or "SHANNON SCOTT-TIBBETTS"
+            cruise_description = user_input_metadata.get("cruise_description") or "FISHERMEN AND SCIENTISTS RESEARCH SOCIETY"
+            platform_name = user_input_metadata.get("platform_name") or "FSRS CRUISE DATA (NO ICES CODE)"
+            country_code = user_input_metadata.get("country_code") or "1899"
 
             # print(f'\nProcessing Metadata file: {metadata_file_path}\n')
             meta = self.read_metadata(metadata_file_path, institution_name)
@@ -548,7 +548,7 @@ class ThermographHeader(OdfHeader):
 
             self.cruise_header.country_institute_code = country_code
             cruise_year = df['date'].to_string(index=False).split('-')[0]
-            cruise_number = f'BCD{cruise_year}603'
+            cruise_number = user_input_metadata.get("cruise_number") or f'BCD{cruise_year}603'
             self.cruise_header.cruise_number = cruise_number
             self.cruise_header.platform = platform_name
             start_date = f"{self.start_date_time(df).strftime(r'%d-%b-%Y')} 00:00:00.00"
@@ -598,11 +598,11 @@ class ThermographHeader(OdfHeader):
 
         elif institution_name == 'BIO':
             # Get user input metadata values with defaults
-            organization = user_input_metadata.get("organization", "DFO BIO")
-            chief_scientist = user_input_metadata.get("chief_scientist", "ADAM DROZDOWSKI")
-            cruise_description = user_input_metadata.get("cruise_description", "LONG TERM TEMPERATURE MONITORING PROGRAM (LTTMP)")
-            platform_name = user_input_metadata.get("platform_name", "BIO CRUISE DATA (NO ICES CODE)")
-            country_code = user_input_metadata.get("country_code", "1810")
+            organization = user_input_metadata.get("organization") or "DFO BIO"
+            chief_scientist = user_input_metadata.get("chief_scientist") or "ADAM DROZDOWSKI"
+            cruise_description = user_input_metadata.get("cruise_description") or "LONG TERM TEMPERATURE MONITORING PROGRAM (LTTMP)"
+            platform_name = user_input_metadata.get("platform_name") or "BIO CRUISE DATA (NO ICES CODE)"
+            country_code = user_input_metadata.get("country_code") or "1810"
 
             # print(f'\nProcessing Metadata file: {metadata_file_path}\n')
             meta = self.read_metadata(metadata_file_path, institution_name)
@@ -654,7 +654,7 @@ class ThermographHeader(OdfHeader):
                 cruise_year = df['date'].to_string(index=False).split('-')[0]
             elif instrument_type == 'hobo':
                 cruise_year = df['date_time'].to_string(index=False).split('-')[0]
-            cruise_number = f'BCD{cruise_year}999'
+            cruise_number = user_input_metadata.get("cruise_number") or f'BCD{cruise_year}999'
             self.cruise_header.cruise_number = cruise_number
             self.cruise_header.platform = platform_name
             start_date = f"{self.start_date_time(df).strftime(r'%d-%b-%Y')} 00:00:00.00"
