@@ -22,7 +22,7 @@ from datashop_toolbox.validated_base import get_current_date_time
 from datashop_toolbox import select_metadata_file_and_data_folder
 from datashop_toolbox.log_window import (
     SafeConsoleFilter, QTextEditLogger, 
-    SafeConsoleFilter, LogWindowUI)
+    SafeConsoleFilter)
 import logging
 
 exit_requested = False
@@ -127,7 +127,8 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
     # Prepare output folder
     out_odf_path = os.path.join(out_folder_path, "Step_2_Quality_Flagging")
     os.makedirs(out_odf_path, exist_ok=True)
-    logger.info(f"Created a output data folder name: Step_2_Quality_Flagging and path for .odf files after initial QC: {out_odf_path}")
+    logger.info(f"Created a output data folder name, Step_2_Quality_Flagging ")
+    logger.info(f"Path for Step_2_Quality_Flagging: {out_odf_path}")
 
     os.chdir(cwd)
 
@@ -136,7 +137,8 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             logger.warning("Exit requested — stopping QC loop.")
             break
         
-        logger.info(f"✅ Reading file {idx} of {len(mtr_files)}: {mtr_file} for QC...please wait.")
+        logger.info(f"✅ Reading file {idx} of {len(mtr_files)}: {mtr_file}")
+        logger.info(f"✅ Please wait...reading ODF file for QC visualization...")
 
         full_path = str(pathlib.Path(in_folder_path, mtr_file))
         
@@ -175,17 +177,21 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
         plt.grid(True)
 
         # --- Buttons (tuple positions required in Python 3.13+) ---
+        ax_deselect = plt.axes((0.02, 0.01, 0.12, 0.06))
         ax_continue = plt.axes((0.70, 0.01, 0.12, 0.06))
         ax_exit = plt.axes((0.85, 0.01, 0.12, 0.06))
 
+        btn_deselect = Button(ax_deselect, "Undo Selection")
         btn_continue = Button(ax_continue, "Continue")
         btn_exit = Button(ax_exit, "Exit")
-
+        
         # --- Optional visual tweaks ---
         btn_continue.color = "lightgreen"
         btn_exit.color = "salmon"
         btn_continue.hovercolor = "limegreen"
         btn_exit.hovercolor = "red"
+        btn_deselect.color = "lightblue"
+        btn_deselect.hovercolor = "yellow"
 
         def click_continue(event):
             logger.info("Figure: Continue clicked.")
@@ -197,15 +203,63 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             logger.info("Figure: Exit clicked (exit_requested set True).")
             plt.close(fig)  # close figure and stop
 
+        def undo_selection(event):
+            """Clear all selected groups and redraw original plot."""
+            selection_groups.clear()  # Remove all previously selected regions
+            logger.info("Figure: Undo Selection clicked (all selections cleared).")
+            # Reset axes
+            ax.cla()
+
+            # Replot original blue data points
+            nonlocal  scatter_blue
+            scatter_blue = ax.scatter(df.index, df['Temperature'], s=10, color='blue', picker=5)
+            ax.set_title(f'[{idx}/{len(mtr_files)}] Time Series Data - {mtr_file}')
+            ax.set_xlabel('Date Time')
+            ax.set_ylabel('Temperature')
+            ax.grid(True)
+            fig.canvas.mpl_connect('pick_event', on_pick)
+
+            # Recreate the lasso tool since clearing breaks it
+            nonlocal lasso   # allow access to outer variable
+            try:
+                lasso.disconnect_events()
+            except Exception:
+                pass
+            lasso = LassoSelector(ax, onselect)
+
+            fig.canvas.draw_idle()
+        
         btn_continue.on_clicked(click_continue)
         btn_exit.on_clicked(click_exit)
+        btn_deselect.on_clicked(undo_selection)
 
-        # Lasso callback
+        def on_pick(event):
+            if event.artist != scatter_blue:
+                return
+            ind = event.ind
+            if len(ind) == 0:
+                return
+            logger.info(f"Selected {len(ind)} point(s) via CLICK.")
+            
+            selected_indices = ind
+            selected_points = xy[selected_indices]
+            ax.scatter(selected_points[:, 0], selected_points[:, 1],
+                   color='red', s=30, zorder=3)
+            plt.draw()
+            selected_dt = list(mdates.num2date(selected_points[:, 0]))
+            selected_temp = selected_points[:, 1].tolist()
+            selected_df = pd.DataFrame({
+                        "DateTime": selected_dt,
+                        "Temperature": selected_temp,
+                        "idx": selected_indices})
+            selection_groups.append(selected_df)
+            
         def onselect(verts):
             path = Path(verts)
             selected_indices = np.nonzero(path.contains_points(xy))[0]
             if selected_indices.size == 0:
                 return
+            logger.info(f"Selected {len(selected_indices)} point(s) via LASSO")
             selected_points = xy[selected_indices]
             ax.scatter(mdates.num2date(selected_points[:, 0]), selected_points[:, 1], color='red', s=20)
             plt.draw()
@@ -213,14 +267,20 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             # Store selected points
             selected_dt = list(mdates.num2date(selected_points[:, 0]))
             selected_temp = selected_points[:, 1].tolist()
-            selected_df = pd.DataFrame({'DateTime': selected_dt, 'Temperature': selected_temp, 'idx': selected_indices})
+            selected_df = pd.DataFrame({
+                'DateTime': selected_dt, 
+                'Temperature': selected_temp, 
+                'idx': selected_indices})
             selection_groups.append(selected_df)
-            logger.info(f"Selected {len(selected_indices)} points via Lasso.")
+            
+        fig.canvas.mpl_connect("pick_event", on_pick)
+        scatter_blue = ax.scatter(df.index, df['Temperature'], s=10, color='blue', picker=5)
 
-        # Activate lasso
         lasso = LassoSelector(ax, onselect)
-
+        
+        ## Plt show non-blocking
         plt.show(block=False)
+        
         # Wait until the figure is closed, processing Qt events so the main GUI remains responsive
         app = QApplication.instance()
         while plt.fignum_exists(fig.number) and not exit_requested:
@@ -228,11 +288,13 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
                 app.processEvents()
             time.sleep(0.05)
 
-        
-        # After closing the plot, you can access all selected points
+        # After closing the plot and collecting all selection groups
         if selection_groups:
             combined_indices = np.unique(
                 np.concatenate([g['idx'].to_numpy() for g in selection_groups])).astype(int)
+            logger.info(f"Total of {len(combined_indices)} unique points selected for flagging.")
+            
+            logger.info("Flagging selected points with QTE90_01 = 4, others with QTE90_01 = 1.")
             index_labels_to_flag = orig_df.index[combined_indices]
             orig_df.loc[index_labels_to_flag, 'QTE90_01'] = 4
             orig_df.loc[~orig_df.index.isin(index_labels_to_flag), 'QTE90_01'] = 1
@@ -249,7 +311,8 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             mtr.update_odf()
             file_spec = mtr.generate_file_spec()
             mtr.file_specification = file_spec
-            logger.info(f"Writing file {idx} of {len(mtr_files)}: {mtr_file} after QC...please wait......")
+            logger.info(f"Writing file {idx} of {len(mtr_files)}: {mtr_file}")
+            logger.info(f"Please wait...writing QC ODF file...")
             out_file = pathlib.Path(out_odf_path) / f"{file_spec}.ODF"
             mtr.write_odf(str(out_file), version=2.0)
             logger.info(f"✔ QC completed for [{idx}/{len(mtr_files)}]: {mtr_file}")
@@ -355,7 +418,8 @@ def start_qc_process(log_ui: LogWindowUI):
         return
     logger.info(f"Inputs selected: operator={operator}, input={input_path}, output={output_path}")
     run_qc_thermograph_data(input_path, output_path, operator)
-    logger.info("Finished run_qc_thermograph_data (returned to GUI).")
+    logger.info("Finished batch successfully (returned to GUI).")
+    logger.info("Please Start QC for new batch.")
 
 
 def main():
