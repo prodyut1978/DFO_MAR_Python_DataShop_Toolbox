@@ -10,19 +10,15 @@ import pathlib
 import sys
 import time
 from PyQt6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QVBoxLayout,
-    QPushButton,
-    QTextEdit,
-    QFileDialog)
+    QApplication,)
 from datashop_toolbox.thermograph import ThermographHeader
 from datashop_toolbox.historyhdr import HistoryHeader
 from datashop_toolbox.validated_base import get_current_date_time
 from datashop_toolbox import select_metadata_file_and_data_folder
 from datashop_toolbox.log_window import (
-    SafeConsoleFilter, QTextEditLogger, 
-    SafeConsoleFilter)
+    SafeConsoleFilter, 
+    SafeConsoleFilter, 
+    LogWindowUI)
 import logging
 
 exit_requested = False
@@ -36,54 +32,8 @@ logger.addHandler(console_handler)
 file_handler = logging.FileHandler("datashop_log.txt", encoding="utf-8")
 file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
 logger.addHandler(file_handler)
-logger.info("Logger initialized.")
+logger.info("Logger file initialized.")
 
-
-class LogWindowUI(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Thermograph QC — Log Window")
-        self.resize(900, 700)
-        layout = QVBoxLayout(self)
-
-        # Log display
-        self.log_view = QTextEdit(self)
-        self.log_view.setReadOnly(True)
-        layout.addWidget(self.log_view)
-
-        # Buttons
-        self.btn_start = QPushButton("Start QC")
-        self.export_button = QPushButton("Export Log")
-        self.export_button.clicked.connect(self.export_log)
-        self.btn_exit = QPushButton("Exit Program")
-
-        layout.addWidget(self.btn_start)
-        layout.addWidget(self.export_button)
-        layout.addWidget(self.btn_exit)
-
-        # Attach a QTextEdit-based logger handler to the global logger
-        self.qtext_handler = QTextEditLogger(self.log_view)
-        logger.addHandler(self.qtext_handler)
-
-        # Small initial message
-        self.append_log("📌 Log window initialized.")
-
-    def append_log(self, text: str):
-        """Convenience method to append a simple message (and log it)."""
-        logger.info(text)
-
-    def export_log(self):
-        """Export the current log content to a text file."""
-        filename, _ = QFileDialog.getSaveFileName(
-            self, "Save Log", "", "Text Files (*.txt);;All Files (*)"
-        )
-        if filename:
-            try:
-                with open(filename, "w", encoding="utf-8") as f:
-                    f.write(self.log_box.toPlainText())
-                self._append_text(f"\n✅ Log exported to: {filename}")
-            except Exception as e:
-                self._append_text(f"\n❌ Failed to export log: {e}")
 
 
 def run_qc_thermograph_data(input_path, output_path, qc_operator):
@@ -91,9 +41,9 @@ def run_qc_thermograph_data(input_path, output_path, qc_operator):
     wildcard = "*.ODF"
     task_completion= qc_thermograph_data(input_path, wildcard, output_path, qc_operator)
     if task_completion["finished"]:
-        logger.info(f"✅ QC Thermograph Data task completed successfully.")
+        logger.info(f"QC Thermograph Data task completed successfully.")
     else:
-        print("❌ QC Thermograph Data task did not complete.")
+        print("QC Thermograph Data task did not complete.")
     return task_completion
    
     
@@ -137,8 +87,8 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             logger.warning("Exit requested — stopping QC loop.")
             break
         
-        logger.info(f"✅ Reading file {idx} of {len(mtr_files)}: {mtr_file}")
-        logger.info(f"✅ Please wait...reading ODF file for QC visualization...")
+        logger.info(f"Reading file {idx} of {len(mtr_files)}: {mtr_file}")
+        logger.info(f"Please wait...reading ODF file for QC visualization...")
 
         full_path = str(pathlib.Path(in_folder_path, mtr_file))
         
@@ -211,13 +161,11 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             ax.cla()
 
             # Replot original blue data points
-            nonlocal  scatter_blue
-            scatter_blue = ax.scatter(df.index, df['Temperature'], s=10, color='blue', picker=5)
+
             ax.set_title(f'[{idx}/{len(mtr_files)}] Time Series Data - {mtr_file}')
             ax.set_xlabel('Date Time')
             ax.set_ylabel('Temperature')
             ax.grid(True)
-            fig.canvas.mpl_connect('pick_event', on_pick)
 
             # Recreate the lasso tool since clearing breaks it
             nonlocal lasso   # allow access to outer variable
@@ -232,28 +180,7 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
         btn_continue.on_clicked(click_continue)
         btn_exit.on_clicked(click_exit)
         btn_deselect.on_clicked(undo_selection)
-
-        def on_pick(event):
-            if event.artist != scatter_blue:
-                return
-            ind = event.ind
-            if len(ind) == 0:
-                return
-            logger.info(f"Selected {len(ind)} point(s) via CLICK.")
-            
-            selected_indices = ind
-            selected_points = xy[selected_indices]
-            ax.scatter(selected_points[:, 0], selected_points[:, 1],
-                   color='red', s=30, zorder=3)
-            plt.draw()
-            selected_dt = list(mdates.num2date(selected_points[:, 0]))
-            selected_temp = selected_points[:, 1].tolist()
-            selected_df = pd.DataFrame({
-                        "DateTime": selected_dt,
-                        "Temperature": selected_temp,
-                        "idx": selected_indices})
-            selection_groups.append(selected_df)
-            
+    
         def onselect(verts):
             path = Path(verts)
             selected_indices = np.nonzero(path.contains_points(xy))[0]
@@ -273,9 +200,6 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
                 'idx': selected_indices})
             selection_groups.append(selected_df)
             
-        fig.canvas.mpl_connect("pick_event", on_pick)
-        scatter_blue = ax.scatter(df.index, df['Temperature'], s=10, color='blue', picker=5)
-
         lasso = LassoSelector(ax, onselect)
         
         ## Plt show non-blocking
@@ -298,7 +222,7 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             index_labels_to_flag = orig_df.index[combined_indices]
             orig_df.loc[index_labels_to_flag, 'QTE90_01'] = 4
             orig_df.loc[~orig_df.index.isin(index_labels_to_flag), 'QTE90_01'] = 1
-            logger.info(f"✔ Flagged {len(index_labels_to_flag)} points in {mtr_file}")  
+            logger.info(f"Flagged {len(index_labels_to_flag)} points in {mtr_file}")  
         else:
             orig_df['QTE90_01'] = 1
             logger.info("No points were selected for this file.")
@@ -315,17 +239,17 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             logger.info(f"Please wait...writing QC ODF file...")
             out_file = pathlib.Path(out_odf_path) / f"{file_spec}.ODF"
             mtr.write_odf(str(out_file), version=2.0)
-            logger.info(f"✔ QC completed for [{idx}/{len(mtr_files)}]: {mtr_file}")
-            logger.info(f"    → Saved [{idx}/{len(mtr_files)}]: {out_file}")
+            logger.info(f"QC completed for [{idx}/{len(mtr_files)}]: {mtr_file}")
+            logger.info(f"Saved [{idx}/{len(mtr_files)}]: {out_file}")
         except Exception as e:
             logger.exception(f"Failed writing QC ODF for {mtr_file}: {e}")
 
     # Completed loop
     if not exit_requested and (idx == len(mtr_files)):
-        logger.info(f"🎉 QC process completed for all {len(mtr_files)} files.")
+        logger.info(f"QC process completed for all {len(mtr_files)} files.")
         batch_result_container["finished"] = True
     elif exit_requested:
-        logger.info(f"⚠️ QC process was interrupted before completion ({idx} of {len(mtr_files)} files).")
+        logger.info(f"QC process was interrupted before completion ({idx} of {len(mtr_files)} files).")
         batch_result_container["finished"] = False
     else:
         # fallback
@@ -430,6 +354,8 @@ def main():
 
     log_window = LogWindowUI()
     log_window.show()
+    logger.addHandler(log_window.qtext_handler)
+    logger.info("Log window initialized.")
 
     # Connect buttons
     log_window.btn_start.clicked.connect(lambda: start_qc_process(log_window))

@@ -1,6 +1,13 @@
 # log_window.py
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QPushButton, QFileDialog, QHBoxLayout
-from PyQt6.QtCore import pyqtSignal, QObject, QThread, Qt
+from PyQt6.QtWidgets import (
+    QApplication,
+    QWidget, 
+    QVBoxLayout, 
+    QTextEdit, 
+    QPushButton, 
+    QFileDialog, 
+    QHBoxLayout,)
+from PyQt6.QtCore import pyqtSignal, QObject, QThread
 import sys
 import traceback
 import logging
@@ -141,13 +148,34 @@ class SafeConsoleFilter(logging.Filter):
             record.msg = record.msg.encode("ascii", "ignore").decode()
         return True
 
+class LogWindowUI(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Thermograph QC — Log Window")
+        self.resize(900, 700)
+        layout = QVBoxLayout(self)
+
+        # Log display
+        self.log_view = QTextEdit(self)
+        self.log_view.setReadOnly(True)
+        layout.addWidget(self.log_view)
+
+        # Buttons
+        self.btn_start = QPushButton("Start QC")
+        self.btn_exit = QPushButton("Exit Program")
+
+        layout.addWidget(self.btn_start)
+        layout.addWidget(self.btn_exit)
+        self.qtext_handler = QTextEditLogger(self.log_view)
+        
+
 
 if __name__ == "__main__":
     
     app = QApplication(sys.argv)
     app.setStyle('Fusion')
 
-    window = LogWindow()
+    window = LogWindowUI()
     window.show()
     #window.redirect_prints_to_log()
 
