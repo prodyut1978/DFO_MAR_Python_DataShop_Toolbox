@@ -1,8 +1,10 @@
 import glob
 import matplotlib.pyplot as plt
-from matplotlib.widgets import LassoSelector, Button
+from matplotlib.widgets import LassoSelector, Button, RadioButtons
 from matplotlib.path import Path
 import matplotlib.dates as mdates
+from matplotlib.patches import Rectangle
+import matplotlib.colors as mcolors
 import numpy as np
 import os
 import pandas as pd
@@ -25,6 +27,7 @@ exit_requested = False
 global logger
 logger = logging.getLogger("datashop")
 logger.setLevel(logging.INFO)
+logger.propagate = False 
 console_handler = logging.StreamHandler()
 console_handler.addFilter(SafeConsoleFilter())
 console_handler.setFormatter(logging.Formatter("[%(levelname)s] %(message)s"))
@@ -33,6 +36,24 @@ file_handler = logging.FileHandler("datashop_log.txt", encoding="utf-8")
 file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
 logger.addHandler(file_handler)
 logger.info("Logger file initialized.")
+
+FLAG_LABELS = {
+            0: "Not been QC'd",
+            1: "Correct",
+            2: "Inconsistent",
+            3: "Doubtful",
+            4: "Erroneous",
+            5: "Modified",
+        }
+
+FLAG_COLORS = {
+    0: "#808080",
+    1: "#02590F",
+    2: "#B59410",
+    3: "#8B008B",
+    4: "#FF0000",
+    5: "#00008B",
+}
 
 
 
@@ -100,106 +121,163 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             continue
 
         orig_df = mtr.data.data_frame
+        orig_df =orig_df.copy()
+        orig_df.reset_index(drop=True, inplace=True)
+        orig_df= pd.DataFrame(orig_df)
 
         # Extract temperature and time
         temp = orig_df['TE90_01'].to_numpy()
         sytm = orig_df['SYTM_01'].str.lower().str.strip("'")
+        
+        if 'QTE90_01' in orig_df.columns:
+            qflag = orig_df['QTE90_01'].to_numpy().astype(int)
+        else:
+            orig_df['QTE90_01']= np.zeros(len(orig_df), dtype=int)
+            qflag = orig_df['QTE90_01'].to_numpy().astype(int)
+        
         try:
             dt = pd.to_datetime(sytm, format='%d-%b-%Y %H:%M:%S.%f')
         except Exception:
             dt = pd.to_datetime(sytm, infer_datetime_format=True, errors="coerce")
 
+       
         # Create a DataFrame with Temperature as the variable and DateTime as the index.
-        df = pd.DataFrame({'Temperature': temp}, index=dt)
+        df = pd.DataFrame({'Temperature': temp, 'qualityflag': qflag}, index=dt)
 
         # Convert datetime to numeric for lasso selection
+        xnums = mdates.date2num(df.index.to_pydatetime())
         xy = np.column_stack([mdates.date2num(df.index.to_pydatetime()), df['Temperature']])
+        colors_initial = [FLAG_COLORS.get(int(f), "#808080") for f in df['qualityflag']]
 
         # Store multiple selection groups
         selection_groups = []
-
-        # Plot the temperature time series
-        fig, ax = plt.subplots(figsize=(10, 6))
-        pts = ax.scatter(df.index, df['Temperature'], s=10, color='blue')
-        plt.title(f'[{idx}/{len(mtr_files)}] Time Series Data- {mtr_file}')
-        plt.xlabel('Date Time')
-        plt.ylabel('Temperature')
-        plt.grid(True)
-
-        # --- Buttons (tuple positions required in Python 3.13+) ---
-        ax_deselect = plt.axes((0.02, 0.01, 0.12, 0.06))
-        ax_continue = plt.axes((0.70, 0.01, 0.12, 0.06))
-        ax_exit = plt.axes((0.85, 0.01, 0.12, 0.06))
-
-        btn_deselect = Button(ax_deselect, "Undo Selection")
-        btn_continue = Button(ax_continue, "Continue")
-        btn_exit = Button(ax_exit, "Exit")
+        applied = False
+        user_exited = False
+        current_flag = 4
         
-        # --- Optional visual tweaks ---
-        btn_continue.color = "lightgreen"
-        btn_exit.color = "salmon"
-        btn_continue.hovercolor = "limegreen"
-        btn_exit.hovercolor = "red"
-        btn_deselect.color = "lightblue"
-        btn_deselect.hovercolor = "yellow"
+        plt.style.use('ggplot')
+        fig = plt.figure(figsize=(12, 6))
+        ax = fig.add_axes([0.065, 0.15, 0.72, 0.8])
 
+        radio_ax = fig.add_axes([0.80, 0.35, 0.2, 0.35])
+        radio_ax.set_axis_off()
+        radio_ax.set_title("Select Quality Flag:", fontsize=12, pad=0, 
+                   fontweight='heavy', color='navy',
+                   family='serif', loc='left')
+        ax_deselectALL = fig.add_axes([0.06, 0.01, 0.15, 0.07])
+        ax_exit = fig.add_axes([0.004, 0.01, 0.05, 0.07])
+        ax_continue = fig.add_axes([0.86, 0.01, 0.13, 0.07])
+        
+        
+        scatter = ax.scatter(xnums, df['Temperature'], s=10, c=colors_initial, picker=5, zorder=1)
+        ax.set_title(f"[{idx}/{len(mtr_files)}] Time Series Data- {mtr_file}")
+        ax.set_xlabel("Date Time")
+        ax.set_ylabel("Temperature")
+        ax.grid(True)
+
+        btn_deselectALL = Button(ax_deselectALL, "Undo All Selections")
+        btn_deselectALL.color = "lightblue"
+        btn_deselectALL.hovercolor = "yellow"
+        btn_deselectALL.label.set_fontsize(10)
+
+        btn_exit = Button(ax_exit, "Exit")
+        btn_exit.color = "salmon"
+        btn_exit.hovercolor = "red"
+        btn_exit.label.set_fontsize(10)
+
+        btn_continue = Button(ax_continue, "Continue Next >>")
+        btn_continue.color = "lightgreen"
+        btn_continue.hovercolor = "limegreen"
+        btn_continue.label.set_fontsize(10)
+        
+        radio_labels = [f"{k}: {FLAG_LABELS[k]}" for k in FLAG_LABELS]
+        radio = RadioButtons(radio_ax, radio_labels, active=list(FLAG_LABELS.keys()).index(current_flag))
+
+        for i, text in enumerate(radio.labels):
+            flag = list(FLAG_LABELS.keys())[i]
+            text.set_color(FLAG_COLORS[flag])
+            x, y = text.get_position()
+            # Small color square beside text
+            rect = Rectangle((0.01, y - 0.017), 0.07, 0.05,
+                            color=FLAG_COLORS[flag], transform=radio_ax.transAxes)
+            radio_ax.add_patch(rect)
+            text.set_family('serif')
+            text.set_fontsize(10)
+            text.set_weight('bold')
+            text.set_linespacing(1)
+
+        def set_current_flag_from_label(label):
+            nonlocal current_flag
+            current_flag = int(label.split(":")[0])
+            logger.info(f"Current flag set to {current_flag}")
+        
         def click_continue(event):
+            nonlocal applied
+            applied = True
             logger.info("Figure: Continue clicked.")
             plt.close(fig)  # close figure and continue
-
+        
         def click_exit(event):
-            global exit_requested
-            exit_requested = True
+            nonlocal user_exited
+            user_exited = True
             logger.info("Figure: Exit clicked (exit_requested set True).")
             plt.close(fig)  # close figure and stop
 
-        def undo_selection(event):
-            """Clear all selected groups and redraw original plot."""
-            selection_groups.clear()  # Remove all previously selected regions
-            logger.info("Figure: Undo Selection clicked (all selections cleared).")
-            # Reset axes
-            ax.cla()
-
-            # Replot original blue data points
-
-            ax.set_title(f'[{idx}/{len(mtr_files)}] Time Series Data - {mtr_file}')
-            ax.set_xlabel('Date Time')
-            ax.set_ylabel('Temperature')
-            ax.grid(True)
-
-            # Recreate the lasso tool since clearing breaks it
-            nonlocal lasso   # allow access to outer variable
-            try:
-                lasso.disconnect_events()
-            except Exception:
-                pass
-            lasso = LassoSelector(ax, onselect)
-
-            fig.canvas.draw_idle()
-        
-        btn_continue.on_clicked(click_continue)
-        btn_exit.on_clicked(click_exit)
-        btn_deselect.on_clicked(undo_selection)
-    
         def onselect(verts):
             path = Path(verts)
-            selected_indices = np.nonzero(path.contains_points(xy))[0]
+            selected_indices = np.nonzero(path.contains_points(xy))[0].astype(int)
             if selected_indices.size == 0:
                 return
             logger.info(f"Selected {len(selected_indices)} point(s) via LASSO")
-            selected_points = xy[selected_indices]
-            ax.scatter(mdates.num2date(selected_points[:, 0]), selected_points[:, 1], color='red', s=20)
-            plt.draw()
+            df.iloc[selected_indices, df.columns.get_loc('qualityflag')] = current_flag
+            try:
+                facecolors = scatter.get_facecolors()
+                new_rgba = np.array(mcolors.to_rgba(FLAG_COLORS[current_flag]))
+                facecolors[selected_indices] = new_rgba
+                scatter.set_facecolors(facecolors)
+            except Exception:
+                colors = [FLAG_COLORS[int(f)] for f in df['qualityflag']]
+                scatter.set_color(colors)
 
-            # Store selected points
-            selected_dt = list(mdates.num2date(selected_points[:, 0]))
-            selected_temp = selected_points[:, 1].tolist()
+            selected_dt = df.index[selected_indices]
+            selected_temp = df['Temperature'].iloc[selected_indices].to_numpy()
+            #Store selected points
             selected_df = pd.DataFrame({
                 'DateTime': selected_dt, 
                 'Temperature': selected_temp, 
-                'idx': selected_indices})
+                'idx': selected_indices,
+                "Flag": current_flag })
             selection_groups.append(selected_df)
+            fig.canvas.draw_idle()
             
+   
+        def click_deselect_all(event):
+            nonlocal selection_groups, df, scatter
+            selection_groups.clear()
+            logger.info("Figure: Undo Selection clicked (all selections cleared).")
+
+            # FULL reset of flags to original values (if needed)
+            df['qualityflag'] = qflag.copy()
+
+            # Remove all artists from axes (clean reset)
+            ax.cla()
+
+            # Replot using initial colors
+            colors_initial = [FLAG_COLORS.get(f, "#808080") for f in df['qualityflag']]
+            scatter = ax.scatter(df.index, df['Temperature'], s=10, c=colors_initial,
+                                picker=5, zorder=1)
+
+            # Restore axes labels, title, grid
+            ax.set_title(f"[{idx}/{len(mtr_files)}] Time Series Data- {mtr_file}")
+            ax.set_xlabel("Date Time")
+            ax.set_ylabel("Temperature")
+            ax.grid(True)
+            fig.canvas.draw_idle()
+        
+        radio.on_clicked(set_current_flag_from_label)
+        btn_continue.on_clicked(click_continue)
+        btn_exit.on_clicked(click_exit)
+        btn_deselectALL.on_clicked(click_deselect_all)
         lasso = LassoSelector(ax, onselect)
         
         ## Plt show non-blocking
@@ -210,24 +288,32 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
         while plt.fignum_exists(fig.number) and not exit_requested:
             if app:
                 app.processEvents()
-            time.sleep(0.05)
+            time.sleep(0.001)
 
         # After closing the plot and collecting all selection groups
-        if selection_groups:
-            combined_indices = np.unique(
-                np.concatenate([g['idx'].to_numpy() for g in selection_groups])).astype(int)
+        if applied:
+            if selection_groups:
+                combined_indices= np.unique(np.concatenate([g['idx'].to_numpy() for g in selection_groups])).astype(int)
+            else:
+                combined_indices = np.array([], dtype=int)
             logger.info(f"Total of {len(combined_indices)} unique points selected for flagging.")
+
+            if len(orig_df) != len(df):
+                raise ValueError(f"Size mismatch: orig_df has {len(orig_df)} rows, but df has {len(df)} rows.")
             
-            logger.info("Flagging selected points with QTE90_01 = 4, others with QTE90_01 = 1.")
-            index_labels_to_flag = orig_df.index[combined_indices]
-            orig_df.loc[index_labels_to_flag, 'QTE90_01'] = 4
-            orig_df.loc[~orig_df.index.isin(index_labels_to_flag), 'QTE90_01'] = 1
-            logger.info(f"Flagged {len(index_labels_to_flag)} points in {mtr_file}")  
+            if len(combined_indices) > 0:
+                orig_df.iloc[combined_indices, orig_df.columns.get_loc("QTE90_01")] = df.iloc[combined_indices]["qualityflag"].to_numpy()
+                # Everything not selected → flag = 1
+                non_sel_mask = ~np.isin(np.arange(len(orig_df)), combined_indices)
+                orig_df.loc[non_sel_mask, "QTE90_01"] = 1
         else:
             orig_df['QTE90_01'] = 1
             logger.info("No points were selected for this file.")
+        
+        new_flags = orig_df["QTE90_01"].to_numpy()
 
         # Output revised ODF
+        print(orig_df['QTE90_01'])
         try:
             mtr.data.data_frame = orig_df
             mtr.add_history()
