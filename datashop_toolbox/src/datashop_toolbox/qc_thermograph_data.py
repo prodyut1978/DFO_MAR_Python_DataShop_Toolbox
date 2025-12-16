@@ -49,6 +49,7 @@ FLAG_LABELS = {
             5: "Modified",
         }
 
+
 FLAG_COLORS = {
             0: "#808080",
             1: "#02590F",
@@ -57,7 +58,6 @@ FLAG_COLORS = {
             4: "#FF0000",
             5: "#00008B",
         }
-
 
 
 def run_qc_thermograph_data(input_path, output_path, qc_operator):
@@ -71,11 +71,11 @@ def run_qc_thermograph_data(input_path, output_path, qc_operator):
     return task_completion
    
 
-def prepare_output_folder(in_folder_path: str, out_folder_path: str):
+def prepare_output_folder(in_folder_path: str, out_folder_path: str, qc_operator: str) -> str:
     base_name_input = "Step_1_Create_ODF"
     in_folder_path = os.path.abspath(in_folder_path)
     
-    base_name_output = "Step_2_Assign_Quality_Flag"
+    base_name_output = "Step_2_Assign_QFlag"
     out_folder_path = os.path.abspath(out_folder_path)
     out_odf_path = os.path.join(out_folder_path, base_name_output)
     out_odf_path = os.path.abspath(out_odf_path)
@@ -83,21 +83,21 @@ def prepare_output_folder(in_folder_path: str, out_folder_path: str):
     
     if base_name_input.lower() in in_folder_path.lower():
         if (not os.path.exists(out_odf_path)) and (out_odf_path != in_folder_path):
-            logger.info(f"Initial QC Mode: No existing output folder found. Creating new folder, name : Step_2_Assign_Quality_Flag")
+            logger.info(f"Initial QC Mode: No existing output folder found. Creating new folder, name : Step_2_Assign_QFlag")
             os.makedirs(out_odf_path, exist_ok=True)
             logger.info(f"Created output folder: {out_odf_path}")
         else:
-            logger.info(f"Initial QC Mode: Overwriting existing output folder, name : Step_2_Assign_Quality_Flag")
+            logger.info(f"Initial QC Mode: Overwriting existing output folder, name : Step_2_Assign_QFlag")
             shutil.rmtree(out_odf_path)
             os.makedirs(out_odf_path, exist_ok=True)
             logger.warning(f"Overwriting existing folder: {out_odf_path}")
     else:
-        logger.info(f"Review QC Mode: Creating new output folder, name: Step_3_Review_Quality_Flag_with timestamp.")
+        logger.info(f"Review QC Mode: Creating new reviewed output folder, name: Step_3_Review_QFlag_with timestamp.")
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        new_name = f"Step_3_Review_Quality_Flag_{timestamp}"
+        new_name = f"Step_3_Review_QFlag_{qc_operator}_{timestamp}"
         out_odf_path = os.path.join(out_folder_path, new_name)
         os.makedirs(out_odf_path, exist_ok=True)
-        logger.info(f"Created new output folder: {out_odf_path}")
+        logger.info(f"Created new reviewed output folder: {out_odf_path}")
 
     return out_odf_path
 
@@ -130,7 +130,7 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
 
 
     # Prepare output folder
-    out_odf_path = prepare_output_folder(in_folder_path, out_folder_path)
+    out_odf_path = prepare_output_folder(in_folder_path, out_folder_path, qc_operator)
     logger.info(f"Created a output data folder name, Step_2_Quality_Flagging ")
     logger.info(f"Path for Step_2_Quality_Flagging: {out_odf_path}")
 
