@@ -94,7 +94,7 @@ def prepare_output_folder(in_folder_path: str, out_folder_path: str, qc_operator
     else:
         logger.info(f"Review QC Mode: Creating new reviewed output folder, name: Step_3_Review_QFlag_with timestamp.")
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        new_name = f"Step_3_Review_QFlag_{qc_operator}_{timestamp}"
+        new_name = f"Step_3_Review_QFlag_{qc_operator.strip().title()}_{timestamp}"
         out_odf_path = os.path.join(out_folder_path, new_name)
         os.makedirs(out_odf_path, exist_ok=True)
         logger.info(f"Created new reviewed output folder: {out_odf_path}")
@@ -564,7 +564,12 @@ def start_qc_process(log_ui: LogWindowUI):
     if not input_path or not output_path or not operator:
         logger.info("QC start aborted: missing input, output, or operator.")
         return
-    logger.info(f"Inputs selected: operator={operator}, input={input_path}, output={output_path}")
+    logger.info(
+                "QC Inputs Selected:\n"
+                f"  • QC Operator : {operator.strip().title()}\n"
+                f"  • Input Path  : {input_path}\n"
+                f"  • Output Path : {output_path}"
+            )
     run_qc_thermograph_data(input_path, output_path, operator)
     logger.info("Finished batch successfully (returned to GUI).")
     logger.info("Please Start QC for new batch.")
