@@ -455,7 +455,10 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
         try:
             mtr.data.data_frame = orig_df
             mtr.add_history()
-            mtr.add_to_history(f'ADDED QUALITY CODE FLAGGING AND PERFORMED VISUAL QC BY {qc_operator.upper()}')
+            if qc_mode_code_ == 0:
+                mtr.add_to_history(f'APPLIED QUALITY CODE FLAGGING AND PERFORMED INITIAL VISUAL QC BY {qc_operator.upper()}')
+            elif qc_mode_code_ == 1:
+                mtr.add_to_history(f'REVIEWED AND UPDATED QUALITY CODE FLAGGING BY {qc_operator.upper()}')
             mtr.update_odf()
             file_spec = mtr.generate_file_spec()
             mtr.file_specification = file_spec
