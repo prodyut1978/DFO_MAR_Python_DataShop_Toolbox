@@ -1,6 +1,7 @@
 README.md
 pyproject.toml
 src/datashop_toolbox/__init__.py
+src/datashop_toolbox/ai_thermograph_data.py
 src/datashop_toolbox/basehdr.py
 src/datashop_toolbox/compare_seabird_xmlcons.py
 src/datashop_toolbox/compasshdr.py
