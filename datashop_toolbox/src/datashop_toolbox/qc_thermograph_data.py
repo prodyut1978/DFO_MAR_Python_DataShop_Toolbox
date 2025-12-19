@@ -333,23 +333,7 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
                 scatter.set_color(colors)
             fig.canvas.draw_idle()
             logging.getLogger("qc_tool").info("Undo All Selections: restored original flags/colors.")
-
-
-            # # Remove all artists from axes (clean reset)
-            # ax.cla()
-
-            # # Replot using initial colors
-            # colors_initial = [FLAG_COLORS.get(f, "#808080") for f in df['qualityflag']]
-            # scatter = ax.scatter(df.index, df['Temperature'], s=10, c=colors_initial,
-            #                     picker=5, zorder=1)
-
-            # # Restore axes labels, title, grid
-            # ax.set_title(f"[{idx}/{len(mtr_files)}] Time Series Data- {mtr_file}")
-            # ax.set_xlabel("Date Time")
-            # ax.set_ylabel("Temperature")
-            # ax.grid(True)
-            # fig.canvas.draw_idle()
-        
+ 
         def on_pick(event):
             # click-to-select: event.ind are positional indices
             if event.artist != scatter:
