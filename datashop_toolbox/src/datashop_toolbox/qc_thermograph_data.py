@@ -333,7 +333,11 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
                 scatter.set_color(colors)
             fig.canvas.draw_idle()
             logging.getLogger("qc_tool").info("Undo All Selections: restored original flags/colors.")
+<<<<<<< HEAD
       
+=======
+ 
+>>>>>>> 9e5f22931d58ee8169fb79bc0c825b7c7fb11e29
         def on_pick(event):
             # click-to-select: event.ind are positional indices
             if event.artist != scatter:
