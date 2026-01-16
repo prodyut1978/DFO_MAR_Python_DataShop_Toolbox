@@ -6,7 +6,8 @@ from PyQt6.QtWidgets import (
     QTextEdit, 
     QPushButton, 
     QFileDialog, 
-    QHBoxLayout,)
+    QHBoxLayout,
+    QRadioButton)
 from PyQt6.QtCore import pyqtSignal, QObject, QThread
 import sys
 import traceback
@@ -159,6 +160,9 @@ class LogWindowUI(QWidget):
         self.log_view = QTextEdit(self)
         self.log_view.setReadOnly(True)
         layout.addWidget(self.log_view)
+
+        self.radio_opt = QRadioButton("Enable As QC Reviewer Mode")
+        layout.addWidget(self.radio_opt)
 
         # Buttons
         self.btn_start = QPushButton("Start QC")

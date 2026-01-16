@@ -13,8 +13,9 @@ import pandas as pd
 import pathlib
 import sys
 import time
+from datetime import timedelta
 from PyQt6.QtWidgets import (
-    QApplication,QMessageBox)
+    QApplication,QMessageBox, QRadioButton, QFileDialog)
 from datashop_toolbox.thermograph import ThermographHeader
 from datashop_toolbox.historyhdr import HistoryHeader
 from datashop_toolbox.validated_base import get_current_date_time
@@ -25,7 +26,11 @@ from datashop_toolbox.log_window import (
     LogWindowUI)
 from collections import Counter
 import logging
+import pytz
+import re
 
+ATLANTIC_TZ = pytz.timezone("Canada/Atlantic")
+UTC = pytz.UTC
 exit_requested = False
 global logger
 logger = logging.getLogger("datashop")
@@ -60,14 +65,85 @@ FLAG_COLORS = {
         }
 
 
-def run_qc_thermograph_data(input_path, output_path, qc_operator):
+def parse_to_utc(dt_str, tz_mode):
+    """
+    dt_str : string like '13:49 ADT Jul 11/14'
+    tz_mode: 'local' or 'UTC'
+    """
+    if pd.isna(dt_str) or str(dt_str).strip() == "":
+        return pd.NaT
+
+    # Remove duplicate timezone tokens like "/ADT"
+    dt_str = re.sub(r"/[A-Z]{3}$", "", str(dt_str)).strip()
+
+    try:
+        dt = pd.to_datetime(dt_str, errors="coerce")
+    except Exception:
+        return pd.NaT
+
+    if pd.isna(dt):
+        return pd.NaT
+
+    if tz_mode.lower() == "local":
+        # Local Atlantic time → UTC
+        if dt.tzinfo is None:
+            dt = ATLANTIC_TZ.localize(dt)
+        return dt.astimezone(UTC)
+
+    else:  # UTC
+        if dt.tzinfo is None:
+            return UTC.localize(dt)
+        return dt.astimezone(UTC)
+
+
+def validate_bio_metadata(meta: pd.DataFrame) -> bool:
+    if meta is None or meta.empty:
+        return False
+
+    cols = set(meta.columns)
+
+    # ---- ID or gauge must exist ----
+    if not ({"ID", "gauge"} & cols):
+        logger.warning("Metadata invalid: neither 'ID' nor 'gauge' column found.")
+        return False
+
+    # ---- deploy & recover must exist ----
+    required_time_cols = {"deploy", "recover"}
+    if not required_time_cols.issubset(cols):
+        logger.warning("Metadata invalid: 'deploy' and/or 'recover' column missing.")
+        return False
+
+    # ---- any acceptable timezone column must exist ----
+    tz_candidates = {
+        "instrument time zone",
+        "Instrument Time Zone",
+        "time zone",
+        "Time zone",
+        "Time Zone",
+        "timezone",
+        "TimeZone",
+    }
+
+    if not (tz_candidates & cols):
+        logger.warning("Metadata invalid: no recognized time-zone column found.")
+        return False
+
+    return True
+
+
+def run_qc_thermograph_data(input_path, output_path, qc_operator, metadata_file_path, review_mode: bool) -> dict:
     logger.info(f"Starting QC Thermograph Data task by {qc_operator} on {input_path}")
     wildcard = "*.ODF"
-    task_completion= qc_thermograph_data(input_path, wildcard, output_path, qc_operator)
+    task_completion= qc_thermograph_data(input_path, wildcard, output_path, qc_operator, metadata_file_path, review_mode)
+    print(task_completion)
     if task_completion["finished"]:
         logger.info(f"QC Thermograph Data task completed successfully.")
+        logger.info("Finished batch successfully (returned to GUI).")
+        logger.info("Please Start QC for new batch.")
     else:
         print("QC Thermograph Data task did not complete.")
+        logger.warning("QC Thermograph Data task did not complete.......")
+        logger.warning("Please check the logs for more details.")
     return task_completion
    
 
@@ -102,7 +178,7 @@ def prepare_output_folder(in_folder_path: str, out_folder_path: str, qc_operator
     return out_odf_path
 
 
-def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str, qc_operator: str):
+def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str, qc_operator: str, metadata_file_path: str, review_mode: bool) -> dict:
     """
     Processes ODF files in `in_folder_path` matching `wildcard`, writes to out_folder_path/Step_2_Quality_Flagging.
     Uses global `exit_requested` to allow user interruption.
@@ -112,6 +188,10 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
     global exit_requested
     exit_requested = False
     batch_result_container = {"finished": False}
+    if review_mode:
+        QC_Mode_user=1 # Review QC Mode
+    else:
+        QC_Mode_user=0 # Initial QC Mode
 
     cwd = os.getcwd()
 
@@ -152,14 +232,15 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
         except Exception as e:
             logger.exception(f"Failed to read ODF {full_path}: {e}")
             continue
-
+        
+        
+         # Extract data frame
         orig_df = mtr.data.data_frame
         orig_df_stored = orig_df.copy()
         orig_df =orig_df.copy()
         orig_df.reset_index(drop=True, inplace=True)
         orig_df= pd.DataFrame(orig_df)
 
-        # Extract temperature and time
         temp = orig_df['TE90_01'].to_numpy()
         sytm = orig_df['SYTM_01'].str.lower().str.strip("'")
         
@@ -178,18 +259,442 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
         # Create a DataFrame with Temperature as the variable and DateTime as the index.
         df = pd.DataFrame({'Temperature': temp, 'qualityflag': qflag}, index=dt)
         N = len(df)
-        qc_mode_slection=np.sum(df['qualityflag'])
-        if qc_mode_slection == 0:
-            qc_mode_=" QC Mode - Initial\n(No Previous QC Flags)"
-            qc_mode_code_=0
+
+        # Extract metadata from ODF headers
+        file_name= mtr._file_specification
+        file_name=f"{file_name}.ODF"
+        if file_name != mtr_file:
+            logger.warning(f"Filename mismatch: Header '{file_name}' vs Actual '{mtr_file}'")
+            batch_result_container["finished"] = False
+            return batch_result_container
         else:
-            qc_mode_=" QC Mode - Review\n(With Previous QC Flags)"
-            qc_mode_code_=1
+            logger.info(f"Filename verified: {mtr_file}")
+
+        organization =mtr.cruise_header.organization
+        Start_datetime= mtr.event_header.start_date_time
+        End_datetime= mtr.event_header.end_date_time
+        event_num = mtr.event_header.event_number
+        if event_num in (None, "", "NA", "NaN"):
+            event_num = None
+            logger.warning(f"Event number is invalid for {mtr_file}.")
+        if event_num is None:
+            # Matches _011_ in filename
+            match = re.search(r"_(\d{1,4})_", file_name)
+            if match:
+                event_num = match.group(1)
+                logger.info(f"Event number extracted from filename: {event_num}")
+            else:
+                logger.warning(
+                    f"Could not determine event number from header or filename: {file_name}"
+                )
+        Gauge_serial_number= mtr.instrument_header.serial_number
+        Instrument= mtr.instrument_header.instrument_type
+        list_organization= ['DFO BIO','FSRS']
+        
+        if organization not in list_organization:
+            logger.warning(f"Organization '{organization}' not recognized for {mtr_file}.")
+            break
+        
+        # Add metadata from metadata file if provided
+        meta = None
+        if organization == list_organization[1]:    # FSRS
+            if not metadata_file_path or not os.path.isfile(metadata_file_path):
+                QMessageBox.critical(
+                    None,
+                    "Missing Metadata File",
+                    "❌ FSRS processing requires a valid metadata file.\n\n"
+                    "Please select a valid metadata file before continuing."
+                )
+                logger.error("FSRS selected but metadata_file_path is missing or invalid.")
+                batch_result_container["finished"] = False
+                return batch_result_container
+                #return {}   # hard stop for this run
+            
+            try:
+                meta = mtr.read_metadata(metadata_file_path, organization)
+                date_str = meta["date"].astype(str)
+                time_str = meta["time"].astype(str)
+                time_str = time_str.where(meta["time"].notna() & (meta["time"] != ""),"00:00:00")
+                datetime_str = np.where(meta["date"].notna() & (meta["date"] != ""),date_str + " " + time_str,np.nan)
+                meta["datetime"] = pd.to_datetime(datetime_str,errors="coerce")
+                logger.info(f"Metadata successfully loaded for FSRS: {metadata_file_path}")
+            except Exception as e:
+                QMessageBox.critical(
+                None,
+                "Metadata Read Error",
+                f"❌ Failed to read metadata file:\n\n{metadata_file_path}\n\n{e}")
+                logger.exception(f"Failed to read metadata from {metadata_file_path}")
+                batch_result_container["finished"] = False
+                return batch_result_container
+            #return {}   # hard stop for this run
+        
+        if organization== list_organization[0]:     # DFO BIO
+            if metadata_file_path and os.path.isfile(metadata_file_path):
+                try:
+                    meta_tmp = mtr.read_metadata(metadata_file_path, organization)
+                    if not validate_bio_metadata(meta_tmp):
+                        meta = None
+                        logger.warning(
+                            "Metadata file loaded but failed validation; "
+                            "proceeding without metadata."
+                        )
+                    else:
+                        meta = meta_tmp
+                        tz_col = next(
+                            c for c in meta.columns
+                            if c.lower().replace(" ", "") in {
+                                "instrumenttimezone", "timezone"
+                            }
+                        )
+
+                        meta["deploy_utc"] = meta.apply(
+                                lambda r: parse_to_utc(r["deploy"], r[tz_col]),
+                                axis=1
+                            )
+
+                        meta["recover_utc"] = meta.apply(
+                            lambda r: parse_to_utc(r["recover"], r[tz_col]),
+                            axis=1
+                        )
+                        logger.info(f"Metadata loaded and validated (DFO BIO): {metadata_file_path}")
+                except Exception as e:
+                    logger.warning(
+                        f"Metadata file provided but could not be read: {metadata_file_path}. "
+                        f"Proceeding without metadata. Error: {e}"
+                    )
+                    meta = None
+            else:
+                meta = None
+                logger.info("No metadata file provided; proceeding without metadata assuming organization is DFO BIO.")
+
+        # Determine QC start/end from metadata if available
+        Start_datetime_QC = Start_datetime
+        End_datetime_QC = End_datetime
+
+        if organization == list_organization[1]:  # FSRS
+            meta_subset = meta[meta['gauge'] == int(Gauge_serial_number)]
+            if not meta_subset.empty:
+                if ("datetime" in meta_subset.columns and not meta_subset["datetime"].isna().all()):
+                    meta_subset = meta_subset.copy()
+                    meta_subset["datetime"] = pd.to_datetime(
+                                                meta_subset["datetime"],
+                                                errors="coerce"
+                                            )
+                    meta_subset = meta_subset.dropna(subset=["datetime", "soak_days"])
+                    if not meta_subset.empty:
+                        idx_start = meta_subset["datetime"].idxmin()
+                        start_dt = meta_subset.loc[idx_start, "datetime"]
+                        start_soak = meta_subset.loc[idx_start, "soak_days"]
+                        Start_datetime_QC = start_dt - pd.to_timedelta(start_soak, unit="D")
+
+                        idx_end = meta_subset["datetime"].idxmax()
+                        end_dt = meta_subset.loc[idx_end, "datetime"]
+                        end_soak = meta_subset.loc[idx_end, "soak_days"]
+                        End_datetime_QC = end_dt #+ pd.to_timedelta(end_soak, unit="D")
+
+                    else:
+                        Start_datetime_QC = Start_datetime
+                        End_datetime_QC = End_datetime
+
+                # ---- Case 2: only date column exists ----
+                elif ("date" in meta_subset.columns and not meta_subset["date"].isna().all()):
+                    meta_subset = meta_subset.copy()
+                    meta_subset["date"] = pd.to_datetime(
+                                                meta_subset["date"],
+                                                errors="coerce"
+                                            )
+                    meta_subset = meta_subset.dropna(subset=["date", "soak_days"])
+                    if not meta_subset.empty:
+                        idx_start = meta_subset["date"].idxmin()
+                        start_dt = meta_subset.loc[idx_start, "date"]
+                        start_soak = meta_subset.loc[idx_start, "soak_days"]
+                        Start_datetime_QC = start_dt - pd.to_timedelta(start_soak, unit="D")
+
+                        idx_end = meta_subset["date"].idxmax()
+                        end_dt = meta_subset.loc[idx_end, "date"]
+                        end_soak = meta_subset.loc[idx_end, "soak_days"]
+                        End_datetime_QC = end_dt #+ pd.to_timedelta(end_soak, unit="D")
+
+
+                    else:
+                        Start_datetime_QC = Start_datetime
+                        End_datetime_QC = End_datetime
+
+            else:
+                # Empty metadata subset → fallback
+                Start_datetime_QC = Start_datetime
+                End_datetime_QC = End_datetime
+        
+        if organization== list_organization[0]: # DFO BIO
+            dt_minutes = df.index.to_series().diff().dt.total_seconds() / 60.0
+            dTdt = df["Temperature"].diff() / dt_minutes
+            dTdt = dTdt.replace([np.inf, -np.inf], np.nan)
+            dT = df["Temperature"].diff()
+            df["dTdt"] = dTdt
+            df["dT"] = dT
+            
+            DROP_THRESHOLD = -0.2   # °C per sample minute (deployment)
+            RISE_THRESHOLD =  0.2   # °C per sample minute (recovery)
+            TEMP_JUMP_MAG = 2.0     # °C jump per sample interval
+            
+            deployment_rate_idx = df.index[dTdt < DROP_THRESHOLD]
+            deployment_jump_idx = df.index[dT <= -TEMP_JUMP_MAG]
+
+            deployment_candidates_rate = [
+                {
+                    "time": t,
+                    "type": "rate",
+                    "severity": abs(dTdt.loc[t]),   # °C/min
+                    "temp_drop": abs(dT.loc[t]) if not pd.isna(dT.loc[t]) else 0.0
+                }
+                for t in deployment_rate_idx
+            ]
+
+            deployment_candidates_jump = [
+                {
+                    "time": t,
+                    "type": "jump",
+                    "severity": abs(dT.loc[t]),     # °C
+                    "temp_drop": abs(dT.loc[t])
+                }
+                for t in deployment_jump_idx
+            ]
+
+            # --- Pick strongest from each ---
+            best_rate = max(
+                deployment_candidates_rate,
+                key=lambda x: x["severity"],
+                default=None
+            )
+
+            best_jump = max(
+                deployment_candidates_jump,
+                key=lambda x: x["severity"],
+                default=None
+            )
+
+            # --- Decision logic ---
+            if best_rate and best_jump:
+
+                # Case 1: same timestamp → strongest evidence
+                if best_rate["time"] == best_jump["time"]:
+                    start_in_water = best_rate["time"]
+
+                else:
+                    # Case 2: different timestamps → choose bigger temperature drop
+                    if best_jump["temp_drop"] > best_rate["temp_drop"]:
+                        start_in_water = best_jump["time"]
+                    elif best_jump["temp_drop"] < best_rate["temp_drop"]:
+                        start_in_water = best_rate["time"]
+                    else:
+                        # Tie-breaker: earlier event
+                        start_in_water = min(best_rate["time"], best_jump["time"])
+
+            elif best_rate:
+                start_in_water = best_rate["time"]
+
+            elif best_jump:
+                start_in_water = best_jump["time"]
+
+            else:
+                # Fallback: no signal detected
+                start_in_water = df.index[0]
+           
+            recovery_rate_idx = df.index[df["dTdt"] > RISE_THRESHOLD]
+            recovery_jump_idx = df.index[df["dT"] >= TEMP_JUMP_MAG]
+
+            recovery_candidates_rate = [
+                {
+                    "time": t,
+                    "type": "rate",
+                    "severity": abs(df.loc[t, "dTdt"]),   # °C/min
+                    "temp_rise": abs(df.loc[t, "dT"]) if pd.notna(df.loc[t, "dT"]) else 0.0
+                }
+                for t in recovery_rate_idx
+            ]
+
+            recovery_candidates_jump = [
+                {
+                    "time": t,
+                    "type": "jump",
+                    "severity": abs(df.loc[t, "dT"]),     # °C
+                    "temp_rise": abs(df.loc[t, "dT"])
+                }
+                for t in recovery_jump_idx
+            ]
+
+            # --- Pick strongest from each ---
+            best_rate = max(
+                recovery_candidates_rate,
+                key=lambda x: x["severity"],
+                default=None
+            )
+
+            best_jump = max(
+                recovery_candidates_jump,
+                key=lambda x: x["severity"],
+                default=None
+            )
+
+            # --- Decision logic ---
+            if best_rate and best_jump:
+
+                # Case 1: same timestamp → strongest evidence
+                if best_rate["time"] == best_jump["time"]:
+                    end_in_water = best_rate["time"]
+
+                else:
+                    # Case 2: choose larger temperature rise
+                    if best_jump["temp_rise"] > best_rate["temp_rise"]:
+                        end_in_water = best_jump["time"]
+                    elif best_jump["temp_rise"] < best_rate["temp_rise"]:
+                        end_in_water = best_rate["time"]
+                    else:
+                        # Tie-breaker: later event (recovery happens at end)
+                        end_in_water = max(best_rate["time"], best_jump["time"])
+
+            elif best_rate:
+                end_in_water = best_rate["time"]
+
+            elif best_jump:
+                end_in_water = best_jump["time"]
+
+            else:
+                # Fallback: no recovery detected
+                end_in_water = df.index[-1]
+
+            if end_in_water <= start_in_water:
+                start_in_water = df.index[0]
+                end_in_water = df.index[-1]
+
+            if meta is None:
+                Start_datetime_QC = pd.to_datetime(start_in_water)
+                End_datetime_QC = pd.to_datetime(end_in_water)
+            else:
+                meta = meta.copy()
+                if "ID" in meta.columns:
+                    meta_subset = meta[meta["ID"] == int(Gauge_serial_number)]
+                    if len(meta_subset) > 1:
+                        try:
+                            event_num_int = int(event_num)
+                        except (TypeError, ValueError):
+                            event_num_int = None
+                        if event_num_int is not None and event_num_int in meta_subset.index:
+                            meta_subset = meta_subset.loc[[event_num_int]]
+                        else:
+                            logger.warning(
+                                f"Multiple metadata entries found for gauge {Gauge_serial_number} "
+                                "but event number is missing or invalid; using all entries for this gauge."
+                            )
+                            meta_subset = meta_subset
+
+                else:
+                    meta_subset = pd.DataFrame()
+                
+                if meta_subset.empty:
+                    logger.warning(
+                        f"No metadata found for gauge {Gauge_serial_number}; "
+                        "falling back to in-water times."
+                    )
+                    Start_datetime_QC = pd.to_datetime(start_in_water, errors="coerce")
+                    End_datetime_QC   = pd.to_datetime(end_in_water, errors="coerce")
+                else:
+                    tolerance_start_T = timedelta(minutes=60)
+                    tolerance_end_T = timedelta(minutes=60)
+                    meta_subset = meta_subset.copy()
+                    if "deploy_utc" in meta_subset.columns and not meta_subset["deploy_utc"].isna().all():
+                        meta_subset["deploy_utc"] = pd.to_datetime(
+                            meta_subset["deploy_utc"], errors="coerce"
+                        )
+                        Start_in_meta = meta_subset["deploy_utc"].min()
+                        if Start_in_meta.tzinfo is not None:
+                            Start_in_meta = Start_in_meta.tz_convert("UTC").tz_localize(None)
+                        
+                        Start_datetime =pd.to_datetime(Start_datetime, errors="coerce")
+                        if ((Start_in_meta- Start_datetime) > tolerance_start_T):
+                            Start_datetime_QC = start_in_water
+                        else:
+                            Start_datetime_QC = Start_in_meta
+                    else:
+                        logger.warning(
+                            "deploy_utc missing or empty in metadata; using in-water start."
+                        )
+                        Start_datetime_QC = pd.to_datetime(start_in_water, errors="coerce")
+
+                    if "recover_utc" in meta_subset.columns and not meta_subset["recover_utc"].isna().all():
+                        meta_subset["recover_utc"] = pd.to_datetime(
+                            meta_subset["recover_utc"], errors="coerce"
+                        )
+                        End_in_meta = meta_subset["recover_utc"].max()
+                        if End_in_meta.tzinfo is not None:
+                            End_in_meta = End_in_meta.tz_convert("UTC").tz_localize(None)
+                        End_datetime = pd.to_datetime(End_datetime, errors="coerce")
+                        if ((End_datetime - End_in_meta) > tolerance_end_T):
+                            End_datetime_QC = end_in_water
+                        else:
+                            End_datetime_QC = End_in_meta
+                    else:
+                        logger.warning(
+                            "recover_utc missing or empty in metadata; using in-water end."
+                        )
+                        End_datetime_QC = pd.to_datetime(end_in_water, errors="coerce")
+
+        logger.info(f"Determined QC window for {mtr_file}: {Start_datetime_QC} to {End_datetime_QC}")
+        qc_start_num = mdates.date2num(pd.to_datetime(Start_datetime_QC))
+        qc_end_num   = mdates.date2num(pd.to_datetime(End_datetime_QC))
+        
+        # Determine QC Mode based on existing flags and user selection
+        has_previous_qc = np.any(df["qualityflag"] != 0)
+        if (not has_previous_qc) and (QC_Mode_user == 0):
+            qc_mode_ = " QC Mode - Initial\n(No Previous QC Flags)"
+            qc_mode_code_ = 0
+            block_next_ = 0
+        elif(not has_previous_qc) and (QC_Mode_user == 1):
+            qc_mode_ = " QC Mode - Invalid\n(Mode Selection Mismatch)"
+            qc_mode_code_ = 1
+            block_next_ = 1
+            logger.warning("QC Mode Mismatch: Review QC Mode selected but no previous QC flags found.")
+            QMessageBox.warning(
+                                None,
+                                "QC Mode Mismatch",
+                                "⚠️ Invalid QC Mode Selection\n\n"
+                                "You selected *Review QC Mode*, but no previous QC flags "
+                                "were found in this file.\n\n"
+                                "Please run *Initial QC Mode* first before reviewing QC.\n\n"
+                                "This file will not proceed."
+                            )
+            
+        elif(has_previous_qc) and (QC_Mode_user == 1):
+            qc_mode_ = " QC Mode - Review\n(With Previous QC Flags)"
+            qc_mode_code_ = 1
+            block_next_ = 0
+        else:
+            qc_mode_ = " QC Mode - Invalid\n(Mode Selection Mismatch)"
+            qc_mode_code_ = 1
+            block_next_ = 1
+            logger.warning("QC Mode Mismatch: Review QC Mode selected but no previous QC flags found.")
+            QMessageBox.warning(
+                                None,
+                                "QC Mode Mismatch",
+                                "⚠️ Invalid QC Mode Selection\n\n"
+                                "You selected *Review QC Mode*, but no previous QC flags "
+                                "were found in this file.\n\n"
+                                "Please run *Initial QC Mode* first before reviewing QC.\n\n"
+                                "This file will not proceed."
+                            )
+
         logger.info(f"QC Mode for this file {mtr_file}: {qc_mode_}")
 
         # Convert datetime to numeric for lasso selection
         xnums = mdates.date2num(df.index.to_pydatetime())
         xy = np.column_stack([mdates.date2num(df.index.to_pydatetime()), df['Temperature']])
+        before_qc_mask = df.index < Start_datetime_QC
+        after_qc_mask  = df.index > End_datetime_QC
+        if qc_mode_code_ == 0:
+            df.loc[df.index < Start_datetime_QC, "qualityflag"] = 4
+            df.loc[df.index > End_datetime_QC, "qualityflag"] = 4
+            in_water_mask = (df.index >= Start_datetime_QC) & (df.index <= End_datetime_QC)
+            df.loc[in_water_mask & ~df["qualityflag"].isin([4]),"qualityflag"] = 1
         colors_initial = [FLAG_COLORS.get(int(f), "#808080") for f in df['qualityflag']]
 
         # Store multiple selection groups
@@ -218,21 +723,93 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             label.set_fontweight('bold')
             label.set_family('serif')
         
+        info_ax = fig.add_axes([0.79, 0.85, 0.1, 0.35])  # [left, bottom, width, height]
+        info_ax.set_axis_off()  # hide the axes
+
+        info_text = (
+            f"\u2022 Start QC: {Start_datetime_QC}\n"
+            f"\u2022 End QC: {End_datetime_QC}\n"
+            f"\u2022 Instrument: {Instrument}\n"
+        )
+
+        info_ax.text(
+            0, 0, info_text,         # x=0 left, y=0 top
+            fontsize=8,
+            fontweight='bold',
+            family='serif',
+            color="navy",
+            va="top",
+            ha="left",
+            wrap=True
+        )
+        
         radio_ax = fig.add_axes([0.80, 0.20, 0.2, 0.35])
         radio_ax.set_axis_off()
         radio_ax.set_title("Assign Quality Codes for\nSelected Points:", fontsize=12, pad=0, 
                    fontweight='heavy', color='navy',
                    family='serif', loc='left')
-        ax_deselectALL = fig.add_axes([0.06, 0.01, 0.15, 0.07])
+        
         ax_exit = fig.add_axes([0.004, 0.01, 0.05, 0.07])
+        ax_deselectALL = fig.add_axes([0.06, 0.01, 0.14, 0.07])
+        ax_exportDF = fig.add_axes([0.21, 0.01, 0.13, 0.07])
         ax_continue = fig.add_axes([0.86, 0.01, 0.13, 0.07])
         
         scatter = ax.scatter(xnums, df['Temperature'], s=10, c=colors_initial, picker=5, zorder=1)
-        ax.set_title(f"[{idx}/{len(mtr_files)}] Time Series Data- {mtr_file}")
+        ax.set_title(f"[{idx}/{len(mtr_files)}] {organization} Time Series Data- {mtr_file}")
         ax.set_xlabel("Date Time")
         ax.set_ylabel("Temperature")
         ax.grid(True)
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+
+        ax.axvspan(
+                    qc_start_num,
+                    qc_end_num,
+                    color="lightblue",
+                    alpha=0.25,
+                    label="QC Window"
+            )
+        
+        ax.axvline(
+                    qc_start_num,
+                    color="blue",
+                    linestyle="--",
+                    linewidth=2,
+                    label="Deployment: Start"
+                )
+
+        ax.axvline(
+                    qc_end_num,
+                    color="blue",
+                    linestyle="--",
+                    linewidth=2,
+                    label="Recovered: End"
+                )
+        
+        ymin, ymax = ax.get_ylim()
+
+        ax.text(
+            qc_start_num,
+            ymax - 0.6,
+            "Deployment: Start",
+            color="purple",
+            fontsize=8,
+            verticalalignment="top",
+            horizontalalignment="right",
+            rotation=90,
+            bbox=dict(facecolor='purple', alpha=0.3, edgecolor='none', pad=2)
+        )
+
+        ax.text(
+            qc_end_num,
+            ymax - 0.6,
+            "Recovered: End",
+            color="purple",
+            fontsize=8,
+            verticalalignment="top",
+            horizontalalignment="right",
+            rotation=90,
+            bbox=dict(facecolor='purple', alpha=0.3, edgecolor='none', pad=2)
+        )
 
         btn_deselectALL = Button(ax_deselectALL, "Undo All Selections")
         btn_deselectALL.color = "lightblue"
@@ -248,6 +825,11 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
         btn_continue.color = "lightgreen"
         btn_continue.hovercolor = "limegreen"
         btn_continue.label.set_fontsize(10)
+
+        btn_exportDF = Button(ax_exportDF, "Export DataFrame")
+        btn_exportDF.color = "lightgrey"
+        btn_exportDF.hovercolor = "ghostwhite"
+        btn_exportDF.label.set_fontsize(10)
         
         radio_labels = [f"{k}: {FLAG_LABELS[k]}" for k in FLAG_LABELS]
         radio = RadioButtons(radio_ax, radio_labels, active=list(FLAG_LABELS.keys()).index(current_flag))
@@ -360,10 +942,51 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             selection_groups.append(sel_df)
             fig.canvas.draw_idle()
             
+        def export_dataframe(event):
+            nonlocal applied
+            applied = True
+            export_path, _ = QFileDialog.getSaveFileName(
+                None,
+                "Export DataFrame to CSV",
+                f"{os.path.splitext(os.path.basename(mtr_file))[0]}_QC_Export.csv",
+                "CSV Files (*.csv);;All Files (*)"
+            )
+            if export_path:
+                try:
+                    df_export = df.copy()
+                    df_export.reset_index(inplace=True)
+                    df_export.rename(columns={"index": "SEQ_INDEX"}, inplace=True)
+                    df_export.to_csv(export_path, index=False)
+                    logger.info(f"DataFrame exported successfully to {export_path}")
+                    QMessageBox.information(
+                        None,
+                        "Export Successful",
+                        f"✅ DataFrame exported successfully to:\n{export_path}"
+                    )
+                except Exception as e:
+                    logger.error(f"Failed to export DataFrame: {e}")
+                    QMessageBox.critical(
+                        None,
+                        "Export Failed",
+                        f"❌ Failed to export DataFrame:\n{e}"
+                    )
+        
+        
+        # Connect radio button event
         radio.on_clicked(set_current_flag_from_label)
+        
+        # Blocking next if mode mismatch
+        if block_next_ ==1:
+            btn_continue.disconnect_events()
+            os.rmdir(out_odf_path)
+        
+        # Bind button events
         btn_continue.on_clicked(click_continue)
         btn_exit.on_clicked(click_exit)
         btn_deselectALL.on_clicked(click_deselect_all)
+        btn_exportDF.on_clicked(export_dataframe)
+        
+        # Initialize Lasso Selector
         lasso = LassoSelector(ax, onselect)
         cid = fig.canvas.mpl_connect("pick_event", on_pick)
         
@@ -395,33 +1018,42 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
 
         # After closing the plot and collecting all selection groups
         if applied:
+            if len(orig_df) != len(df):
+                raise ValueError(f"Size mismatch: orig_df has {len(orig_df)} rows, but df has {len(df)} rows.")
+            
             if selection_groups:
                 combined_indices= np.unique(np.concatenate([g['idx'].to_numpy() for g in selection_groups])).astype(int)
             else:
                 combined_indices = np.array([], dtype=int)
-            logger.info(f"Total of {len(combined_indices)} unique points selected for flagging.")
-
-            if len(orig_df) != len(df):
-                raise ValueError(f"Size mismatch: orig_df has {len(orig_df)} rows, but df has {len(df)} rows.")
             
-            if len(combined_indices) > 0:
-                orig_df.iloc[combined_indices, orig_df.columns.get_loc("QTE90_01")] = df.iloc[combined_indices]["qualityflag"].to_numpy()
+            logger.info(f"Total of {len(combined_indices)} unique points selected for flagging.")
+            
+            if len(combined_indices) == 0:
                 if qc_mode_code_ == 0:
-                # Initial QC Mode: everything not selected → flag = 1
-                    non_sel_mask = ~np.isin(np.arange(len(orig_df)), combined_indices)
-                    orig_df.loc[non_sel_mask, "QTE90_01"] = 1
+                    # Initial QC Mode: no points selected → all flag = 1
+                    orig_df['QTE90_01'] = 1
+                    orig_df.loc[before_qc_mask, "QTE90_01"] = 4
+                    orig_df.loc[after_qc_mask,  "QTE90_01"] = 4
+                    logger.info("No points were selected for this file.")
+                    logger.info("Initial QC: applied default flags with QC window boundaries.")
                 elif qc_mode_code_ == 1:
-                    # Review-QC Mode: only selected points are changed, others remain as is
+                    # Review-QC Mode: no points selected → no changes made
+                    logger.info("No points were selected for this file; no changes made.")
                     pass
-        else:
-            if qc_mode_code_ == 0:
-                # Initial QC Mode: no points selected → all flag = 1
-                orig_df['QTE90_01'] = 1
-                logger.info("No points were selected for this file.")
-            elif qc_mode_code_ == 1:
-                # Review-QC Mode: no points selected → no changes made
-                logger.info("No points were selected for this file; no changes made.")
-        
+                        
+            if len(combined_indices) > 0:
+                if qc_mode_code_ == 0:
+                    orig_df["QTE90_01"] = 1
+                    orig_df.loc[before_qc_mask, "QTE90_01"] = 4
+                    orig_df.loc[after_qc_mask,  "QTE90_01"] = 4
+                    orig_df.iloc[combined_indices,orig_df.columns.get_loc("QTE90_01")] = df.iloc[combined_indices]["qualityflag"].to_numpy()
+                    logger.info(f"Applied {len(combined_indices)} user-selected QC flags with window enforcement.")
+                elif qc_mode_code_ == 1:
+                    orig_df.loc[before_qc_mask, "QTE90_01"] = 4
+                    orig_df.loc[after_qc_mask,  "QTE90_01"] = 4
+                    orig_df.iloc[combined_indices,orig_df.columns.get_loc("QTE90_01")] = df.iloc[combined_indices]["qualityflag"].to_numpy()
+                    logger.info("Review QC: updated selected points and enforced QC window.")
+
         orig_df_afterQC = orig_df.copy()
         afterQC_flags = orig_df_afterQC["QTE90_01"].to_numpy().astype(int)
         beforeQC_flags = orig_df_stored['QTE90_01'].to_numpy().astype(int)
@@ -445,6 +1077,24 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
                 mtr.add_to_history(f'REVIEWED AND UPDATED QUALITY CODE FLAGGING BY {qc_operator.upper()}')
             mtr.update_odf()
             file_spec = mtr.generate_file_spec()
+            event_num = getattr(mtr.event_header, "event_number", None)
+            
+            if "__" in file_spec or event_num is None:
+                # Extract 0–4 digit number between underscores in the filename
+                fname = file_name   # remove .ODF
+                match = re.search(r"_(\d{1,4})_", fname)
+                if match:
+                    event_num = match.group(1).zfill(3)  # pad with leading zeros if needed
+                    # Insert event number into file_spec if missing
+                    file_spec_parts = file_spec.split("__")
+                    if len(file_spec_parts) == 2:
+                        file_spec = f"{file_spec_parts[0]}_{event_num}_{file_spec_parts[1]}"
+                    else:
+                        # fallback: just append event_num if double underscore not found
+                        file_spec = f"{file_spec.replace('.ODF','')}_{event_num}.ODF"
+                else:
+                    raise ValueError(f"Could not determine event number from filename: {mtr_file}")
+            
             mtr.file_specification = file_spec
             logger.info(f"Writing file {idx} of {len(mtr_files)}: {mtr_file}")
             logger.info(f"Please wait...writing QC ODF file...")
@@ -469,21 +1119,22 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
     return batch_result_container
 
 
-def main_select_inputs():
+def main_select_inputs(review_mode: bool):
     app = QApplication.instance()
     must_quit_app = app is None
     if must_quit_app:
         app = QApplication(sys.argv)
     app.setStyle("Fusion")
     
-    select_inputs = select_metadata_file_and_data_folder.SubWindowOne()
+    select_inputs = select_metadata_file_and_data_folder.SubWindowOne(review_mode=review_mode)
     select_inputs.show()
 
-    result_container = {"finished": False, "input": None, "output": None, "operator": None}
+    result_container = {"finished": False, "input": None, "output": None, "operator": None, "metadata": None}
 
     
     def on_accept():
-        operator = select_inputs.qc_name.strip()
+        operator = select_inputs.line_edit_text.strip()
+        metadata_file_path = select_inputs.metadata_file
         input_path = select_inputs.input_data_folder
         output_path = select_inputs.output_data_folder
 
@@ -492,6 +1143,7 @@ def main_select_inputs():
             return
 
         result_container["operator"] = operator
+        result_container["metadata"] = metadata_file_path
         result_container["input"] = input_path
         result_container["output"] = output_path
         result_container["finished"] = True
@@ -517,9 +1169,10 @@ def main_select_inputs():
             result_container["input"],
             result_container["output"],
             result_container["operator"],
+            result_container["metadata"],   
         )
     else:
-        return None, None, None
+        return None, None, None, None
 
 
 def exit_program(app):
@@ -539,7 +1192,7 @@ def exit_program(app):
     app.quit()
 
 
-def start_qc_process(log_ui: LogWindowUI):
+def start_qc_process(log_ui: LogWindowUI, review_mode: bool):
     """
     Called when Start QC button is clicked.
     It opens the metadata/input selection dialog, and if accepted, runs the QC workflow.
@@ -547,7 +1200,14 @@ def start_qc_process(log_ui: LogWindowUI):
     global exit_requested
     exit_requested = False
     logger.info("Start QC button clicked.")
-    input_path, output_path, operator = main_select_inputs()
+    
+    review_mode = log_ui.radio_opt.isChecked()
+    if review_mode:
+        logger.info("Review QC Mode selected.")
+    else:
+        logger.info("Initial QC Mode selected.")
+    
+    input_path, output_path, operator, metadata_file_path = main_select_inputs(review_mode)
     if not input_path or not output_path or not operator:
         logger.info("QC start aborted: missing input, output, or operator.")
         return
@@ -555,12 +1215,11 @@ def start_qc_process(log_ui: LogWindowUI):
                 "QC Inputs Selected:\n"
                 f"  • QC Operator : {operator.strip().title()}\n"
                 f"  • Input Path  : {input_path}\n"
-                f"  • Output Path : {output_path}"
+                f"  • Output Path : {output_path}\n"
+                f"  • Metadata    : {metadata_file_path}\n"
             )
-    run_qc_thermograph_data(input_path, output_path, operator)
-    logger.info("Finished batch successfully (returned to GUI).")
-    logger.info("Please Start QC for new batch.")
-
+    run_qc_thermograph_data(input_path, output_path, operator, metadata_file_path, review_mode)
+    
 
 def main():
     app = QApplication.instance()
@@ -572,9 +1231,16 @@ def main():
     log_window.show()
     logger.addHandler(log_window.qtext_handler)
     logger.info("Log window initialized.")
+    log_window.radio_opt.toggled.connect(lambda checked: logger.info(f"Radio button is {'checked' if checked else 'unchecked'}"))
 
     # Connect buttons
-    log_window.btn_start.clicked.connect(lambda: start_qc_process(log_window))
+    #log_window.btn_start.clicked.connect(lambda: start_qc_process(log_window))
+    log_window.btn_start.clicked.connect(
+    lambda: start_qc_process(
+        log_window,
+        log_window.radio_opt.isChecked()
+    )
+    )
     log_window.btn_exit.clicked.connect(lambda: exit_program(app))
     logger.info("Application started. Use Start QC to begin.")
 

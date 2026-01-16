@@ -13,7 +13,7 @@ from typing import ClassVar
 from difflib import SequenceMatcher
 
 from PyQt6.QtWidgets import (
-    QApplication
+    QApplication, QInputDialog, QFileDialog, QMessageBox
 )
 
 from datashop_toolbox.basehdr import BaseHeader
@@ -24,7 +24,6 @@ from datashop_toolbox.historyhdr import HistoryHeader
 from datashop_toolbox.lookup_parameter import lookup_parameter
 from datashop_toolbox.qualityhdr import QualityHeader
 from datashop_toolbox import select_metadata_file_and_data_folder
-
 
 class ThermographHeader(OdfHeader):
     """
@@ -346,11 +345,51 @@ class ThermographHeader(OdfHeader):
                             delTime_UTC = int(delTime_UTC) if str(delTime_UTC).lstrip('+-').isdigit() else 0
                         continue
             
-            # --- Safety defaults: ask user if not found ---
-            if inst_model is None:
-                inst_model = input(f"⚠️ Input message for '{mtrfile}' file: Please input 'inst_model (example: Minilog-T)' to continue: ")
-            if gauge is None:
-                gauge = input(f"⚠️ Input message for '{mtrfile}' file: Please input 'gauge number(note: must be integer)' to continue: ")
+
+            #--- Safety defaults: ask user if not found ---
+            if inst_model is None or gauge is None:
+                msg_text = f"""❌ Instrument model or Gauge number missing in MTR file header:
+                    {mtrfile}
+                    Example MTR file header info:
+                    Source File: Minilog-II-T_351009_20130923_1.vld
+                    Source Device: Minilog-II-T-351009
+                    Study Description: Anonymous
+                    Minilog Initialized: 2013-03-26 09:36:11 (UTC-3)
+                    Study Start Time: 2013-03-26 10:00:00
+                    Study Stop Time: 2013-09-23 09:00:00
+                    Sample Interval: 00:00:00
+                    """
+                print(msg_text)
+                print("⚠️ Alternate Option: Attempting to extract instrument model and gauge from filename...")
+                filename = Path(mtrfile).name
+                pattern = r"^(Minilog-[^_]+)_(\d+)_"
+                match = re.search(pattern, filename)
+                if match:
+                    inst_model = match.group(1)
+                    gauge = match.group(2)
+                    print(f"✅ Extracted instrument model: {inst_model}, gauge: {gauge} from filename.")
+                    print("Please check the above raw MTR file header info in the file and ensure it matches the extracted values.")
+
+                else:
+                    print("⚠️ Unable to extract instrument model and gauge from filename.")
+                    print("You will be prompted to quit the application and restart the process after correcting the MTR file.")
+                    app = QApplication.instance()
+                    msg = QMessageBox()
+                    msg.setIcon(QMessageBox.Icon.Critical)
+                    msg.setWindowTitle("Missing Instrument or Gauge model")
+                    msg.setText(msg_text)
+                    msg.setInformativeText("Please check the above raw MTR file header if present and correct the file.") 
+                    msg.setInformativeText("You must quit the application and restart the process after correcting the MTR file.") 
+                    quit_btn = msg.addButton("Quit App", QMessageBox.ButtonRole.RejectRole)
+                    ok_btn = msg.addButton("Ok", QMessageBox.ButtonRole.AcceptRole)
+                    msg.setDefaultButton(ok_btn)
+                    msg.exec()
+                    if msg.clickedButton() == quit_btn:
+                        app.quit()
+                    if msg.clickedButton() == ok_btn:
+                        raise Exception(f"MissingMetaHeaderinMTRReading: Missing instrument model or gauge number in file {mtrfile}.")
+
+
             if delTime_UTC is None or delTime_UTC == 0:
                 print("⚠️ No UTC/GMT offset found in column headers. Setting offset = 0 and assumed Timezone is UTC")
                 delTime_UTC = 0
@@ -491,7 +530,13 @@ class ThermographHeader(OdfHeader):
 
         if institution == 'FSRS':
 
-            dfmeta = pd.read_table(metafile, encoding = 'iso8859_1')
+            dfmeta = pd.read_table(metafile, 
+                                encoding = 'iso8859_1',  
+                                sep="\t",
+                                engine="python",
+                                skip_blank_lines=False)
+
+            dfmeta = dfmeta.dropna(how="all")  # Drop rows where all elements are NaN
 
             # Change some column types.
             dfmeta['LFA'].astype(int)
@@ -514,7 +559,7 @@ class ThermographHeader(OdfHeader):
             # Fix the date and time columns.
             dfmeta = ThermographHeader.fix_datetime(dfmeta, False)
 
-        elif institution == 'BIO':
+        elif institution.strip().upper() in ('BIO', 'DFO BIO'):
 
             dfmeta = pd.read_excel(metafile)
 
@@ -627,12 +672,32 @@ class ThermographHeader(OdfHeader):
                 if instrument_type == 'hobo':
                     hobo_file = f"{path1.stem}.hobo".lower()
                     # print(hobo_file)
-                    meta_subset = meta_subset[meta_subset['file_name'] == hobo_file]
+                    meta_subset = meta_subset.copy()
+                    meta_subset["file_name_norm"] = meta_subset["file_name"].astype(str).str.lower()
+                    matched = meta_subset[meta_subset["file_name_norm"] == hobo_file]
+                    if matched.empty:
+                        matched = meta_subset[
+                            meta_subset["file_name_norm"].str.replace(".hobo", "", regex=False) == path1.stem.lower()
+                        ]
+                    if not matched.empty:
+                        meta_subset = matched
+                    meta_subset.drop(columns="file_name_norm", inplace=True)
+                    
                 else:
                     minilog_file = f"{path1.stem}.vld".lower()
                     # print(minilog_file)
-                    meta_subset = meta_subset[meta_subset['file_name'] == minilog_file]
-
+                    meta_subset = meta_subset.copy()
+                    meta_subset["file_name_norm"] = meta_subset["file_name"].astype(str).str.lower()
+                    matched = meta_subset[meta_subset["file_name_norm"] == minilog_file]
+                    if matched.empty:
+                        matched = meta_subset[
+                            meta_subset["file_name_norm"].str.replace(".vld", "", regex=False) == path1.stem.lower()
+                        ]
+                    if not matched.empty:
+                        meta_subset = matched
+                    meta_subset.drop(columns="file_name_norm", inplace=True)
+                    
+                    
             # print(meta_subset.head())
             # print('\n')
 
@@ -644,11 +709,9 @@ class ThermographHeader(OdfHeader):
                     or meta_subset.get('Instrument', pd.Series(['minilog II'])).iloc[0]
                     or "minilog II"
                 )
-            elif instrument_type.lower() == 'hobo':
-                inst_model = meta_subset.get('Instrument', pd.Series(['hobo'])).iloc[0]
-            else:
-                inst_model = "hobo"
-
+            if instrument_type.lower() == 'hobo':
+                inst_model = (meta_subset.get('Instrument', pd.Series(['hobo'])).iloc[0]
+                              or "hobo")
             self.cruise_header.country_institute_code = country_code
             if instrument_type == 'minilog':
                 cruise_year = df['date'].to_string(index=False).split('-')[0]
