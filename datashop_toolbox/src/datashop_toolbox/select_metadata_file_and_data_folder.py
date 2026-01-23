@@ -7,6 +7,8 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt
 from pathlib import Path
 import json
+import os
+import re
 
 BASE_DIR = Path(__file__).resolve().parent
 meta_dir = BASE_DIR / "temporary"
@@ -462,6 +464,7 @@ class SubWindowOne(QMainWindow):
         self.reviewer_input_meta = {}
         self.remember_input_dict = {}
         self.remember_input_choice = False
+        self.generate_batch = ""
 
   
         # --- QC Checker Name ---
@@ -485,7 +488,7 @@ class SubWindowOne(QMainWindow):
         self.load_last_user_metadata()
 
         # --- Meta file selection ---
-        self.meta_label = QLabel("Select meta data file(e.g. LFA .txt file, or Excel file:")
+        self.meta_label = QLabel("Select meta data file(e.g. LFA .txt file, or Excel file):")
         self.meta_button = QPushButton("Choose Meta Data File")
         self.meta_button.setFixedSize(200, 40)
         self.meta_button.clicked.connect(self.choose_metadata_file)
@@ -516,6 +519,13 @@ class SubWindowOne(QMainWindow):
         self.output_path_text = QLineEdit(" ")
         self.output_path_text.setReadOnly(True)
         self.output_path_text.setFixedWidth(500)
+
+        # --- Generated Batch Name ---
+        self.generate_batch_label = QLabel("Generated batch for QC view (modify it if required):")
+        self.generate_batch_text = QLineEdit(" ")
+        self.generate_batch_text.setReadOnly(True)
+        self.generate_batch_text.setFixedWidth(200)
+
 
         # --- OK / Cancel buttons ---
         buttons = (
@@ -569,6 +579,12 @@ class SubWindowOne(QMainWindow):
         row2b.addWidget(self.output_path_text)
         main_layout.addLayout(row2b)
 
+        # Gen batch row
+        row3 = QVBoxLayout()
+        row3.addWidget(self.generate_batch_label)
+        row3.addWidget(self.generate_batch_text)
+        main_layout.addLayout(row3)
+
         # Buttons centered
         btn_row = QHBoxLayout()
         btn_row.addStretch(1)
@@ -606,6 +622,43 @@ class SubWindowOne(QMainWindow):
                     return p
         return None
     
+    def build_batch_name(self, meta_path: str) -> str:
+        filename = os.path.splitext(os.path.basename(meta_path))[0]
+        lfa_match = re.search(r"LFA\s*[_\-]?\s*(\d+[A-Z]?)",filename,re.IGNORECASE)
+        
+        if lfa_match:
+            lfa_number = lfa_match.group(1)
+
+            # Look for year patterns after LFA number
+            year_match_4 = re.search(r"LFA\s*[_\-]?\s*\d+[A-Z]?[_\-]?(\d{4})",filename,re.IGNORECASE)
+            if year_match_4:
+                year_token = year_match_4.group(1)
+
+                # 1112 → 2011_2012
+                if not year_token.startswith("20"):
+                    start = "20" + year_token[:2]
+                    end = "20" + year_token[2:]
+                    return f"LFA-{lfa_number}-{start}_{end}"
+
+                # 2012 → keep as is
+                return f"LFA-{lfa_number}-{year_token}"
+            
+            year_match_2 = re.search(r"LFA\s*[_\-]?\s*\d+[A-Z]?[_\-]?(\d{2})",filename,re.IGNORECASE)
+            if year_match_2:
+                year_token = year_match_2.group(1)
+                return f"LFA-{lfa_number}-20{year_token}"
+
+
+            # No year info
+            return f"LFA-{lfa_number}"
+
+        # ---- BCD ----
+        bcd_match = re.search(r"BCD\s*[_\-]?\s*(\d+)", filename, re.IGNORECASE)
+        if bcd_match:
+            return f"BCD-{bcd_match.group(1)}"
+
+        return "UNKNOWN_BATCH"
+    
     def choose_metadata_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select the Metadata file")
         if not file_path:
@@ -637,6 +690,10 @@ class SubWindowOne(QMainWindow):
                 f"(4 of 4) Output data folder auto-set to: "
                 f"{self.output_data_folder}\n"
             )
+            #extract_meta_name = os.path.basename(file_path)
+            batchname = self.build_batch_name(file_path)
+            self.generate_batch = batchname
+            self.generate_batch_text.setText(self.generate_batch)
 
     def choose_input_data_folder(self):
         folder_path = QFileDialog.getExistingDirectory(self, "Select folder with ODF files")

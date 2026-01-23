@@ -23,7 +23,7 @@ from datashop_toolbox import select_metadata_file_and_data_folder
 from datashop_toolbox.log_window import (
     SafeConsoleFilter, 
     SafeConsoleFilter, 
-    LogWindowUI)
+    LogWindowThermographQC)
 from collections import Counter
 import logging
 import pytz
@@ -33,14 +33,14 @@ ATLANTIC_TZ = pytz.timezone("Canada/Atlantic")
 UTC = pytz.UTC
 exit_requested = False
 global logger
-logger = logging.getLogger("datashop")
+logger = logging.getLogger("thermograph_qc_logger")
 logger.setLevel(logging.INFO)
 logger.propagate = False 
 console_handler = logging.StreamHandler()
 console_handler.addFilter(SafeConsoleFilter())
 console_handler.setFormatter(logging.Formatter("[%(levelname)s] %(message)s"))
 logger.addHandler(console_handler)
-file_handler = logging.FileHandler("datashop_log.txt", encoding="utf-8")
+file_handler = logging.FileHandler("datashop_MTR_QC_log.txt", encoding="utf-8")
 file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
 logger.addHandler(file_handler)
 logger.info("Logger file initialized.")
@@ -63,6 +63,54 @@ FLAG_COLORS = {
             4: "#FF0000",
             5: "#00008B",
         }
+
+def parse_datetime(date_str, time_str):
+    DATE_FORMATS = [
+    "%d/%m/%Y",
+    "%d/%m/%y",
+    "%d-%m-%Y",
+    "%d-%m-%y",
+    "%b-%d-%y",
+    "%B-%d-%y",
+    "%d-%b-%y",  # <-- handles 13-Jul-12
+    "%d-%B-%y"
+    ]
+    TIME_FORMATS = [
+    "%H:%M",
+    "%H:%M:%S",
+    "%H:%M:%S.%f"
+    ]
+    if pd.isna(date_str) or date_str.strip() == "":
+        return pd.NaT
+
+    # Handle missing time
+    if pd.isna(time_str) or time_str.strip() == "":
+        time_str = "12:00"  # default time
+
+    # Try each date format
+    dt_date = None
+    for d_fmt in DATE_FORMATS:
+        try:
+            dt_date = datetime.strptime(date_str, d_fmt).date()
+            break
+        except ValueError:
+            continue
+    if dt_date is None:
+        return pd.NaT
+
+    # Try each time format
+    dt_time = None
+    for t_fmt in TIME_FORMATS:
+        try:
+            dt_time = datetime.strptime(time_str, t_fmt).time()
+            break
+        except ValueError:
+            continue
+    if dt_time is None:
+        dt_time = datetime.strptime("12:00", "%H:%M").time()  # fallback
+
+    # Combine date and time, then format as string
+    return f"{dt_date.strftime('%Y-%m-%d')} {dt_time.strftime('%H:%M:%S')}"
 
 
 def parse_to_utc(dt_str, tz_mode):
@@ -131,10 +179,12 @@ def validate_bio_metadata(meta: pd.DataFrame) -> bool:
     return True
 
 
-def run_qc_thermograph_data(input_path, output_path, qc_operator, metadata_file_path, review_mode: bool) -> dict:
+def run_qc_thermograph_data(input_path, output_path, qc_operator, 
+                            metadata_file_path, review_mode: bool, 
+                            batch_name) -> dict:
     logger.info(f"Starting QC Thermograph Data task by {qc_operator} on {input_path}")
     wildcard = "*.ODF"
-    task_completion= qc_thermograph_data(input_path, wildcard, output_path, qc_operator, metadata_file_path, review_mode)
+    task_completion= qc_thermograph_data(input_path, wildcard, output_path, qc_operator, metadata_file_path, review_mode, batch_name)
     print(task_completion)
     if task_completion["finished"]:
         logger.info(f"QC Thermograph Data task completed successfully.")
@@ -178,7 +228,9 @@ def prepare_output_folder(in_folder_path: str, out_folder_path: str, qc_operator
     return out_odf_path
 
 
-def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str, qc_operator: str, metadata_file_path: str, review_mode: bool) -> dict:
+def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str, 
+                        qc_operator: str, metadata_file_path: str, review_mode: bool, 
+                        batch_name:str) -> dict:
     """
     Processes ODF files in `in_folder_path` matching `wildcard`, writes to out_folder_path/Step_2_Quality_Flagging.
     Uses global `exit_requested` to allow user interruption.
@@ -308,15 +360,14 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
                 logger.error("FSRS selected but metadata_file_path is missing or invalid.")
                 batch_result_container["finished"] = False
                 return batch_result_container
-                #return {}   # hard stop for this run
             
             try:
                 meta = mtr.read_metadata(metadata_file_path, organization)
-                date_str = meta["date"].astype(str)
-                time_str = meta["time"].astype(str)
-                time_str = time_str.where(meta["time"].notna() & (meta["time"] != ""),"00:00:00")
-                datetime_str = np.where(meta["date"].notna() & (meta["date"] != ""),date_str + " " + time_str,np.nan)
-                meta["datetime"] = pd.to_datetime(datetime_str,errors="coerce")
+                meta['date'] = meta['date'].astype(str)
+                meta['time'] = meta['time'].astype(str)
+                meta['time'] = meta['time'].where(meta['time'].notna() & (meta['time'] != ""), "12:00")
+                meta["datetime"] = meta.apply(
+                    lambda row: parse_datetime(row["date"], row["time"]), axis=1)
                 logger.info(f"Metadata successfully loaded for FSRS: {metadata_file_path}")
             except Exception as e:
                 QMessageBox.critical(
@@ -326,7 +377,6 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
                 logger.exception(f"Failed to read metadata from {metadata_file_path}")
                 batch_result_container["finished"] = False
                 return batch_result_container
-            #return {}   # hard stop for this run
         
         if organization== list_organization[0]:     # DFO BIO
             if metadata_file_path and os.path.isfile(metadata_file_path):
@@ -375,7 +425,7 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
             meta_subset = meta[meta['gauge'] == int(Gauge_serial_number)]
             if not meta_subset.empty:
                 if ("datetime" in meta_subset.columns and not meta_subset["datetime"].isna().all()):
-                    meta_subset = meta_subset.copy()
+                    meta_subset = meta_subset.copy()                   
                     meta_subset["datetime"] = pd.to_datetime(
                                                 meta_subset["datetime"],
                                                 errors="coerce"
@@ -702,7 +752,7 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
         applied = False
         user_exited = False
         current_flag = 4
-        figsize=(13, 6)
+        figsize=(14, 7)
         
         plt.style.use('ggplot')
         fig = plt.figure(figsize=figsize)
@@ -710,33 +760,39 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
 
         qcMode_ax = fig.add_axes([0.78, 0.78, 0.1, 0.35])
         qcMode_ax.set_axis_off()
-        qcMode_ax.set_title("QC Mode:", fontsize=12, pad=0, 
+        qcMode_ax.set_title("QC Mode:", fontsize=15, pad=0, 
                    fontweight='heavy', color='navy',
-                   family='serif', loc='right')
+                   family='arial', loc='right')
         qcMode = CheckButtons(
                 qcMode_ax,
                 labels=[qc_mode_],
                 actives=[False],
                 )
         for label in qcMode.labels:
-            label.set_fontsize(12)
+            label.set_fontsize(15)
             label.set_fontweight('bold')
-            label.set_family('serif')
+            if qc_mode_code_ == 0:
+                label.set_color("green")
+            else:
+                label.set_color("orange")
+            label.set_family('arial')
+            
         
         info_ax = fig.add_axes([0.79, 0.85, 0.1, 0.35])  # [left, bottom, width, height]
         info_ax.set_axis_off()  # hide the axes
 
         info_text = (
-            f"\u2022 Start QC: {Start_datetime_QC}\n"
-            f"\u2022 End QC: {End_datetime_QC}\n"
-            f"\u2022 Instrument: {Instrument}\n"
+            f"\u2022 Deployed: {Start_datetime_QC}\n"
+            f"\u2022 Recovered: {End_datetime_QC}\n"
+            f"\u2022 Recording Instrument: {Instrument}\n"
+            f"\u2022 Batch: {batch_name}\n"
         )
 
         info_ax.text(
             0, 0, info_text,         # x=0 left, y=0 top
-            fontsize=8,
+            fontsize=12,
             fontweight='bold',
-            family='serif',
+            family='arial',
             color="navy",
             va="top",
             ha="left",
@@ -1129,7 +1185,9 @@ def main_select_inputs(review_mode: bool):
     select_inputs = select_metadata_file_and_data_folder.SubWindowOne(review_mode=review_mode)
     select_inputs.show()
 
-    result_container = {"finished": False, "input": None, "output": None, "operator": None, "metadata": None}
+    result_container = {"finished": False, "input": None, 
+                        "output": None, "operator": None, 
+                        "metadata": None, "batch": None}
 
     
     def on_accept():
@@ -1137,6 +1195,7 @@ def main_select_inputs(review_mode: bool):
         metadata_file_path = select_inputs.metadata_file
         input_path = select_inputs.input_data_folder
         output_path = select_inputs.output_data_folder
+        batch_name = select_inputs.generate_batch
 
         if not operator or not input_path or not output_path:
             print("❌ Missing required fields.")
@@ -1147,6 +1206,7 @@ def main_select_inputs(review_mode: bool):
         result_container["input"] = input_path
         result_container["output"] = output_path
         result_container["finished"] = True
+        result_container["batch"] = batch_name
         select_inputs.close()
 
     def on_reject():
@@ -1169,10 +1229,11 @@ def main_select_inputs(review_mode: bool):
             result_container["input"],
             result_container["output"],
             result_container["operator"],
-            result_container["metadata"],   
+            result_container["metadata"],
+            result_container["batch"] 
         )
     else:
-        return None, None, None, None
+        return None, None, None, None, None
 
 
 def exit_program(app):
@@ -1192,7 +1253,7 @@ def exit_program(app):
     app.quit()
 
 
-def start_qc_process(log_ui: LogWindowUI, review_mode: bool):
+def start_qc_process(log_ui: LogWindowThermographQC, review_mode: bool):
     """
     Called when Start QC button is clicked.
     It opens the metadata/input selection dialog, and if accepted, runs the QC workflow.
@@ -1207,7 +1268,7 @@ def start_qc_process(log_ui: LogWindowUI, review_mode: bool):
     else:
         logger.info("Initial QC Mode selected.")
     
-    input_path, output_path, operator, metadata_file_path = main_select_inputs(review_mode)
+    input_path, output_path, operator, metadata_file_path, batch_name = main_select_inputs(review_mode)
     if not input_path or not output_path or not operator:
         logger.info("QC start aborted: missing input, output, or operator.")
         return
@@ -1217,8 +1278,9 @@ def start_qc_process(log_ui: LogWindowUI, review_mode: bool):
                 f"  • Input Path  : {input_path}\n"
                 f"  • Output Path : {output_path}\n"
                 f"  • Metadata    : {metadata_file_path}\n"
+                f"  • BatchName    : {batch_name}\n"
             )
-    run_qc_thermograph_data(input_path, output_path, operator, metadata_file_path, review_mode)
+    run_qc_thermograph_data(input_path, output_path, operator, metadata_file_path, review_mode, batch_name)
     
 
 def main():
@@ -1227,7 +1289,7 @@ def main():
         app = QApplication(sys.argv)
     app.setStyle("Fusion")
 
-    log_window = LogWindowUI()
+    log_window = LogWindowThermographQC()
     log_window.show()
     logger.addHandler(log_window.qtext_handler)
     logger.info("Log window initialized.")

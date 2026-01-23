@@ -149,7 +149,7 @@ class SafeConsoleFilter(logging.Filter):
             record.msg = record.msg.encode("ascii", "ignore").decode()
         return True
 
-class LogWindowUI(QWidget):
+class LogWindowThermographQC(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Thermograph QC — Log Window")
@@ -165,14 +165,32 @@ class LogWindowUI(QWidget):
         layout.addWidget(self.radio_opt)
 
         # Buttons
-        self.btn_start = QPushButton("Start QC")
+        self.btn_start = QPushButton("Start Visual QC Process for Thermograph Data (ODF Files)")
         self.btn_exit = QPushButton("Exit Program")
 
         layout.addWidget(self.btn_start)
         layout.addWidget(self.btn_exit)
         self.qtext_handler = QTextEditLogger(self.log_view)
         
+class LogWindowProcessMTR(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Thermograph Processing — Log Window")
+        self.resize(900, 700)
+        layout = QVBoxLayout(self)
 
+        # Log display
+        self.log_view = QTextEdit(self)
+        self.log_view.setReadOnly(True)
+        layout.addWidget(self.log_view)
+
+        # Buttons
+        self.btn_start = QPushButton("Start Processing of Raw (.csv) MTR Files (to ODF Format)")
+        self.btn_exit = QPushButton("Exit Program")
+
+        layout.addWidget(self.btn_start)
+        layout.addWidget(self.btn_exit)
+        self.qtext_handler = QTextEditLogger(self.log_view)
 
 if __name__ == "__main__":
     
