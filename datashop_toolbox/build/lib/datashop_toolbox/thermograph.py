@@ -539,10 +539,10 @@ class ThermographHeader(OdfHeader):
             dfmeta = dfmeta.dropna(how="all")  # Drop rows where all elements are NaN
 
             # Change some column types.
-            dfmeta['LFA'].astype(int)
-            dfmeta['Vessel Code'].astype(int)
-            dfmeta['Gauge'].astype(int)
-            dfmeta['Soak Days'].astype(int)
+            dfmeta['LFA'] = dfmeta['LFA'].astype('Int64')
+            dfmeta['Vessel Code'] = dfmeta['Vessel Code'].astype('Int64')
+            dfmeta['Gauge'] = dfmeta['Gauge'].astype('Int64')
+            dfmeta['Soak Days'] = dfmeta['Soak Days'].astype('Int64')
 
             # Drop some columns.
             dfmeta.drop(columns=['Date.1', 'Latitude', 'Longitude', 'Depth'], inplace = True)
