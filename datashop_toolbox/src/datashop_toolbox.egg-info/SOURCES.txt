@@ -5,6 +5,7 @@ src/datashop_toolbox/ai_thermograph_data.py
 src/datashop_toolbox/basehdr.py
 src/datashop_toolbox/compare_seabird_xmlcons.py
 src/datashop_toolbox/compasshdr.py
+src/datashop_toolbox/concatenate_qat_files.py
 src/datashop_toolbox/create_parameters_database.py
 src/datashop_toolbox/cruisehdr.py
 src/datashop_toolbox/demo_validated_base.py

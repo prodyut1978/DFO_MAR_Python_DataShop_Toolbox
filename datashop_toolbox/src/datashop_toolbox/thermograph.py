@@ -46,6 +46,22 @@ class ThermographHeader(OdfHeader):
         return ThermographHeader.time_format
 
 
+    @staticmethod
+    def clean_lfa(value):
+        try:
+            # Try converting to float first
+            f = float(value)
+            # If it's a whole number, convert to int
+            if f.is_integer():
+                return int(f)
+            else:
+                # If float has decimal, convert to int (truncate)
+                return int(f)
+        except (ValueError, TypeError):
+            # If conversion fails (string or NaN), leave as is
+            return value
+
+
     # @staticmethod
     # def is_date_only(value):
     #     if isinstance(value, date) and not isinstance(value, datetime):
@@ -539,7 +555,7 @@ class ThermographHeader(OdfHeader):
             dfmeta = dfmeta.dropna(how="all")  # Drop rows where all elements are NaN
 
             # Change some column types.
-            dfmeta['LFA'] = dfmeta['LFA'].astype('Int64')
+            dfmeta['LFA'] = dfmeta['LFA'].apply(ThermographHeader.clean_lfa)
             dfmeta['Vessel Code'] = dfmeta['Vessel Code'].astype('Int64')
             dfmeta['Gauge'] = dfmeta['Gauge'].astype('Int64')
             dfmeta['Soak Days'] = dfmeta['Soak Days'].astype('Int64')
