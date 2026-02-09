@@ -3,6 +3,7 @@ import glob
 import math
 import os
 import posixpath
+from pathlib import Path
 import pytz
 import re
 import sys
@@ -60,6 +61,45 @@ class ThermographHeader(OdfHeader):
         except (ValueError, TypeError):
             # If conversion fails (string or NaN), leave as is
             return value
+
+    @staticmethod
+    def clean_soakday(value):
+        try:
+            # Try converting to float first
+            f = float(value)
+            # If it's a whole number, convert to int
+            if f.is_integer():
+                return int(f)
+            else:
+                # If float has decimal, convert to int (truncate)
+                return int(f)
+        except (ValueError, TypeError):
+            # If conversion fails (string or NaN), leave as is
+            return 0
+
+    @staticmethod
+    def load_meta_file(metafile):
+        ext = Path(metafile).suffix.lower()
+        if ext in [".txt", ".tsv"]:
+            df = pd.read_table(
+                metafile,
+                encoding="iso8859_1",
+                sep="\t",
+                engine="python",
+                skip_blank_lines=False,
+            )
+        
+        elif ext == ".csv":
+            df = pd.read_csv(metafile, encoding="iso8859_1")
+        
+        elif ext in [".xls", ".xlsx"]:
+            df = pd.read_excel(metafile)
+        
+        else:
+            raise ValueError(f"Unsupported metadata file type: {ext}")
+        
+        return df
+
 
 
     # @staticmethod
@@ -165,28 +205,82 @@ class ThermographHeader(OdfHeader):
             datetime_str = ''
 
             # Check the date format.
-            if ThermographHeader.check_datetime_format(df['date'][i], r"%d/%m/%Y"):
-                meta_date_format = r"%d/%m/%Y"
+            if ThermographHeader.check_datetime_format(df['date'][i], "%Y-%m-%d"):
+                meta_date_format = "%Y-%m-%d"
+                date_note = "ISO format (YYYY-MM-DD)"
+
+            elif ThermographHeader.check_datetime_format(df['date'][i], "%Y/%m/%d"):
+                meta_date_format = "%Y/%m/%d"
+                date_note = "ISO format with slashes (YYYY/MM/DD)"
+
+            elif ThermographHeader.check_datetime_format(df['date'][i], "%d/%m/%Y"):
+                meta_date_format = "%d/%m/%Y"
+                date_note = "Day/Month/Year with slashes (DD/MM/YYYY)"
+
             elif ThermographHeader.check_datetime_format(df['date'][i], "%d/%m/%y"):
                 meta_date_format = "%d/%m/%y"
+                date_note = "Day/Month/2-digit Year (DD/MM/YY)"
+
             elif ThermographHeader.check_datetime_format(df['date'][i], "%d-%m-%Y"):
                 meta_date_format = "%d-%m-%Y"
+                date_note = "Day-Month-Year with dashes (DD-MM-YYYY)"
+
             elif ThermographHeader.check_datetime_format(df['date'][i], "%b-%d-%y"):
                 meta_date_format = "%b-%d-%y"
+                date_note = "Abbreviated month-Day-Year (Mon-DD-YY)"
+
+            elif ThermographHeader.check_datetime_format(df['date'][i], "%b-%d-%Y"):
+                meta_date_format = "%b-%d-%Y"
+                date_note = "Abbreviated month-Day-Year (Mon-DD-YYYY)"
+
             elif ThermographHeader.check_datetime_format(df['date'][i], "%B-%d-%y"):
                 meta_date_format = "%B-%d-%y"
+                date_note = "Full month name-Day-Year (Month-DD-YY)"
+
+            elif ThermographHeader.check_datetime_format(df['date'][i], "%B-%d-%Y"):
+                meta_date_format = "%B-%d-%Y"
+                date_note = "Full month name-Day-Year (Month-DD-YYYY)"
+
             elif ThermographHeader.check_datetime_format(df['date'][i], "%d-%b-%y"):
                 meta_date_format = "%d-%b-%y"
+                date_note = "Day-Abbreviated month-Year (DD-Mon-YY)"
+
+            elif ThermographHeader.check_datetime_format(df['date'][i], "%d-%b-%Y"):
+                meta_date_format = "%d-%b-%Y"
+                date_note = "Day-Abbreviated month-Year (DD-Mon-YYYY)"
+
             elif ThermographHeader.check_datetime_format(df['date'][i], "%d-%B-%y"):
                 meta_date_format = "%d-%B-%y"
+                date_note = "Day-Full month-Year (DD-Month-YY)"
+
+            elif ThermographHeader.check_datetime_format(df['date'][i], "%d-%B-%Y"):
+                meta_date_format = "%d-%B-%Y"
+                date_note = "Day-Full month-Year (DD-Month-YYYY)"
+
+            else:
+                meta_date_format = None
+                date_note = "Unrecognized date format"
+                print(date_note)
+
 
             # Check the time format.
-            if ThermographHeader.check_datetime_format(df['time'][i], r"%H:%M"):
-                meta_time_format = r"%H:%M"
-            elif ThermographHeader.check_datetime_format(df['time'][i], r"%H:%M:%S"):
-                meta_time_format = r"%H:%M:%S"
-            elif ThermographHeader.check_datetime_format(df['time'][i], r"%H:%M:%S.%f"):
-                meta_time_format = r"%H:%M:%S.%f"
+            if ThermographHeader.check_datetime_format(df['time'][i], "%H:%M:%S.%f"):
+                meta_time_format = "%H:%M:%S.%f"
+                time_note = "Time with fractional seconds (HH:MM:SS.microseconds)"
+
+            elif ThermographHeader.check_datetime_format(df['time'][i], "%H:%M:%S"):
+                meta_time_format = "%H:%M:%S"
+                time_note = "Time with seconds (HH:MM:SS)"
+
+            elif ThermographHeader.check_datetime_format(df['time'][i], "%H:%M"):
+                meta_time_format = "%H:%M"
+                time_note = "Time without seconds (HH:MM)"
+
+            else:
+                meta_time_format = None
+                time_note = "Unrecognized or missing time format"
+                print(time_note)
+
 
             datetime_str = date_str + ' ' + time_str
             datetimes.append(datetime.strptime(datetime_str, f"{meta_date_format} {meta_time_format}"))
@@ -313,9 +407,10 @@ class ThermographHeader(OdfHeader):
 
         if instrument_type == 'minilog':
             # Detect number of header lines dynamically ---
-            skiprows = 0
+            skiprows = 8
             with open(mtrfile, 'r', encoding='iso8859_1') as f:
-                for i, line in enumerate(f):
+                first_lines = [next(f) for _ in range(skiprows * 2)]  # read first skiprows*2 lines
+                for i, line in enumerate(first_lines):  # Read up to twice the default skiprows
                     stripped = line.strip()
                     # Detect the first data-like line - Typically starts with a date (e.g., "11/03/2014") or similar pattern 11-03-2014
                     if re.match(r"^(\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}[/-]\d{1,2}[/-]\d{1,2})", stripped):
@@ -324,9 +419,7 @@ class ThermographHeader(OdfHeader):
                     elif stripped.startswith('* Date(yyyy-mm-dd),') or stripped.startswith('Date(yyyy-mm-dd),'):
                         skiprows = i+1
                         break
-                    else:
-                        skiprows = 8  # Default to 8 if no match found
-                        break
+            
             
             # Read the data lines from the MTR file
             dfmtr = pd.read_table(mtrfile, sep = ',', header = None, encoding = 'iso8859_1', skiprows = skiprows)
@@ -420,7 +513,9 @@ class ThermographHeader(OdfHeader):
                 mtr_dict['filename'] = mtrfile
             else:
                 hours = abs(float(delTime_UTC))
-                dfmtr['DateTime'] = pd.to_datetime(dfmtr['date'] + ' ' + dfmtr['time'])
+                dfmtr['DateTime'] = pd.to_datetime(dfmtr['date'].astype(str) + ' ' + dfmtr['time'].astype(str),
+                                    format="mixed",
+                                    dayfirst=True)
                 if float(delTime_UTC) < 0:
                     dfmtr['DateTime'] = dfmtr['DateTime'] + timedelta(hours=hours)
                 else:
@@ -435,27 +530,25 @@ class ThermographHeader(OdfHeader):
 
         elif instrument_type == 'hobo':
             # Detect number of header lines dynamically ---
-            skiprows = 0
+            skiprows = 1
             pattern = re.compile(
                 r"^\s*\d+,\s*\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\s+\d{1,2}:\d{2}:\d{2}\s*[APap][Mm],"
                 )
             with open(mtrfile, 'r', encoding='iso8859_1') as f:
-                for i, line in enumerate(f):
+                first_lines = [next(f) for _ in range(skiprows * 4)]  # read first skiprows*4 lines
+                for i, line in enumerate(first_lines):  # Read up to four times the default skiprows
                     stripped = line.strip()
                     # Case 1: Header line (with column names)
-                    if stripped.startswith('"#",') or stripped.startswith('"#","Date Time'):
+                    if stripped.startswith('"#",') or stripped.startswith('"#","Date Time') or stripped.startswith('#,date_time'):
                         skiprows = i
                         break
                     #Case 2: Direct data line (starts with record number, date-time, etc.)
                     elif pattern.match(stripped):
                         skiprows = i - 1 if i > 0 else 0  # avoid negative skiprows
                         break
-                    else:
-                        skiprows = 1
-                        break  # Default to skipping first line if no match found
 
             # Read the data lines from the MTR file.
-            dfmtr = pd.read_table(mtrfile, sep = ',', header = 0, encoding = 'utf-8', skiprows = 1)
+            dfmtr = pd.read_table(mtrfile, sep = ',', header = 0, encoding = 'utf-8', skiprows = skiprows)
             
             # drop the row number column & Extract offset value from UTC/GMT column header
             delTime_UTC = None
@@ -524,9 +617,26 @@ class ThermographHeader(OdfHeader):
             datetime.strptime(dt_str, dt_format_string).replace(tzinfo=local_tz).astimezone(timezone.utc)
                             for dt_str in dt_original]
             dfmtr['date_time'] = datetime_objects
-            
+
+            ## Extract inst_model from file name if possible
+            basefilename = os.path.basename(mtrfile)
+            name_lower = basefilename.lower()
+            inst_model = None
+            # Priority order matters (more specific first)
+            if re.search(r"hobo[\s\-]?u20", name_lower):
+                inst_model = "hobo U20"
+            elif re.search(r"hobo[\s\-]?u22", name_lower):
+                inst_model = "hobo U22"
+            elif re.search(r"hobou20", name_lower):
+                inst_model = "hobo U20"
+            elif re.search(r"hobou22", name_lower):
+                inst_model = "hobo U22"
+            elif re.search(r"\bhobo\b", name_lower):
+                inst_model = "hobo"
+
             ## Assemble results ---
             mtr_dict['df'] = dfmtr
+            mtr_dict['inst_model'] = inst_model
             mtr_dict['gauge'] = inst_id
             mtr_dict['filename'] = mtrfile
             # print(mtr_dict)
@@ -545,20 +655,16 @@ class ThermographHeader(OdfHeader):
         dfmeta = pd.DataFrame()
 
         if institution == 'FSRS':
-
-            dfmeta = pd.read_table(metafile, 
-                                encoding = 'iso8859_1',  
-                                sep="\t",
-                                engine="python",
-                                skip_blank_lines=False)
+            dfmeta = ThermographHeader.load_meta_file(metafile)
 
             dfmeta = dfmeta.dropna(how="all")  # Drop rows where all elements are NaN
 
             # Change some column types.
             dfmeta['LFA'] = dfmeta['LFA'].apply(ThermographHeader.clean_lfa)
+            dfmeta['Soak Days'] = dfmeta['Soak Days'].apply(ThermographHeader.clean_soakday)
             dfmeta['Vessel Code'] = dfmeta['Vessel Code'].astype('Int64')
             dfmeta['Gauge'] = dfmeta['Gauge'].astype('Int64')
-            dfmeta['Soak Days'] = dfmeta['Soak Days'].astype('Int64')
+            
 
             # Drop some columns.
             dfmeta.drop(columns=['Date.1', 'Latitude', 'Longitude', 'Depth'], inplace = True)
@@ -597,18 +703,30 @@ class ThermographHeader(OdfHeader):
         
             # print(f'\nProcessing Thermograph Data file: {data_file_path}\n')
             mydict = self.read_mtr(data_file_path, instrument_type)
-
+            # Extract data frame and gauge from the returned dictionary.
             df = mydict['df']
-            inst_model = mydict['inst_model']
             gauge = mydict['gauge']
             # print(df.head())
-
             meta_subset = meta[meta['gauge'] == int(gauge)]
             # print(meta_subset.head())
             # print('\n')
 
+            inst_model = mydict.get('inst_model')
+            if not inst_model:
+                if instrument_type.lower() == 'minilog':
+                    inst_model = (
+                        meta_subset.get('Instrument', pd.Series(['minilog II'])).iloc[0]
+                        or "minilog II"
+                    )
+                elif instrument_type.lower() == 'hobo':
+                    inst_model = (meta_subset.get('Instrument', pd.Series(['hobo'])).iloc[0]
+                                or "hobo")
+            
             self.cruise_header.country_institute_code = country_code
-            cruise_year = df['date'].to_string(index=False).split('-')[0]
+            if instrument_type == 'minilog':
+                cruise_year = df['date'].to_string(index=False).split('-')[0]
+            elif instrument_type == 'hobo':
+                cruise_year = df['date_time'].to_string(index=False).split('-')[0]
             cruise_number = user_input_metadata.get("cruise_number") or f'BCD{cruise_year}603'
             self.cruise_header.cruise_number = cruise_number
             self.cruise_header.platform = platform_name
@@ -719,15 +837,18 @@ class ThermographHeader(OdfHeader):
 
             matching_indices = meta_subset[meta_subset['ID'] == gauge].index
 
-            if instrument_type.lower() == 'minilog':
-                inst_model = (
-                    mydict.get('inst_model')
-                    or meta_subset.get('Instrument', pd.Series(['minilog II'])).iloc[0]
-                    or "minilog II"
-                )
-            if instrument_type.lower() == 'hobo':
-                inst_model = (meta_subset.get('Instrument', pd.Series(['hobo'])).iloc[0]
-                              or "hobo")
+
+            inst_model = mydict.get('inst_model')
+            if not inst_model:
+                if instrument_type.lower() == 'minilog':
+                    inst_model = (
+                        meta_subset.get('Instrument', pd.Series(['minilog II'])).iloc[0]
+                        or "minilog II"
+                    )
+                elif instrument_type.lower() == 'hobo':
+                    inst_model = (meta_subset.get('Instrument', pd.Series(['hobo'])).iloc[0]
+                                or "hobo")
+            
             self.cruise_header.country_institute_code = country_code
             if instrument_type == 'minilog':
                 cruise_year = df['date'].to_string(index=False).split('-')[0]
@@ -899,28 +1020,28 @@ def main():
         # Generate an empty MTR object.
         mtr = ThermographHeader()
 
-        operator = 'JProdyut Roy'
+        operator = 'Prodyut Roy'
 
-        # institution_name = 'FSRS'
-        # instrument_type = 'minilog'
-        # metadata_file = 'C:/DFO-MPO/DEV/MTR/FSRS_data_2013_2014/LatLong LFA 30_14.txt' # FSRS
-        # input_data_folder_path = 'C:/DFO-MPO/DEV/MTR/FSRS_data_2013_2014/LFA 30/' # FSRS
-        # data_file_path = 'C:/DFO-MPO/DEV/MTR/FSRS_data_2013_2014/LFA 30/Minilog-II-T_354633_2014jmacleod_1.csv' # FSRS
+        institution_name = 'FSRS'
+        instrument_type = 'minilog'
+        metadata_file = 'C:/Users/ROYPR/Desktop/DFO-ODIS-SSPPI/Python_Development/MTR_Data/FSRS/LatLong LFA 33_1415.txt' # FSRS
+        input_data_folder_path = 'C:/Users/ROYPR/Desktop/DFO-ODIS-SSPPI/Python_Development/MTR_Data/FSRS/Raw_Data/' # FSRS
+        output_data_folder_path = 'C:/Users/ROYPR/Desktop/DFO-ODIS-SSPPI/Python_Development/MTR_Data/FSRS' # FSRS
 
-        institution_name = 'BIO'
+        # institution_name = 'BIO'
         #instrument_type = 'minilog'
-        instrument_type = 'hobo'
-        metadata_file = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/MetaData_BCD2014999.xlsx' # BIO
+        #instrument_type = 'hobo'
+        #metadata_file = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/MetaData_BCD2014999.xlsx' # BIO
         # metadata_file = 'C:/DFO-MPO/DEV/MTR/999_Test/MetaData_BCD2015999_Reformatted.xlsx' # BIO
         # input_data_folder_path = 'C:/DFO-MPO/DEV/MTR/999_Test/'  # BIO
         # input_data_folder_path = 'C:/DFO-MPO/DEV/MTR/BCD2014999/Hobo/'  # BIO
-        input_data_folder_path = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/Hobos/MTR_Hobos_RAW_CSV'  # BIO
-        output_data_folder_path = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/Hobos'
+        #input_data_folder_path = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/Hobos/MTR_Hobos_RAW_CSV'  # BIO
+        #output_data_folder_path = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/Hobos'
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/999_Test/Liscomb_15m_352964_20160415_1.csv'  # BIO
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/999_Test/cape_sable_summer_2014.csv'  # BIO
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/999_Test/LTTMP_summer2014_HLFX_1273003_south.csv'  # BIO
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/BCD2014999/Hobo/Dundee_10231582.csv'  # BIO
-        data_file_path = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/Hobos/MTR_Hobos_RAW_CSV/baddeck_10536701.csv'  # BIO
+        #data_file_path = 'C:/MTR_Data_Processing/ReadyTo_Process_Data/BCD2014999/Hobos/MTR_Hobos_RAW_CSV/baddeck_10536701.csv'  # BIO
         # data_file_path = 'C:/DFO-MPO/DEV/MTR/999_Test/Whycocomagh_885_north_10m.csv'  # BIO
 
         user_input_metadata = {'organization': 'DFO BIO', 
@@ -934,7 +1055,7 @@ def main():
         history_header.set_process(f'Initial file creation by {operator}')
         mtr.history_headers.append(history_header)
 
-        mtr.process_thermograph(institution_name.upper(), instrument_type.lower(), metadata_file, data_file_path, user_input_metadata)
+        mtr.process_thermograph(institution_name.upper(), instrument_type.lower(), metadata_file, input_data_folder_path, user_input_metadata)
 
         os.chdir(input_data_folder_path)
 

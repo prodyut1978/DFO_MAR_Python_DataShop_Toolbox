@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, 
     QPushButton, QComboBox, QFileDialog, QLabel, QLineEdit, 
-    QWidget, QDialogButtonBox, QCheckBox
+    QWidget, QDialogButtonBox, QCheckBox, QDialog, QMessageBox
 )
 from PyQt6.QtCore import Qt
 from pathlib import Path
@@ -257,8 +257,8 @@ class MainWindow(QMainWindow):
         elif s == "FSRS":
             # FSRS only supports Minilog
             self.instrument_combo.clear()
-            self.instrument_combo.addItem("Minilog")
-            self.instrument = "Minilog"   # ensure consistency
+            self.instrument_combo.addItems(["Minilog", "Hobo"])
+            self.instrument_combo.setCurrentIndex(0)   # ensure consistency
         # Update cruise header defaults
         self.populate_defaults(s)
 
@@ -789,6 +789,159 @@ class SubWindowOne(QMainWindow):
         self.line_edit.setPlaceholderText("Please Provide Reviewer Name")
 
 
+class SubWindowTwo(QDialog):
+    def __init__(self):
+        super().__init__()
+       
+        self.setWindowTitle("MTR Preprocessing Toolbox - Check & Fix MTR Raw and Meta Data QC ")
+        self.resize(600, 350)
+
+        self.line_edit_text = ""
+        self.metadata_file = ""
+        self.input_data_folder = ""
+        self.output_data_folder = ""
+        self.result = None
+        
+
+        # --- Meta file selection ---
+        self.meta_label = QLabel("Select meta data file(e.g. LFA .txt file, or Excel file):")
+        self.meta_button = QPushButton("Choose Meta Data File")
+        self.meta_button.setFixedSize(200, 40)
+        self.meta_button.clicked.connect(self.choose_metadata_file)
+
+        self.metadata_file_path_text = QLineEdit(" ")
+        self.metadata_file_path_text.setReadOnly(True)
+        self.metadata_file_path_text.setFixedWidth(500)
+
+        # Input Folder selection
+        self.input_label = QLabel("Select the input folder path of raw files:")
+        self.input_button = QPushButton("Select input data folder\n(Location of raw *.csv files)")
+        self.input_button.setFixedSize(200, 40)
+        self.input_button.clicked.connect(self.choose_input_data_folder)
+        
+        self.input_path_text = QLineEdit(" ")
+        self.input_path_text.setReadOnly(True)
+        self.input_path_text.setFixedWidth(500)
+        
+        # --- Output folder selection ---
+        self.output_label = QLabel("Select the folder path to save raw and meta files:")
+        self.output_button = QPushButton("Choose QC Output Folder")
+        self.output_button.setFixedSize(200, 40)
+        self.output_button.clicked.connect(self.choose_output_data_folder)
+
+        self.output_path_text = QLineEdit(" ")
+        self.output_path_text.setReadOnly(True)
+        self.output_path_text.setFixedWidth(500)
+
+        # --- OK / Cancel buttons ---
+        buttons = (
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        self.buttonBox = QDialogButtonBox(buttons)
+        self.buttonBox.accepted.connect(self.on_accept)
+        self.buttonBox.rejected.connect(self.on_reject)
+
+        # --- LAYOUT SECTION ---
+        main_layout = QVBoxLayout()
+        
+        # Meta file row
+        row0 = QHBoxLayout()
+        row0.addWidget(self.meta_label)
+        main_layout.addLayout(row0)
+
+        row0b = QHBoxLayout()
+        row0b.addWidget(self.meta_button)
+        row0b.addWidget(self.metadata_file_path_text)
+        main_layout.addLayout(row0b)
+        
+        # Input folder row
+        row1 = QHBoxLayout()
+        row1.addWidget(self.input_label)
+        main_layout.addLayout(row1)
+
+        row1b = QHBoxLayout()
+        row1b.addWidget(self.input_button)
+        row1b.addWidget(self.input_path_text)
+        main_layout.addLayout(row1b)
+
+        # Output folder row
+        row2 = QHBoxLayout()
+        row2.addWidget(self.output_label)
+        main_layout.addLayout(row2)
+
+        row2b = QHBoxLayout()
+        row2b.addWidget(self.output_button)
+        row2b.addWidget(self.output_path_text)
+        main_layout.addLayout(row2b)
+
+        # Buttons centered
+        btn_row = QHBoxLayout()
+        btn_row.addStretch(1)
+        btn_row.addWidget(self.buttonBox)
+        btn_row.addStretch(1)
+        main_layout.addLayout(btn_row)
+        self.setLayout(main_layout)
+    
+    def choose_metadata_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select the Metadata file")
+        if not file_path:
+            return
+        if file_path:
+            self.metadata_file = file_path
+            self.metadata_file_path_text.setText(self.metadata_file)
+            meta_path = Path(file_path)
+            meta_dir = meta_path.parent
+            raw_folder = self.find_raw_data_folder(meta_dir)
+            if raw_folder:
+                self.input_data_folder = str(raw_folder)
+                self.input_path_text.setText(self.input_data_folder)
+            self.output_data_folder = str(meta_dir)
+            self.output_path_text.setText(self.output_data_folder)
+            
+    def choose_input_data_folder(self):
+        folder_path = QFileDialog.getExistingDirectory(self, "Select folder with ODF files")
+        if folder_path:
+            self.input_data_folder = folder_path
+            print(f"QC Input ODF folder selected: {folder_path}")
+            self.input_path_text.setText(self.input_data_folder)
+
+    def choose_output_data_folder(self):
+        folder_path = QFileDialog.getExistingDirectory(self, "Select QC output folder")
+        if folder_path:
+            self.output_data_folder = folder_path
+            print(f"QC Output folder selected: {folder_path}")
+            self.output_path_text.setText(self.output_data_folder)
+
+    def on_accept(self):
+
+        if not self.metadata_file:
+            QMessageBox.warning(self, "Missing Meta Input", "Please select metadata file data folder.")
+            return
+        
+        if not self.input_data_folder:
+            QMessageBox.warning(self, "Missing Input Folder", "Please select input data folder.")
+            return
+
+        if not self.output_data_folder:
+            QMessageBox.warning(self, "Missing Output", "Please select output data folder.")
+            return
+
+        self.result = "accept"
+        self.accept()
+        
+    def on_reject(self):
+        self.result = "reject"
+        self.reject()
+        
+    def find_raw_data_folder(self, base_dir):
+        keywords = ["raw", "csv", "input"]
+        for p in base_dir.iterdir():
+            if p.is_dir() and any(keyword in p.name.lower() for keyword in keywords):
+                return p
+        return None
+
+
 
 if __name__ == "__main__":
     
@@ -796,7 +949,8 @@ if __name__ == "__main__":
     app.setStyle('Fusion')
 
     #window = MainWindow()
-    window = SubWindowOne(True)
-    window.show()
+    #window = SubWindowOne(True)
+    #window = SubWindowTwo()
+    #window.show()
 
     app.exec()

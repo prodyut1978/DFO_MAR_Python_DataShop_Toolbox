@@ -751,7 +751,7 @@ def qc_thermograph_data(in_folder_path: str, wildcard: str, out_folder_path: str
         selection_groups = []
         applied = False
         user_exited = False
-        current_flag = 4
+        current_flag = 4 if qc_mode_code_ == 1 else 1
         figsize=(14, 7)
         
         plt.style.use('ggplot')

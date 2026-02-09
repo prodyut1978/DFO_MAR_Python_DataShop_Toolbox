@@ -801,5 +801,5 @@ def on_mtr_processing_finished(log_ui, success):
 
 
 if __name__ == "__main__":
-    main_manual_startQC()
-    #main_automated_startQC()
+    #main_manual_startQC()
+    main_automated_startQC()
