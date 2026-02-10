@@ -3,13 +3,13 @@
 
 author : Jeff Jackson
 
-Created: 03-JAN-2024
+Created: 31-JAN-2026
 
 Last updated: 06-AUG-2024
 
-version : 3.0
+version : 3.1
 
-© 2024, Fisheries and Oceans Canada (DFO).
+© 2026, Fisheries and Oceans Canada (DFO).
 
 The Oceans Data Format (ODF) is an ASCII text file format used for the
 primary storage of an oceanographic data series. It consists of a set of
@@ -21,7 +21,7 @@ records.
 The following document presents the details of the ODF file format
 specification.
 
-## ODF Version 3.0
+## ODF Version 3.1
 
 This specification details both the ODF Header section and the ODF Data
 section.
@@ -189,9 +189,9 @@ CRUISE_HEADER
 | EVENT_HEADER | ORIG_CREATION_DATE |         n         |  SYTM  |         n         |           1           |     empty     | 17-NOV-1858 00:00:00.00 |
 | EVENT_HEADER | START_DATE_TIME    |         n         |  SYTM  |         n         |           1           |     empty     | 17-NOV-1858 00:00:00.00 |
 | EVENT_HEADER | END_DATE_TIME      |         n         |  SYTM  |         n         |           1           |     empty     | 17-NOV-1858 00:00:00.00 |
-| EVENT_HEADER | INITIAL_LATITUDE   |         n         | number |         n         |           1           |     empty     |           -99           |
+| EVENT_HEADER | INITIAL_LATITUDE   |         n         | number |         n         |           1           |     empty     |           -999           |
 | EVENT_HEADER | INITIAL_LONGITUDE  |         n         | number |         n         |           1           |     empty     |          -999           |
-| EVENT_HEADER | END_LATITUDE       |         n         | number |         n         |           1           |     empty     |           -99           |
+| EVENT_HEADER | END_LATITUDE       |         n         | number |         n         |           1           |     empty     |           -999           |
 | EVENT_HEADER | END_LONGITUDE      |         n         | number |         n         |           1           |     empty     |          -999           |
 | EVENT_HEADER | MIN_DEPTH          |         n         | number |         n         |           1           |     empty     |          none           |
 | EVENT_HEADER | MAX_DEPTH          |         n         | number |         n         |           1           |     empty     |          none           |
@@ -233,7 +233,7 @@ EVENT_HEADER
   END_DATE_TIME = '17-NOV-1858 00:00:00.00'
   INITIAL_LATITUDE = 43.7823
   INITIAL_LONGITUDE = -57.8332
-  END_LATITUDE = -99.0000
+  END_LATITUDE = -999.0000
   END_LONGITUDE = -999.0000
   MIN_DEPTH = 1.0
   MAX_DEPTH = 205.0
@@ -286,8 +286,8 @@ An example METEO_HEADER block follows:
 
 <pre>
 METEO_HEADER,
-  AIR_TEMPERATURE = -99.00,
-  ATMOSPHERIC_PRESSURE = -99.00,
+  AIR_TEMPERATURE = -999.00,
+  ATMOSPHERIC_PRESSURE = -999.00,
   WIND_SPEED = 4.60,
   WIND_DIRECTION = 135.00,
   SEA_STATE = 3,
@@ -584,13 +584,13 @@ HISTORY_HEADER
 | PARAMETER_HEADER | PRINT_FIELD_ORDER    |         n         | number |         y         |           1           |     empty     |    none    |
 | PARAMETER_HEADER | PRINT_FIELD_WIDTH    |         n         | number |         n         |           1           |     empty     |    none    |
 | PARAMETER_HEADER | PRINT_DECIMAL_PLACES |         n         | number |         n         |           1           |     empty     |    none    |
-| PARAMETER_HEADER | ANGLE_OF_SECTION     |         n         | number |         n         |           1           |     empty     |    -99     |
-| PARAMETER_HEADER | MAGNETIC_VARIATION   |         n         | number |         n         |           1           |     empty     |    -99     |
-| PARAMETER_HEADER | DEPTH                |         n         | number |         n         |           1           |     empty     |    -99     |
-| PARAMETER_HEADER | MINIMUM_VALUE        |         n         | number |         n         |           1           |     empty     |    -99     |
-| PARAMETER_HEADER | MAXIMUM_VALUE        |         n         | number |         n         |           1           |     empty     |    -99     |
-| PARAMETER_HEADER | NUMBER_VALID         |         n         | number |         y         |           1           |     empty     |    -99     |
-| PARAMETER_HEADER | NUMBER_NULL          |         n         | number |         y         |           1           |     empty     |    -99     |
+| PARAMETER_HEADER | ANGLE_OF_SECTION     |         n         | number |         n         |           1           |     empty     |    -999     |
+| PARAMETER_HEADER | MAGNETIC_VARIATION   |         n         | number |         n         |           1           |     empty     |    -999     |
+| PARAMETER_HEADER | DEPTH                |         n         | number |         n         |           1           |     empty     |    -999     |
+| PARAMETER_HEADER | MINIMUM_VALUE        |         n         | number |         n         |           1           |     empty     |    -999     |
+| PARAMETER_HEADER | MAXIMUM_VALUE        |         n         | number |         n         |           1           |     empty     |    -999     |
+| PARAMETER_HEADER | NUMBER_VALID         |         n         | number |         y         |           1           |     empty     |    -999     |
+| PARAMETER_HEADER | NUMBER_NULL          |         n         | number |         y         |           1           |     empty     |    -999     |
 
 Table 11 - PARAMETER_HEADER block details
 
@@ -638,7 +638,7 @@ PARAMETER_HEADER,
   DEPTH = 0.000000,
   MINIMUM_VALUE = 1.2,
   MAXIMUM_VALUE = 35.6,
-  NUMBER_VALID = -99,
+  NUMBER_VALID = -999,
   NUMBER_NULL = 0,
 </pre><br/>
 
@@ -728,7 +728,7 @@ d.Markdown(md)
 | ATP\_    | Adenosine Triphosphate content                                                 | mg/m\*\*3                   |          10 |              5 |
 | ATRK     | Along Track Displacement                                                       | metres                      |          10 |              3 |
 | ATTU     | Attenuance (ADCP)                                                              | /m                          |          10 |              3 |
-| AUTH     | Authority                                                                      | none                        |          50 |            -99 |
+| AUTH     | Authority                                                                      | none                        |          50 |           -999 |
 | BAC\_    | Bacteria Counts                                                                | 10\*\*6/L                   |          10 |              3 |
 | BATH     | Bathymetric Depth                                                              | metres                      |          10 |              3 |
 | BATT     | Battery Voltage                                                                | volts                       |          10 |              3 |
@@ -743,19 +743,19 @@ d.Markdown(md)
 | CDWT     | Detail data: Calculated dry weight derived using a regression                  | mg/m³                       |          10 |              5 |
 | CHLR     | Chlorinity (parts/thousand)                                                    | g/kg                        |          10 |              3 |
 | CHLS     | Chlorosity                                                                     | kg/m\*\*3                   |          10 |              3 |
-| CMET     | Method used for sample collection                                              | none                        |          50 |            -99 |
-| CMNT     | Comments                                                                       | none                        |        1000 |            -99 |
+| CMET     | Method used for sample collection                                              | none                        |          50 |           -999 |
+| CMNT     | Comments                                                                       | none                        |        1000 |           -999 |
 | CMTM     | CMCTD Time YYJJJHHMMSSss                                                       | GMT                         |          10 |              3 |
 | CNDC     | Electrical Conductivity                                                        | mhos/m                      |          10 |              5 |
 | CNTR     | Counter                                                                        | none                        |          10 |              3 |
 | CNTS     | Number of Organisms Counted                                                    | none                        |           4 |              0 |
-| COLL     | Detail data: Name of the collector for the data                                | none                        |          30 |            -99 |
+| COLL     | Detail data: Name of the collector for the data                                | none                        |          30 |           -999 |
 | COND     | Conductivity                                                                   | mmHo                        |          10 |              5 |
 | CORG     | Organic Carbon Content                                                         | mmol/m\*\*3                 |          10 |              3 |
 | CPCT     | Identifies the Percentage of Specified Plankton                                | %                           |           6 |              3 |
 | CPHL     | Chlorophyll-a Content                                                          | mg/m\*\*3                   |          10 |              3 |
 | CRAT     | Conductivity Ratio                                                             | none                        |          10 |              5 |
-| CTAX     | Collector Taxonomic Identifier                                                 | none                        |          20 |            -99 |
+| CTAX     | Collector Taxonomic Identifier                                                 | none                        |          20 |           -999 |
 | CTOT     | Total Carbon (C) Content                                                       | mmol/m\*\*3                 |          10 |              3 |
 | DCHG     | Discharge                                                                      | m\*\*3/s                    |           9 |              2 |
 | DENS     | Sea Density                                                                    | kg/m\*\*3                   |          10 |              4 |
@@ -778,7 +778,7 @@ d.Markdown(md)
 | FLORSDEV | Fluorescence standard deviation                                                | mg/m\*\*3                   |          10 |              3 |
 | FLU\_    | Fluorescence                                                                   | %                           |          10 |              3 |
 | GDIR     | Gust Wind Direction                                                            | degrees                     |          10 |              3 |
-| GEAR     | Gear used for sample collection                                                | none                        |          50 |            -99 |
+| GEAR     | Gear used for sample collection                                                | none                        |          50 |           -999 |
 | GEOP     | Geopotential                                                                   | none                        |          10 |              3 |
 | GSPD     | Gust Wind Speed                                                                | m/s                         |          10 |              3 |
 | HCDM     | Horizontal Current Direction (magnetic)                                        | degrees                     |          10 |              3 |
@@ -791,13 +791,13 @@ d.Markdown(md)
 | IDEN     | Data identifier                                                                | none                        |          10 |              0 |
 | LATD     | Latitude (North +ve)                                                           | degrees                     |          10 |              4 |
 | LCHL     | Chlorophyll-a Content from cells \> 5um                                        | mg/m\*\*3                   |          10 |              3 |
-| LHIS     | Life History or Development Stage                                              | none                        |          50 |            -99 |
+| LHIS     | Life History or Development Stage                                              | none                        |          50 |           -999 |
 | LOND     | Longitude (East +ve)                                                           | degrees                     |          10 |              4 |
 | LPHA     | Phaeopigment content from cells \> 5um                                         | mg/m\*\*3                   |          10 |              3 |
 | MAGN     | Magnetic Variation From True North                                             | degrees                     |          10 |              3 |
 | MNSV     | Retention Filter Size                                                          | microns                     |           6 |              0 |
 | MNSZ     | Minimum size of organisms                                                      | microns                     |           6 |              0 |
-| MODF     | Additional taxonomic information                                               | none                        |          50 |            -99 |
+| MODF     | Additional taxonomic information                                               | none                        |          50 |           -999 |
 | MXSV     | Largest Sieve Used                                                             | microns                     |           6 |              0 |
 | MXSZ     | Maximum size of organisms                                                      | microns                     |           6 |              0 |
 | NETR     | Net Solar Radiation                                                            | watts/m\*\*2                |          10 |              3 |
@@ -832,10 +832,10 @@ d.Markdown(md)
 | PPR\_    | Primary Production                                                             | mgC/m\*\*3/h                |          10 |              2 |
 | PPTR     | PIPE Internal Pointer                                                          | none                        |          10 |              3 |
 | PRES     | Sea Pressure (sea surface - 0)                                                 | decibars                    |          10 |              2 |
-| PROC     | Identifies the state of the sample analysis                                    | none                        |          50 |            -99 |
+| PROC     | Identifies the state of the sample analysis                                    | none                        |          50 |           -999 |
 | PRP\_    | Production primaire à partir d\`incubations                                    | mgC/m\*\*3/h                |          10 |              3 |
 | PRSN     | Indicates presence (1) or absence (0) of organisms if not counted              | none                        |           3 |              0 |
-| PRSV     | Method used for sample preservation                                            | none                        |          50 |            -99 |
+| PRSV     | Method used for sample preservation                                            | none                        |          50 |           -999 |
 | PSAL     | Practical Salinity                                                             | psu                         |          10 |              4 |
 | PSAR     | Photosynthetic Active Radiation                                                | ueinsteins/s/m\*\*2         |          10 |              3 |
 | PTCH     | Pitch Angle                                                                    | degrees                     |           6 |              1 |
@@ -854,7 +854,7 @@ d.Markdown(md)
 | RPOT     | Redox Potential                                                                | mV                          |          10 |              3 |
 | SDEV     | Standard deviation of preceding parameter                                      | same as preceding parameter |          10 |              3 |
 | SECC     | SECCHI disc depth                                                              | m                           |          10 |              1 |
-| SEX\_    | Sex                                                                            | none                        |          50 |            -99 |
+| SEX\_    | Sex                                                                            | none                        |          50 |           -999 |
 | SIGO     | Sigma-0                                                                        | kg/m\*\*3                   |          10 |              4 |
 | SIGP     | Sigma-Theta                                                                    | kg/m\*\*3                   |          10 |              4 |
 | SIGT     | Sigma-T                                                                        | kg/m\*\*3                   |          10 |              4 |
@@ -868,14 +868,14 @@ d.Markdown(md)
 | SPVA     | Specific Volume Anomoly                                                        | m\*\*3/kg                   |          10 |              3 |
 | SPVO     | Specific Volume                                                                | m\*\*3/kg                   |          10 |              3 |
 | SSAL     | Salinity                                                                       | g/kg or o/oo                |          10 |              3 |
-| STOR     | Description of sample storage between collection and analysis                  | none                        |          50 |            -99 |
+| STOR     | Description of sample storage between collection and analysis                  | none                        |          50 |           -999 |
 | STRA     | Stress Amplitude                                                               | Pa                          |          10 |              3 |
 | STRD     | Stress Direction                                                               | degrees T                   |          10 |              3 |
 | STRU     | Stress (U Component)                                                           | Pa                          |          10 |              3 |
 | STRV     | Stress (V Component)                                                           | Pa                          |          10 |              3 |
 | SVEL     | Sound Velocity                                                                 | m/s                         |          10 |              3 |
 | SYTM     | PIPE Time Format DD-MMM-YYYY HH:MM:SS.ss                                       | GMT                         |          23 |              0 |
-| TAXN     | Taxonomic Name                                                                 | none                        |          50 |            -99 |
+| TAXN     | Taxonomic Name                                                                 | none                        |          50 |           -999 |
 | TE90     | Temperature (ITS-90 scale)                                                     | degrees C                   |          10 |              4 |
 | TEMP     | Temperature (IPTS-68 Scale)                                                    | degrees C                   |          10 |              4 |
 | TEXT     | Plain Language Text                                                            | none                        |          10 |              3 |
@@ -884,7 +884,7 @@ d.Markdown(md)
 | TILTSDEV | Tilt Angle standard deviation                                                  | degrees                     |           6 |              1 |
 | TLENBSEQ | Frequency data: Sequential number attached to bugs having a given total length | nan                         |           4 |              0 |
 | TLENCNTP | Frequency data: Percentage of bugs having a given total length                 | %                           |           6 |              1 |
-| TLENCOLL | Frequency data: Name of the collector                                          | nan                         |          30 |            -99 |
+| TLENCOLL | Frequency data: Name of the collector                                          | nan                         |          30 |           -999 |
 | TLENLBIN | Frequency data: Bug total length lower frequency bin                           | mm                          |           7 |              3 |
 | TLENQQQQ | Frequency data: Quality control code of bugs having a given total length       | nan                         |           1 |              0 |
 | TLENTLEN | Frequency data: Bug total length                                               | mm                          |           7 |              3 |
@@ -893,7 +893,7 @@ d.Markdown(md)
 | TOTP     | Total Pressure (Atmosphere + Sea Pressure)                                     | decibars                    |          10 |              3 |
 | TPHS     | Total Phosphorous (P) Content                                                  | mmol/m\*\*3                 |          10 |              3 |
 | TRAN     | Light Transmission                                                             | %                           |          10 |              3 |
-| TRPH     | Trophic Descriptor                                                             | none                        |          50 |            -99 |
+| TRPH     | Trophic Descriptor                                                             | none                        |          50 |           -999 |
 | TSM\_    | Bottle sample total suspended matter                                           | g/m\*\*3                    |          10 |              3 |
 | TSN\_    | Taxonomic Serial Number                                                        | none                        |          12 |              0 |
 | TURB     | OBS Turbidity                                                                  | FTU                         |          10 |              4 |
@@ -901,7 +901,7 @@ d.Markdown(md)
 | URE\_    | Urea content                                                                   | mmol/m\*\*3                 |          10 |              3 |
 | VAIS     | Brunt Vaissala Frequency                                                       | hertz                       |          10 |              3 |
 | VCSP     | Vertical Current Speed (positive up)                                           | m/s                         |          10 |              4 |
-| VMET     | Method used to determine the volume of water                                   | none                        |          50 |            -99 |
+| VMET     | Method used to determine the volume of water                                   | none                        |          50 |           -999 |
 | VOLT     | Sensor Volts                                                                   | volts                       |          10 |              4 |
 | WDIR     | Wind Direction relative to North (T)                                           | degrees                     |          10 |              3 |
 | WETECOBB | Turbidity, WET Labs ECO BB                                                     | m^-1/sr                     |          10 |              4 |
